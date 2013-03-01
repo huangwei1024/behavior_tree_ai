@@ -146,26 +146,6 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath=".\behavior_action_node.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\behavior_composite_node.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\behavior_condition_node.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\behavior_decorator_node.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\behavior_tree.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
