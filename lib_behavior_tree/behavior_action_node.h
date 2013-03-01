@@ -37,7 +37,10 @@ public:
 	 * @brief ActionNode Execute
 	 *
 	 * virtual public 
-	 * Some detailed comment.
+	 * Actions which finally implement an actors or game world state changes, 
+	 * for example to plan a path and move on it, to sense for the nearest enemies. 
+	 * Actions will typically coordinate and call into different game systems. 
+	 * They might run for one simulation tick ¨C one frame ¨C or might need to be ticked for multiple frames to finish their work.
 	 * @return 		ExecState
 	 */
 	virtual ExecState	Execute()		{return NodeExec_Success;}
