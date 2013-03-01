@@ -48,7 +48,7 @@ public:
 		PtrList::iterator it, itEnd = m_vChilds.end();
 		for (it = m_vChilds.begin(); it != itEnd; ++ it)
 		{
-			ExecState nRet = it->Execute();
+			ExecState nRet = *it->Execute();
 			switch (nRet)
 			{
 			case NodeExec_Success:
@@ -91,7 +91,7 @@ public:
 		PtrList::iterator it, itEnd = m_vChilds.end();
 		for (it = m_vChilds.begin(); it != itEnd; ++ it)
 		{
-			ExecState nRet = it->Execute();
+			ExecState nRet = *it->Execute();
 			switch (nRet)
 			{
 			case NodeExec_Fail:
@@ -142,7 +142,7 @@ public:
 		PtrList::iterator it, itEnd = m_vChilds.end();
 		for (it = m_vChilds.begin(); it != itEnd; ++ it)
 		{
-			++ nRetCnt[it->Execute()];
+			++ nRetCnt[*it->Execute()];
 		}
 
 		switch (m_nPolicy)

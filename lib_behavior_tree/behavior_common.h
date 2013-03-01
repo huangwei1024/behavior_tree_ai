@@ -49,6 +49,10 @@ enum NodeType
 	NodeType_Action,
 	NodeType_Condition,
 	NodeType_Decorator,
+	NodeType_DecoratorNot,
+	NodeType_DecoratorLoop,
+	NodeType_DecoratorCounter,
+	NodeType_DecoratorTime,
 };
 
 };
