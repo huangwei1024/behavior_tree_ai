@@ -46,6 +46,21 @@ public:
 	Ptr GetParent()								{return m_pParent;}
 
 	/**
+	 * @brief ClearChild
+	 *
+	 * public 
+	 */
+	void ClearChild()
+	{
+		PtrList::iterator it, itEnd = m_vChilds.end();
+		for (it = m_vChilds.begin(); it != itEnd; ++ it)
+		{
+			it->ClearChild();
+		}
+		m_vChilds.clear();
+	}
+
+	/**
 	 * @brief AddChild
 	 *
 	 * public 
@@ -108,6 +123,24 @@ protected:
 	PtrList				m_vChilds;
 };
 
+
+/**
+ * behavior param data class
+ */
+class ParamData
+{
+public:
+	typedef ParamData*				Ptr;
+
+public:
+	ParamData();
+	virtual ~ParamData();
+
+	virtual	void		SetParam() = 0;
+	virtual				GetParam() = 0;
+};
+
+
 /**
  * behavior blackboard class
  */
@@ -118,11 +151,16 @@ public:
 
 public:
 	Blackboard();
-	~Blackboard();
+	virtual ~Blackboard();
+
+	void				Clear();
 
 protected:
-	Tree::Ptr
+	Tree::Ptr			m_pTree;
+	ParamData::Ptr		m_pInput;
+	ParamData::Ptr		m_pOutput;
 };
+
 
 /**
  * behavior tree class
@@ -133,12 +171,12 @@ public:
 	typedef Tree*					Ptr;
 
 public:
-	Tree();
+	Tree(Blackboard::Ptr pBlackboard);
 	~Tree();
 
-	void				Init();
+	void				Init(Node::Ptr pRoot);
 	void				Clear();
-	bool				Process();
+	NodeExecState		Process(ParamData::Ptr pInput, ParamData::Ptr pOutput);
 	bool				IsValid();
 
 	bool				DumpFile(const char* szFile);

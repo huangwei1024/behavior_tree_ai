@@ -25,6 +25,9 @@
 #include <algorithm>
 #include <functional>
 
+#define SafeDelete(p)			{if (p) {delete (p); (p) = NULL;}}
+#define SafeDeleteArray(p)		{if (p) {delete [] (p); (p) = NULL;}}
+
 namespace BehaviorTree
 {
 
