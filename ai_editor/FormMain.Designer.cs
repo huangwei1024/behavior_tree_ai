@@ -30,14 +30,6 @@
         {
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-			System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Node", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Line", System.Windows.Forms.HorizontalAlignment.Left);
-			System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("Selector", 0);
-			System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("Sequece", 1);
-			System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("Action", 3);
-			System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("Condition", 6);
-			System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("Parallel", 11);
-			System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("Line", 2);
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,6 +47,7 @@
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.menuStrip1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -64,6 +57,7 @@
 			this.splitContainer2.SuspendLayout();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
+			this.tabControl_BTree.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -200,26 +194,6 @@
 			// listView_Node
 			// 
 			this.listView_Node.Dock = System.Windows.Forms.DockStyle.Fill;
-			listViewGroup3.Header = "Node";
-			listViewGroup3.Name = "listViewGroup_Node";
-			listViewGroup4.Header = "Line";
-			listViewGroup4.Name = "listViewGroup_Line";
-			this.listView_Node.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup3,
-            listViewGroup4});
-			listViewItem7.Group = listViewGroup3;
-			listViewItem8.Group = listViewGroup3;
-			listViewItem9.Group = listViewGroup3;
-			listViewItem10.Group = listViewGroup3;
-			listViewItem11.Group = listViewGroup3;
-			listViewItem12.Group = listViewGroup4;
-			this.listView_Node.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem7,
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12});
 			this.listView_Node.LargeImageList = this.imageList1;
 			this.listView_Node.Location = new System.Drawing.Point(0, 0);
 			this.listView_Node.Name = "listView_Node";
@@ -227,6 +201,7 @@
 			this.listView_Node.SmallImageList = this.imageList1;
 			this.listView_Node.TabIndex = 0;
 			this.listView_Node.UseCompatibleStateImageBehavior = false;
+			this.listView_Node.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.listView_Node_ItemDrag);
 			// 
 			// splitContainer3
 			// 
@@ -244,12 +219,18 @@
 			// 
 			// tabControl_BTree
 			// 
+			this.tabControl_BTree.AllowDrop = true;
+			this.tabControl_BTree.Controls.Add(this.tabPage1);
 			this.tabControl_BTree.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl_BTree.Location = new System.Drawing.Point(0, 0);
 			this.tabControl_BTree.Name = "tabControl_BTree";
 			this.tabControl_BTree.SelectedIndex = 0;
 			this.tabControl_BTree.Size = new System.Drawing.Size(300, 351);
 			this.tabControl_BTree.TabIndex = 1;
+			this.tabControl_BTree.DragOver += new System.Windows.Forms.DragEventHandler(this.tabControl_BTree_DragOver);
+			this.tabControl_BTree.DragDrop += new System.Windows.Forms.DragEventHandler(this.tabControl_BTree_DragDrop);
+			this.tabControl_BTree.DragEnter += new System.Windows.Forms.DragEventHandler(this.tabControl_BTree_DragEnter);
+			this.tabControl_BTree.SelectedIndexChanged += new System.EventHandler(this.tabControl_BTree_SelectedIndexChanged);
 			// 
 			// statusStrip1
 			// 
@@ -271,6 +252,16 @@
 			// 
 			this.openFileDialog1.FileName = "openFileDialog1";
 			// 
+			// tabPage1
+			// 
+			this.tabPage1.AllowDrop = true;
+			this.tabPage1.Location = new System.Drawing.Point(4, 22);
+			this.tabPage1.Name = "tabPage1";
+			this.tabPage1.Size = new System.Drawing.Size(292, 325);
+			this.tabPage1.TabIndex = 0;
+			this.tabPage1.Text = "tabPage1";
+			this.tabPage1.UseVisualStyleBackColor = true;
+			// 
 			// FormMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -282,6 +273,8 @@
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "FormMain";
 			this.Text = "BT AI 编辑器";
+			this.Load += new System.EventHandler(this.FormMain_Load);
+			this.Resize += new System.EventHandler(this.FormMain_Resize);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.splitContainer1.Panel1.ResumeLayout(false);
@@ -292,6 +285,7 @@
 			this.splitContainer2.ResumeLayout(false);
 			this.splitContainer3.Panel1.ResumeLayout(false);
 			this.splitContainer3.ResumeLayout(false);
+			this.tabControl_BTree.ResumeLayout(false);
 			this.statusStrip1.ResumeLayout(false);
 			this.statusStrip1.PerformLayout();
 			this.ResumeLayout(false);
@@ -318,6 +312,7 @@
 		private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
 		private System.Windows.Forms.OpenFileDialog openFileDialog1;
+		private System.Windows.Forms.TabPage tabPage1;
 
     }
 }
