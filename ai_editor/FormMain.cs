@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace ai_editor
 {
@@ -17,7 +18,10 @@ namespace ai_editor
 
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			(new AboutBox()).Show();
+			using (AboutBox about = new AboutBox())
+			{
+				about.ShowDialog();
+			}
 		}
 
 		private void tabPage1_Click(object sender, EventArgs e)
@@ -27,24 +31,31 @@ namespace ai_editor
 		private void tabPage1_Paint(object sender, PaintEventArgs e)
 		{
 			Graphics g = e.Graphics;
-// 			Point point = new Point(0, 0);
-// 			foreach (ImageInfo info in Node.ImageInfoMap.Values)
-// 			{
-// 				Size size = info.size;
-// 				Bitmap image = info.image;
-// 				g.DrawImage(image, point);
-// 				//g.DrawRectangle(Pens.Red, new Rectangle(point, size));
-// 				point.X += size.Width + 5;
-// 			}
-// 			
-			if (dragEvent != null)
-			{
-				System.Diagnostics.Debug.Write("tabPage1_Paint dragEvent\n");
 
-				string dummy = "temp";
-				dummy = (string)dragEvent.Data.GetData(dummy.GetType());
-				Point point = tabControl_BTree.PointToClient(System.Windows.Forms.Control.MousePosition);
-				g.DrawImage(Node.ImageInfoMap[dummy].image, point);
+			// 			Point point = new Point(0, 0);
+			// 			foreach (ImageInfo info in Node.ImageInfoMap.Values)
+			// 			{
+			// 				Size size = info.size;
+			// 				Bitmap image = info.image;
+			// 				g.DrawImage(image, point);
+			// 				//g.DrawRectangle(Pens.Red, new Rectangle(point, size));
+			// 				point.X += size.Width + 5;
+			// 			}
+			// 			
+
+			foreach (AiTreeNode aiNode in treeView_BTree.AiNodes)
+			{
+				aiNode.pageNode.Draw(g);
+			}
+
+			// draw drag node
+			if (dragNode != null)
+			{
+				ImageInfo info = Node.ImageInfoMap[dragNode];
+				Point point = tabControl_BTree.SelectedTab.PointToClient(System.Windows.Forms.Control.MousePosition);
+				point.X -= info.size.Width / 2;
+				point.Y -= info.size.Height / 2;
+				g.DrawImage(info.image, point);
 			}
 		}
 
@@ -56,33 +67,42 @@ namespace ai_editor
 			tabControl_BTree.TabPages.Add(newPage);
 		}
 
+		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			saveFileDialog1.ShowDialog();
+			MessageBox.Show(saveFileDialog1.FileName);
+		}
+
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			openFileDialog1.ShowDialog();
-			//MessageBox.Show(openFileDialog1.FileName);
-			//System.Diagnostics.Trace.Assert(false, "hehe");
+			MessageBox.Show(openFileDialog1.FileName);
 		}
 
 		private void FormMain_Load(object sender, EventArgs e)
 		{
+			this.SetStyle(ControlStyles.ResizeRedraw |
+			  ControlStyles.OptimizedDoubleBuffer |
+			  ControlStyles.AllPaintingInWmPaint, true);
+			this.UpdateStyles();
+
 			// imagelist
 			this.imageList1.Images.Clear();
-			this.imageList1.Images.Add(SelectorNode.NodeImage());
-			this.imageList1.Images.Add(SequenceNode.NodeImage());
-			this.imageList1.Images.Add(ParallelNode.NodeImage());
-			this.imageList1.Images.Add(ActionNode.NodeImage());
-			this.imageList1.Images.Add(ConditionNode.NodeImage());
+			this.imageList1.Images.Add(SelectorNode.Name, SelectorNode.NodeImage());
+			this.imageList1.Images.Add(SequenceNode.Name, SequenceNode.NodeImage());
+			this.imageList1.Images.Add(ParallelNode.Name, ParallelNode.NodeImage());
+			this.imageList1.Images.Add(ActionNode.Name, ActionNode.NodeImage());
+			this.imageList1.Images.Add(ConditionNode.Name, ConditionNode.NodeImage());
 
 			// listview
 			this.listView_Node.Groups.Clear();
 			{
 				ListViewGroup groupNode = new ListViewGroup("Group_Node", "Node");
 				this.listView_Node.Groups.Add(groupNode);
-				this.listView_Node.Items.Add(new ListViewItem("Selector", 0, groupNode));
-				this.listView_Node.Items.Add(new ListViewItem("Sequence", 1, groupNode));
-				this.listView_Node.Items.Add(new ListViewItem("Parallel", 2, groupNode));
-				this.listView_Node.Items.Add(new ListViewItem("Action", 3, groupNode));
-				this.listView_Node.Items.Add(new ListViewItem("Condition", 4, groupNode));
+				foreach (ImageInfo info in Node.ImageInfoMap.Values)
+				{
+					this.listView_Node.Items.Add(new ListViewItem(info.name, info.name, groupNode));
+				}
 			}
 		}
 
@@ -98,34 +118,54 @@ namespace ai_editor
 			DoDragDrop(strDragItem, DragDropEffects.Copy | DragDropEffects.Move);
 		}
 
-		private void tabControl_BTree_DragEnter(object sender, DragEventArgs e)
-		{
-			//判断是否目前拖动的数据是字符串，如果是则拖动符串对目的组件进行拷贝
-			dragEvent = null;
-			if (e.Data.GetDataPresent(DataFormats.Text))
-			{
-				e.Effect = DragDropEffects.Move;
-				dragEvent = e;
-			}
-			else
-				e.Effect = DragDropEffects.None;
-		}
-
-		private DragEventArgs dragEvent;
-
-		private void tabControl_BTree_DragOver(object sender, DragEventArgs e)
-		{
-			tabControl_BTree.SelectedTab.Invalidate();
-		}
-
-		private void tabControl_BTree_DragDrop(object sender, DragEventArgs e)
-		{
-			dragEvent = null;
-		}
 
 		private void tabControl_BTree_SelectedIndexChanged(object sender, EventArgs e)
 		{
 
 		}
+
+		
+
+		private DragEventArgs dragEvent;
+		private string dragNode;
+
+		private void tabPage1_DragEnter(object sender, DragEventArgs e)
+		{
+			//判断是否目前拖动的数据是字符串，如果是则拖动符串对目的组件进行拷贝
+			dragEvent = null;
+			dragNode = null;
+			if (e.Data.GetDataPresent(DataFormats.Text))
+			{
+				e.Effect = DragDropEffects.Move;
+				dragEvent = e;
+				string dummy = "temp";
+				dragNode = (string)dragEvent.Data.GetData(dummy.GetType());
+			}
+			else
+				e.Effect = DragDropEffects.None;
+		}
+
+		private void tabPage1_DragOver(object sender, DragEventArgs e)
+		{
+			tabControl_BTree.SelectedTab.Refresh();
+		}
+
+		private void tabPage1_DragDrop(object sender, DragEventArgs e)
+		{
+			// insert node
+			AiTreeNode aiNode = treeView_BTree.AiNodes.AiAdd(dragNode);
+			propertyGrid1.SelectedObject = aiNode.pageNode.Props;
+
+			aiNode.pageNode.Move(tabPage1.PointToClient(new Point(e.X, e.Y)));
+
+			// refresh
+			dragEvent = null;
+			dragNode = null;
+			treeView_BTree.Refresh();
+			tabPage1.Refresh();
+		}
+
 	}
+
+
 }
