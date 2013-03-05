@@ -60,7 +60,6 @@ namespace ai_editor
 		}
 
 		public abstract string ClassName { get;}
-		public abstract Image Image { get;}
 		public abstract Point InPoint { get;}
 		public abstract Point OutPoint { get;}
 		public abstract Bitmap DefaultBitmap { get;}
@@ -71,6 +70,20 @@ namespace ai_editor
 			get
 			{
 				return string.Format("{0}_{1}", ClassName, id);
+			}
+		}
+		public virtual Image Image
+		{
+			get
+			{
+				return bitmap;
+			}
+		}
+		public virtual Bitmap Bitmap
+		{
+			get
+			{
+				return bitmap;
 			}
 		}
 
@@ -173,14 +186,6 @@ namespace ai_editor
 			get
 			{
 				return new Point(bitmap.Size.Width / 2, bitmap.Size.Height);
-			}
-		}
-
-		public override Image Image
-		{
-			get
-			{
-				return bitmap;
 			}
 		}
 
@@ -289,15 +294,6 @@ namespace ai_editor
 			}
 		}
 
-
-		public override Image Image
-		{
-			get
-			{
-				return bitmap;
-			}
-		}
-
 		public override Bitmap DefaultBitmap
 		{
 			get
@@ -305,7 +301,6 @@ namespace ai_editor
 				return new Bitmap(NodeImage());
 			}
 		}
-
 
 		public override NodeProperties DefaultProperties
 		{
@@ -401,15 +396,6 @@ namespace ai_editor
 			get
 			{
 				return new Point(0, 0);
-			}
-		}
-
-
-		public override Image Image
-		{
-			get
-			{
-				return bitmap;
 			}
 		}
 
@@ -518,15 +504,6 @@ namespace ai_editor
 			}
 		}
 
-
-		public override Image Image
-		{
-			get
-			{
-				return bitmap;
-			}
-		}
-
 		public override Bitmap DefaultBitmap
 		{
 			get
@@ -628,15 +605,6 @@ namespace ai_editor
 			get
 			{
 				return new Point(0, 0);
-			}
-		}
-
-
-		public override Image Image
-		{
-			get
-			{
-				return bitmap;
 			}
 		}
 

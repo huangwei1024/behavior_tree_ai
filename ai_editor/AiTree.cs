@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.Text;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace ai_editor
 {
@@ -23,6 +24,27 @@ namespace ai_editor
 			{
 				return root.AiNodes;
 			}
+		}
+
+		public AiTreeNode GetAiNodeAt(int x, int y)
+		{
+			Point cPointBK = new Point(x, y);
+			foreach (AiTreeNode aiNode in AiNodes)
+			{
+				Point cPoint = cPointBK;
+				Point point = aiNode.pageNode.Pos;
+				if (cPoint.X < point.X || cPoint.Y < point.Y)
+					continue;
+				cPoint.X -= point.X;
+				cPoint.Y -= point.Y;
+				Size size = aiNode.pageNode.Size;
+				if (cPoint.X > size.Width || cPoint.Y > size.Height)
+					continue;
+				Color color = aiNode.pageNode.Bitmap.GetPixel(cPoint.X, cPoint.Y);
+				if (color.A > 0)
+					return aiNode;
+			}
+			return null;
 		}
 
 		private AiTreeNode root;
@@ -79,7 +101,6 @@ namespace ai_editor
 			subNodes[pageNewNode.Key] = aiNewNode;
 			return aiNewNode;
 		}
-
 		public void AiRemove(string key)
 		{
 			if (!subNodes.ContainsKey(key))
@@ -88,7 +109,6 @@ namespace ai_editor
 			AiTreeNode node = subNodes[key];
 			aiNode.Nodes.Remove(node.viewNode);
 		}
-
 		public System.Collections.IEnumerator GetEnumerator()
 		{
 			return new AiTreeNodeEnum(this);
@@ -140,7 +160,6 @@ namespace ai_editor
 			{
 				if (subIn)
 					return subEnumerator.Current.Value;
-
 
 				if (enumerator.Current.Value.AiNodes.subNodes.Count > 0)
 				{

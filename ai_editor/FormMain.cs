@@ -26,6 +26,16 @@ namespace ai_editor
 
 		private void tabPage1_Click(object sender, EventArgs e)
 		{
+			Point point = tabPage1.PointToClient(System.Windows.Forms.Control.MousePosition);
+			selectedNode = treeView_BTree.GetAiNodeAt(point.X, point.Y);
+			if (selectedNode == null)
+				return;
+
+			treeView_BTree.Focus();
+			treeView_BTree.SelectedNode = selectedNode.viewNode;
+
+			tabPage1.Refresh();
+			treeView_BTree.Refresh();
 		}
 
 		private void tabPage1_Paint(object sender, PaintEventArgs e)
@@ -43,6 +53,16 @@ namespace ai_editor
 			// 			}
 			// 			
 
+			if (selectedNode != null)
+			{
+				Rectangle rect = new Rectangle(selectedNode.pageNode.Pos, selectedNode.pageNode.Size);
+				rect.Inflate(4, 4);
+				using (Pen pen = new Pen(Color.DarkRed, 2))
+				{
+					g.DrawRectangle(pen, rect);
+				}
+			}
+
 			foreach (AiTreeNode aiNode in treeView_BTree.AiNodes)
 			{
 				aiNode.pageNode.Draw(g);
@@ -52,7 +72,7 @@ namespace ai_editor
 			if (dragNode != null)
 			{
 				ImageInfo info = Node.ImageInfoMap[dragNode];
-				Point point = tabControl_BTree.SelectedTab.PointToClient(System.Windows.Forms.Control.MousePosition);
+				Point point = tabPage1.PointToClient(System.Windows.Forms.Control.MousePosition);
 				point.X -= info.size.Width / 2;
 				point.Y -= info.size.Height / 2;
 				g.DrawImage(info.image, point);
@@ -125,7 +145,7 @@ namespace ai_editor
 		}
 
 		
-
+		private AiTreeNode selectedNode;
 		private DragEventArgs dragEvent;
 		private string dragNode;
 
@@ -147,7 +167,7 @@ namespace ai_editor
 
 		private void tabPage1_DragOver(object sender, DragEventArgs e)
 		{
-			tabControl_BTree.SelectedTab.Refresh();
+			tabPage1.Refresh();
 		}
 
 		private void tabPage1_DragDrop(object sender, DragEventArgs e)

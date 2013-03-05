@@ -34,11 +34,13 @@
 			this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.treeView_BTree = new ai_editor.AiTreeView();
 			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
 			this.listView_Node = new System.Windows.Forms.ListView();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
@@ -49,8 +51,6 @@
 			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-			this.treeView_BTree = new ai_editor.AiTreeView();
-			this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -91,23 +91,29 @@
 			// newToolStripMenuItem
 			// 
 			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-			this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
 			this.newToolStripMenuItem.Text = "New";
 			this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
 			// 
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
 			this.openToolStripMenuItem.Text = "Open";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
 			this.saveToolStripMenuItem.Text = "Save";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+			// 
+			// closeToolStripMenuItem
+			// 
+			this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+			this.closeToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+			this.closeToolStripMenuItem.Text = "Close";
 			// 
 			// editToolStripMenuItem
 			// 
@@ -165,6 +171,17 @@
 			this.splitContainer2.Size = new System.Drawing.Size(200, 449);
 			this.splitContainer2.SplitterDistance = 307;
 			this.splitContainer2.TabIndex = 0;
+			// 
+			// treeView_BTree
+			// 
+			this.treeView_BTree.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.treeView_BTree.ImageIndex = 0;
+			this.treeView_BTree.ImageList = this.imageList1;
+			this.treeView_BTree.Location = new System.Drawing.Point(0, 0);
+			this.treeView_BTree.Name = "treeView_BTree";
+			this.treeView_BTree.SelectedImageIndex = 0;
+			this.treeView_BTree.Size = new System.Drawing.Size(200, 307);
+			this.treeView_BTree.TabIndex = 0;
 			// 
 			// imageList1
 			// 
@@ -224,6 +241,7 @@
 			this.tabPage1.UseVisualStyleBackColor = true;
 			this.tabPage1.Paint += new System.Windows.Forms.PaintEventHandler(this.tabPage1_Paint);
 			this.tabPage1.DragOver += new System.Windows.Forms.DragEventHandler(this.tabPage1_DragOver);
+			this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
 			this.tabPage1.DragDrop += new System.Windows.Forms.DragEventHandler(this.tabPage1_DragDrop);
 			this.tabPage1.DragEnter += new System.Windows.Forms.DragEventHandler(this.tabPage1_DragEnter);
 			// 
@@ -258,23 +276,6 @@
 			// saveFileDialog1
 			// 
 			this.saveFileDialog1.Filter = "BT文件|*.bt";
-			// 
-			// treeView_BTree
-			// 
-			this.treeView_BTree.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.treeView_BTree.ImageIndex = 0;
-			this.treeView_BTree.ImageList = this.imageList1;
-			this.treeView_BTree.Location = new System.Drawing.Point(0, 0);
-			this.treeView_BTree.Name = "treeView_BTree";
-			this.treeView_BTree.SelectedImageIndex = 0;
-			this.treeView_BTree.Size = new System.Drawing.Size(200, 307);
-			this.treeView_BTree.TabIndex = 0;
-			// 
-			// closeToolStripMenuItem
-			// 
-			this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-			this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.closeToolStripMenuItem.Text = "Close";
 			// 
 			// FormMain
 			// 
