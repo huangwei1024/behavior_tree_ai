@@ -51,6 +51,8 @@
 			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+			this.contextMenuStrip_Node = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.nodeConnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -63,6 +65,7 @@
 			this.splitContainer3.SuspendLayout();
 			this.tabControl_BTree.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
+			this.contextMenuStrip_Node.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
@@ -175,6 +178,7 @@
 			// treeView_BTree
 			// 
 			this.treeView_BTree.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.treeView_BTree.HideSelection = false;
 			this.treeView_BTree.ImageIndex = 0;
 			this.treeView_BTree.ImageList = this.imageList1;
 			this.treeView_BTree.Location = new System.Drawing.Point(0, 0);
@@ -182,6 +186,7 @@
 			this.treeView_BTree.SelectedImageIndex = 0;
 			this.treeView_BTree.Size = new System.Drawing.Size(200, 307);
 			this.treeView_BTree.TabIndex = 0;
+			this.treeView_BTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_BTree_AfterSelect);
 			// 
 			// imageList1
 			// 
@@ -241,8 +246,12 @@
 			this.tabPage1.UseVisualStyleBackColor = true;
 			this.tabPage1.Paint += new System.Windows.Forms.PaintEventHandler(this.tabPage1_Paint);
 			this.tabPage1.DragOver += new System.Windows.Forms.DragEventHandler(this.tabPage1_DragOver);
-			this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
+			this.tabPage1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tabPage1_MouseMove);
 			this.tabPage1.DragDrop += new System.Windows.Forms.DragEventHandler(this.tabPage1_DragDrop);
+			this.tabPage1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tabPage1_MouseClick);
+			this.tabPage1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabPage1_MouseDown);
+			this.tabPage1.DragLeave += new System.EventHandler(this.tabPage1_DragLeave);
+			this.tabPage1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tabPage1_MouseUp);
 			this.tabPage1.DragEnter += new System.Windows.Forms.DragEventHandler(this.tabPage1_DragEnter);
 			// 
 			// propertyGrid1
@@ -277,6 +286,20 @@
 			// 
 			this.saveFileDialog1.Filter = "BT文件|*.bt";
 			// 
+			// contextMenuStrip_Node
+			// 
+			this.contextMenuStrip_Node.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nodeConnectToolStripMenuItem});
+			this.contextMenuStrip_Node.Name = "contextMenuStrip_Node";
+			this.contextMenuStrip_Node.Size = new System.Drawing.Size(125, 26);
+			// 
+			// nodeConnectToolStripMenuItem
+			// 
+			this.nodeConnectToolStripMenuItem.Name = "nodeConnectToolStripMenuItem";
+			this.nodeConnectToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+			this.nodeConnectToolStripMenuItem.Text = "节点连接";
+			this.nodeConnectToolStripMenuItem.Click += new System.EventHandler(this.nodeConnectToolStripMenuItem_Click);
+			// 
 			// FormMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -304,6 +327,7 @@
 			this.tabControl_BTree.ResumeLayout(false);
 			this.statusStrip1.ResumeLayout(false);
 			this.statusStrip1.PerformLayout();
+			this.contextMenuStrip_Node.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -333,6 +357,8 @@
 		private System.Windows.Forms.SaveFileDialog saveFileDialog1;
 		private System.Windows.Forms.PropertyGrid propertyGrid1;
 		private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
+		private System.Windows.Forms.ContextMenuStrip contextMenuStrip_Node;
+		private System.Windows.Forms.ToolStripMenuItem nodeConnectToolStripMenuItem;
 
     }
 }

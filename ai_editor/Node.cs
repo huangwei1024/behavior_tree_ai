@@ -32,6 +32,23 @@ namespace ai_editor
 			{
 				return pos;
 			}
+			set
+			{
+				pos = value;
+			}
+		}
+		public Point CenterPos
+		{
+			get
+			{
+				return new Point(pos.X + size.Width / 2, pos.Y + size.Height / 2);
+			}
+			set
+			{
+				pos = value;
+				pos.X -= size.Width / 2;
+				pos.Y -= size.Height / 2;
+			}
 		}
 		public Size Size
 		{
@@ -52,16 +69,8 @@ namespace ai_editor
 		{
 			g.DrawImage(bitmap, pos);
 		}
-		public virtual void Move(Point point)
-		{
-			point.X -= size.Width / 2;
-			point.Y -= size.Height / 2;
-			pos = point;
-		}
 
 		public abstract string ClassName { get;}
-		public abstract Point InPoint { get;}
-		public abstract Point OutPoint { get;}
 		public abstract Bitmap DefaultBitmap { get;}
 		public abstract NodeProperties DefaultProperties { get;}
 		public abstract ImageInfo DefaultImageInfo { get;}
@@ -84,6 +93,20 @@ namespace ai_editor
 			get
 			{
 				return bitmap;
+			}
+		}
+		public virtual Point InPoint 
+		{
+			get
+			{
+				return new Point(pos.X + size.Width / 2, pos.Y);
+			}
+		}
+		public virtual Point OutPoint
+		{
+			get
+			{
+				return new Point(pos.X + size.Width / 2, pos.Y + size.Height);
 			}
 		}
 
@@ -170,22 +193,6 @@ namespace ai_editor
 			get
 			{
 				return ChineseName;
-			}
-		}
-
-		public override Point InPoint
-		{
-			get
-			{
-				return new Point(bitmap.Size.Width / 2, 0);
-			}
-		}
-
-		public override Point OutPoint
-		{
-			get
-			{
-				return new Point(bitmap.Size.Width / 2, bitmap.Size.Height);
 			}
 		}
 
@@ -278,22 +285,6 @@ namespace ai_editor
 			}
 		}
 
-		public override Point InPoint
-		{
-			get
-			{
-				return new Point(0, 0);
-			}
-		}
-
-		public override Point OutPoint
-		{
-			get
-			{
-				return new Point(0, 0);
-			}
-		}
-
 		public override Bitmap DefaultBitmap
 		{
 			get
@@ -380,22 +371,6 @@ namespace ai_editor
 			get
 			{
 				return ChineseName;
-			}
-		}
-
-		public override Point InPoint
-		{
-			get
-			{
-				return new Point(0, 0);
-			}
-		}
-
-		public override Point OutPoint
-		{
-			get
-			{
-				return new Point(0, 0);
 			}
 		}
 
@@ -488,22 +463,6 @@ namespace ai_editor
 			}
 		}
 
-		public override Point InPoint
-		{
-			get
-			{
-				return new Point(0, 0);
-			}
-		}
-
-		public override Point OutPoint
-		{
-			get
-			{
-				return new Point(0, 0);
-			}
-		}
-
 		public override Bitmap DefaultBitmap
 		{
 			get
@@ -589,22 +548,6 @@ namespace ai_editor
 			get
 			{
 				return ChineseName;
-			}
-		}
-
-		public override Point InPoint
-		{
-			get
-			{
-				return new Point(0, 0);
-			}
-		}
-
-		public override Point OutPoint
-		{
-			get
-			{
-				return new Point(0, 0);
 			}
 		}
 

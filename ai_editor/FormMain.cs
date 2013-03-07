@@ -11,9 +11,25 @@ namespace ai_editor
 {
 	public partial class FormMain : Form
 	{
+		private AiTreeNode selectedNode;
+		private AiTreeNode dragNode;
+		private Point dragNodePosDist;
+		private Point movePoint;
+		private bool isConnectNode;
+		private string dragListNodeKey;
+
 		public FormMain()
 		{
 			InitializeComponent();
+
+			isConnectNode = false;
+		}
+
+		private void RefreshUI()
+		{
+			tabPage1.Refresh();
+			propertyGrid1.Refresh();
+			treeView_BTree.Refresh();
 		}
 
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -24,19 +40,6 @@ namespace ai_editor
 			}
 		}
 
-		private void tabPage1_Click(object sender, EventArgs e)
-		{
-			Point point = tabPage1.PointToClient(System.Windows.Forms.Control.MousePosition);
-			selectedNode = treeView_BTree.GetAiNodeAt(point.X, point.Y);
-			if (selectedNode == null)
-				return;
-
-			treeView_BTree.Focus();
-			treeView_BTree.SelectedNode = selectedNode.viewNode;
-
-			tabPage1.Refresh();
-			treeView_BTree.Refresh();
-		}
 
 		private void tabPage1_Paint(object sender, PaintEventArgs e)
 		{
@@ -55,7 +58,7 @@ namespace ai_editor
 
 			if (selectedNode != null)
 			{
-				Rectangle rect = new Rectangle(selectedNode.pageNode.Pos, selectedNode.pageNode.Size);
+				Rectangle rect = new Rectangle(selectedNode.PageNode.Pos, selectedNode.PageNode.Size);
 				rect.Inflate(4, 4);
 				using (Pen pen = new Pen(Color.DarkRed, 2))
 				{
@@ -63,19 +66,33 @@ namespace ai_editor
 				}
 			}
 
-			foreach (AiTreeNode aiNode in treeView_BTree.AiNodes)
-			{
-				aiNode.pageNode.Draw(g);
-			}
+			treeView_BTree.PageDraw(g);
 
-			// draw drag node
-			if (dragNode != null)
+			Point point = tabPage1.PointToClient(System.Windows.Forms.Control.MousePosition);
+			// draw list drag node
+			if (dragListNodeKey != null)
 			{
-				ImageInfo info = Node.ImageInfoMap[dragNode];
-				Point point = tabPage1.PointToClient(System.Windows.Forms.Control.MousePosition);
+				ImageInfo info = Node.ImageInfoMap[dragListNodeKey];
 				point.X -= info.size.Width / 2;
 				point.Y -= info.size.Height / 2;
 				g.DrawImage(info.image, point);
+			}
+
+			// draw drag node
+// 			if (dragNode != null)
+// 			{
+// 				point.X -= dragNodePosDist.X;
+// 				point.Y -= dragNodePosDist.Y;
+// 				g.DrawImage(dragNode.PageNode.Image, point);
+// 			}
+
+			// draw line
+			if (isConnectNode && selectedNode != null)
+			{
+				using (Pen pen = new Pen(Color.Black, 2))
+				{
+					g.DrawLine(pen, selectedNode.PageNode.OutPoint, point);
+				}
 			}
 		}
 
@@ -128,7 +145,7 @@ namespace ai_editor
 
 		private void FormMain_Resize(object sender, EventArgs e)
 		{
-			this.tabControl_BTree.Refresh();
+			RefreshUI();
 		}
 
 		private void listView_Node_ItemDrag(object sender, ItemDragEventArgs e)
@@ -144,22 +161,16 @@ namespace ai_editor
 
 		}
 
-		
-		private AiTreeNode selectedNode;
-		private DragEventArgs dragEvent;
-		private string dragNode;
 
 		private void tabPage1_DragEnter(object sender, DragEventArgs e)
 		{
 			//判断是否目前拖动的数据是字符串，如果是则拖动符串对目的组件进行拷贝
-			dragEvent = null;
-			dragNode = null;
+			dragListNodeKey = null;
 			if (e.Data.GetDataPresent(DataFormats.Text))
 			{
 				e.Effect = DragDropEffects.Move;
-				dragEvent = e;
 				string dummy = "temp";
-				dragNode = (string)dragEvent.Data.GetData(dummy.GetType());
+				dragListNodeKey = (string)e.Data.GetData(dummy.GetType());
 			}
 			else
 				e.Effect = DragDropEffects.None;
@@ -167,22 +178,166 @@ namespace ai_editor
 
 		private void tabPage1_DragOver(object sender, DragEventArgs e)
 		{
-			tabPage1.Refresh();
+			if (movePoint.X == e.X && movePoint.Y == e.Y)
+				return;
+
+			RefreshUI();
+			movePoint.X = e.X;
+			movePoint.Y = e.Y;
 		}
 
 		private void tabPage1_DragDrop(object sender, DragEventArgs e)
 		{
-			// insert node
-			AiTreeNode aiNode = treeView_BTree.AiNodes.AiAdd(dragNode);
-			propertyGrid1.SelectedObject = aiNode.pageNode.Props;
+			Point pagePoint = tabPage1.PointToClient(new Point(e.X, e.Y));
+			if (pagePoint.X < 0 || pagePoint.Y < 0 ||
+				pagePoint.X > tabPage1.Size.Width || pagePoint.Y > tabPage1.Size.Height)
+				return;
 
-			aiNode.pageNode.Move(tabPage1.PointToClient(new Point(e.X, e.Y)));
+			// insert node
+			AiTreeNode aiNode = treeView_BTree.AiNodes.AiAdd(dragListNodeKey);
+			propertyGrid1.SelectedObject = aiNode.PageNode.Props;
+
+			aiNode.PageNode.CenterPos = pagePoint;
 
 			// refresh
-			dragEvent = null;
+			dragListNodeKey = null;
+			RefreshUI();
+		}
+
+		private void treeView_BTree_AfterSelect(object sender, TreeViewEventArgs e)
+		{
+			if (treeView_BTree.Focused)
+				selectedNode = (AiTreeNode)e.Node;
+			RefreshUI();
+		}
+
+		private void tabPage1_MouseClick(object sender, MouseEventArgs e)
+		{
+			AiTreeNode clickNode = treeView_BTree.GetAiNodeAt(e.X, e.Y);
+
+			if (e.Button == MouseButtons.Left)
+			{
+				// 左键选择
+				if (isConnectNode)
+				{
+					isConnectNode = false;
+
+					// 连接
+					AiTreeNode selectedNode2 = treeView_BTree.GetAiNodeAt(e.X, e.Y);
+					if (selectedNode == null || selectedNode2 == null)
+						return;
+
+					string path = selectedNode.AiFullPath;
+					string path2 = selectedNode2.AiFullPath;
+					if (path.Substring(0, Math.Min(path2.Length, path.Length)) == path2)
+					{
+						MessageBox.Show("循环连接！", "ERROR");
+						return;
+					}
+					treeView_BTree.AiNodes.AiRemove(selectedNode2.Name, true);
+					selectedNode.AiNodes.AiAdd(selectedNode2);
+				}
+				else
+				{
+					selectedNode = clickNode;
+					treeView_BTree.SelectedNode = selectedNode;
+					propertyGrid1.SelectedObject = null;
+					if (clickNode == null)
+					{
+						RefreshUI();
+						return;
+					}
+
+					propertyGrid1.SelectedObject = selectedNode.PageNode.Props;
+				}
+			}
+			else if (e.Button == MouseButtons.Right)
+			{
+				// 右键选择
+				if (isConnectNode)
+				{
+					// 取消
+					isConnectNode = false;
+				}
+				else
+				{
+					selectedNode = clickNode;
+					contextMenuStrip_Node.Show(tabPage1, e.X, e.Y);
+				}
+			}
+
+			RefreshUI();
+		}
+
+		private void tabPage1_MouseDown(object sender, MouseEventArgs e)
+		{
 			dragNode = null;
-			treeView_BTree.Refresh();
-			tabPage1.Refresh();
+			if (e.Button == MouseButtons.Left)
+			{
+				// 左键拖拽
+				dragNode = treeView_BTree.GetAiNodeAt(e.X, e.Y);
+				if (dragNode != null)
+					dragNodePosDist = new Point(e.X - dragNode.PageNode.Pos.X, e.Y - dragNode.PageNode.Pos.Y);
+			}
+		}
+
+		private void tabPage1_MouseUp(object sender, MouseEventArgs e)
+		{
+			if (dragNode != null)
+			{
+				if (e.X < 0 || e.Y < 0 ||
+					e.X > tabPage1.Size.Width || e.Y > tabPage1.Size.Height)
+				{
+					treeView_BTree.AiNodes.AiRemove(dragNode.Name, true);
+				}
+				else
+				{
+					dragNodePosDist.X = e.X - dragNodePosDist.X;
+					dragNodePosDist.Y = e.Y - dragNodePosDist.Y;
+					dragNode.PageNode.Pos = dragNodePosDist;
+				}
+			}
+
+			dragNode = null;
+			isConnectNode = false;
+			RefreshUI();
+		}
+
+		private void tabPage1_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (movePoint.X == e.X && movePoint.Y == e.Y)
+				return;
+
+			movePoint.X = e.X;
+			movePoint.Y = e.Y;
+
+			if (dragNode != null)
+			{
+				selectedNode = null;
+				Point point = movePoint;
+				point.X -= dragNodePosDist.X;
+				point.Y -= dragNodePosDist.Y;
+				dragNode.PageNode.Pos = point;
+				RefreshUI();
+			}
+			else if (isConnectNode)
+			{
+				RefreshUI();
+			}
+			
+		}
+
+		private void nodeConnectToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (selectedNode == null)
+				return;
+
+			isConnectNode = true;
+		}
+
+		private void tabPage1_DragLeave(object sender, EventArgs e)
+		{
+			dragListNodeKey = null;
 		}
 
 	}

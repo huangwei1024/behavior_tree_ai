@@ -14,51 +14,7 @@ namespace ai_editor
 		public AiTreeView()
 		{
 			InitializeComponent();
-			root = new AiTreeNode(null, null);
-			root.nodes = this.Nodes;
-		}
-
-		public AiTreeNodeCollection AiNodes
-		{
-			get
-			{
-				return root.AiNodes;
-			}
-		}
-
-		public AiTreeNode GetAiNodeAt(int x, int y)
-		{
-			Point cPointBK = new Point(x, y);
-			foreach (AiTreeNode aiNode in AiNodes)
-			{
-				Point cPoint = cPointBK;
-				Point point = aiNode.pageNode.Pos;
-				if (cPoint.X < point.X || cPoint.Y < point.Y)
-					continue;
-				cPoint.X -= point.X;
-				cPoint.Y -= point.Y;
-				Size size = aiNode.pageNode.Size;
-				if (cPoint.X > size.Width || cPoint.Y > size.Height)
-					continue;
-				Color color = aiNode.pageNode.Bitmap.GetPixel(cPoint.X, cPoint.Y);
-				if (color.A > 0)
-					return aiNode;
-			}
-			return null;
-		}
-
-		private AiTreeNode root;
-	}
-
-	public class AiTreeNode
-	{
-		public AiTreeNode(Node page, TreeNode view)
-		{
-			pageNode = page;
-			viewNode = view;
-			if (viewNode != null)
-				nodes = viewNode.Nodes;
-			aiNodes = new AiTreeNodeCollection(this);
+			aiNodes = new AiTreeNodeCollection(Nodes);
 		}
 
 		public AiTreeNodeCollection AiNodes
@@ -69,25 +25,92 @@ namespace ai_editor
 			}
 		}
 
-		public TreeNodeCollection Nodes
+		public void PageDraw(Graphics g)
 		{
-			get
+			foreach (AiTreeNode aiNode in AiNodes)
 			{
-				return nodes;
+				aiNode.PageNode.Draw(g);
+				foreach (AiTreeNode subAiNode in aiNode.AiNodes.subNodes.Values)
+				{
+					g.DrawLine(Pens.Black, aiNode.PageNode.OutPoint, subAiNode.PageNode.InPoint);
+				}
 			}
 		}
 
-		public Node pageNode;
-		public TreeNode viewNode;
-		public TreeNodeCollection nodes;
-		public AiTreeNodeCollection aiNodes;
+		public AiTreeNode GetAiNodeAt(int x, int y)
+		{
+			Point cPointBK = new Point(x, y);
+			foreach (AiTreeNode aiNode in AiNodes)
+			{
+				Point cPoint = cPointBK;
+				Point point = aiNode.PageNode.Pos;
+				if (cPoint.X < point.X || cPoint.Y < point.Y)
+					continue;
+				cPoint.X -= point.X;
+				cPoint.Y -= point.Y;
+				Size size = aiNode.PageNode.Size;
+				if (cPoint.X > size.Width || cPoint.Y > size.Height)
+					continue;
+				Color color = aiNode.PageNode.Bitmap.GetPixel(cPoint.X, cPoint.Y);
+				if (color.A > 0)
+					return aiNode;
+			}
+			return null;
+		}
+
+
+		private AiTreeNodeCollection aiNodes;
+	}
+
+	public class AiTreeNode : TreeNode
+	{
+		public AiTreeNode(Node page)
+		{
+			pageNode = page;
+			aiNodes = new AiTreeNodeCollection(Nodes);
+		}
+
+		public Node PageNode
+		{
+			get
+			{
+				return pageNode;
+			}
+		}
+
+		public AiTreeNodeCollection AiNodes
+		{
+			get
+			{
+				return aiNodes;
+			}
+		}
+
+		public string AiFullPath
+		{
+			get
+			{
+				List<string> listPath = new List<string>();
+				TreeNode node = this;
+				while (node != null)
+				{
+					listPath.Add(node.Name);
+					node = node.Parent;
+				}
+				listPath.Reverse();
+				return string.Join(".", listPath.ToArray());
+			}
+		}
+
+		private Node pageNode;
+		private AiTreeNodeCollection aiNodes;
 	}
 
 	public class AiTreeNodeCollection : System.Collections.IEnumerable
 	{
-		public AiTreeNodeCollection(AiTreeNode node)
+		public AiTreeNodeCollection(TreeNodeCollection _nodes)
 		{
-			aiNode = node;
+			nodes = _nodes;
 			subNodes = new Dictionary<string, AiTreeNode>();
 		}
 
@@ -95,26 +118,50 @@ namespace ai_editor
 		{
 			ImageInfo info = Node.ImageInfoMap[nodeType];
 			Node pageNewNode = info.newNode();
-			TreeNode viewNewNode = aiNode.Nodes.Add(pageNewNode.Key, pageNewNode.Key, info.name, info.name);
-			AiTreeNode aiNewNode = new AiTreeNode(pageNewNode, viewNewNode);
+			AiTreeNode aiNewNode = new AiTreeNode(pageNewNode);
+			aiNewNode.Name = pageNewNode.Key;
+			aiNewNode.Text = pageNewNode.Key + " Text";
+			aiNewNode.ImageKey = aiNewNode.SelectedImageKey = info.name;
 
-			subNodes[pageNewNode.Key] = aiNewNode;
+			subNodes[aiNewNode.Name] = aiNewNode;
+			nodes.Add(aiNewNode);
 			return aiNewNode;
 		}
-		public void AiRemove(string key)
+		public AiTreeNode AiAdd(AiTreeNode node)
+		{
+			subNodes[node.Name] = node;
+			nodes.Add(node);
+			return node;
+		}
+		public bool AiRemove(string key, bool searchAll)
 		{
 			if (!subNodes.ContainsKey(key))
-				return;
+			{
+				if (searchAll)
+				{
+					foreach (AiTreeNode sunNode in subNodes.Values)
+						if (sunNode.AiNodes.AiRemove(key, true))
+							return true;
+				}
+				return false;
+			}
 
 			AiTreeNode node = subNodes[key];
-			aiNode.Nodes.Remove(node.viewNode);
+			subNodes.Remove(node.Name);
+			nodes.Remove(node);
+			return true;
 		}
+// 		public void AiRemove(AiTreeNode node)
+// 		{
+// 			subNodes.Remove(node.Name);
+// 			nodes.Remove(node);
+// 		}
 		public System.Collections.IEnumerator GetEnumerator()
 		{
 			return new AiTreeNodeEnum(this);
 		}
 
-		public AiTreeNode aiNode;
+		public TreeNodeCollection nodes;
 		public Dictionary<string, AiTreeNode> subNodes;
 	}
 
@@ -122,7 +169,7 @@ namespace ai_editor
 	{
 		private AiTreeNodeCollection collection;
 		private Dictionary<string, AiTreeNode>.Enumerator enumerator;
-		private Dictionary<string, AiTreeNode>.Enumerator subEnumerator;
+		private AiTreeNodeEnum subEnumerator;
 		bool subIn;
 
 		public AiTreeNodeEnum(AiTreeNodeCollection collect)
@@ -136,17 +183,12 @@ namespace ai_editor
 		{
 			if (subIn)
 			{
-				if (!subEnumerator.MoveNext())
-				{
-					subIn = false;
-					return false;
-				}
-				return true;
+				if (subEnumerator.MoveNext())
+					return true;
+				subIn = false;
 			}
 
-			if (!enumerator.MoveNext())
-				return false;
-			return true;
+			return enumerator.MoveNext();
 		}
 
 		public void Reset()
@@ -159,11 +201,11 @@ namespace ai_editor
 			get
 			{
 				if (subIn)
-					return subEnumerator.Current.Value;
+					return subEnumerator.Current;
 
 				if (enumerator.Current.Value.AiNodes.subNodes.Count > 0)
 				{
-					subEnumerator = (Dictionary<string, AiTreeNode>.Enumerator)enumerator.Current.Value.AiNodes.GetEnumerator();
+					subEnumerator = (AiTreeNodeEnum)enumerator.Current.Value.AiNodes.GetEnumerator();
 					subIn = true;
 				}
 				return enumerator.Current.Value;
