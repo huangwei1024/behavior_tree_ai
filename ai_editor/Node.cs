@@ -6,57 +6,25 @@ using System.Drawing.Drawing2D;
 
 namespace ai_editor
 {
-	public struct ImageInfo
-	{
-		public string name;
-		public string chName;
-		public Size size;
-		public Bitmap image;
-
-		public delegate Node NewNodeFunc();
-		public NewNodeFunc newNode;
-	}
-
 	public abstract class Node
 	{
-		protected Point pos;
-		protected Size size;
+		protected AiTreeNode aiNode;
 		protected NodeProperties properties;
-
 		protected int id;
-		protected Bitmap bitmap;
 
-		public Point Pos
+		public Node()
 		{
-			get
-			{
-				return pos;
-			}
+			properties = this.DefaultProperties;
+		}
+
+		public AiTreeNode AiNode
+		{
 			set
 			{
-				pos = value;
+				aiNode = value;
 			}
 		}
-		public Point CenterPos
-		{
-			get
-			{
-				return new Point(pos.X + size.Width / 2, pos.Y + size.Height / 2);
-			}
-			set
-			{
-				pos = value;
-				pos.X -= size.Width / 2;
-				pos.Y -= size.Height / 2;
-			}
-		}
-		public Size Size
-		{
-			get
-			{
-				return size;
-			}
-		}
+
 		public NodeProperties Props
 		{
 			get
@@ -65,69 +33,42 @@ namespace ai_editor
 			}
 		}
 
-		public virtual void Draw(Graphics g)
-		{
-			g.DrawImage(bitmap, pos);
-		}
-
 		public abstract string ClassName { get;}
-		public abstract Bitmap DefaultBitmap { get;}
 		public abstract NodeProperties DefaultProperties { get;}
-		public abstract ImageInfo DefaultImageInfo { get;}
 		public virtual string Key
 		{
 			get
 			{
-				return string.Format("{0}_{1}", ClassName, id);
+				return string.Format("{0}{1}", ClassName, id);
 			}
 		}
-		public virtual Image Image
+		public virtual string DispName
 		{
-			get
+			set
 			{
-				return bitmap;
+				aiNode.Text = DispName;
 			}
-		}
-		public virtual Bitmap Bitmap
-		{
 			get
 			{
-				return bitmap;
-			}
-		}
-		public virtual Point InPoint 
-		{
-			get
-			{
-				return new Point(pos.X + size.Width / 2, pos.Y);
-			}
-		}
-		public virtual Point OutPoint
-		{
-			get
-			{
-				return new Point(pos.X + size.Width / 2, pos.Y + size.Height);
+				if (Props.Name == null || Props.Name.Length == 0)
+					return Key;
+				return string.Format("{0}:{1}", Key, Props.Name);
 			}
 		}
 
-		protected static Dictionary<string, ImageInfo> mapImages;
-		public static Dictionary<string, ImageInfo> ImageInfoMap
+		public static Node CreateInstance(string key)
 		{
-			get
-			{
-				if (mapImages == null)
-					mapImages = new Dictionary<string, ImageInfo>();
-				return mapImages;
-			}
-		}
-
-		public Node()
-		{
-			bitmap = this.DefaultBitmap;
-			properties = this.DefaultProperties;
-			pos.X = 0;
-			pos.Y = 0;
-			size = this.DefaultImageInfo.size;
+			if (key == SelectorNode.Name)
+				return new SelectorNode();
+			else if (key == SequenceNode.Name)
+				return new SequenceNode();
+			else if (key == ParallelNode.Name)
+				return new ParallelNode();
+			else if (key == ConditionNode.Name)
+				return new ConditionNode();
+			else if (key == ActionNode.Name)
+				return new ActionNode();
+			return null;
 		}
 
 	}
@@ -135,41 +76,11 @@ namespace ai_editor
 
 	public class SelectorNode : Node
 	{
-		private static ImageInfo info;
 		private static int nodeCnt;
 
 		public SelectorNode()
 		{
 			id = ++nodeCnt;
-		}
-
-		public static Node NewNode()
-		{
-			return new SelectorNode();
-		}
-
-		public static Image NodeImage()
-		{
-			if (info.image != null)
-				return info.image;
-
-			info.name = Name;
-			info.chName = ChineseName;
-			info.size = new Size(50, 50);
-			info.image = new Bitmap(info.size.Width + 2, info.size.Height + 2);
-			info.newNode = new ImageInfo.NewNodeFunc(NewNode);
-
-			Font font = new Font("宋体", 12, FontStyle.Regular, GraphicsUnit.Pixel);
-			Graphics g = Graphics.FromImage(info.image);
-			g.SmoothingMode = SmoothingMode.AntiAlias;
-			{
-				Rectangle rect = new Rectangle(0, 0, info.size.Width, info.size.Height);
-				g.FillEllipse(Brushes.LightGreen, rect);
-				g.DrawEllipse(Pens.Black, rect);
-				g.DrawString(ChineseName, font, Brushes.Black, new Point(12, 18));
-			}
-			ImageInfoMap.Add(info.name, info);
-			return info.image;
 		}
 
 		public static string Name
@@ -196,14 +107,6 @@ namespace ai_editor
 			}
 		}
 
-		public override Bitmap DefaultBitmap
-		{
-			get
-			{
-				return new Bitmap(NodeImage());
-			}
-		}
-
 		public override NodeProperties DefaultProperties
 		{
 			get
@@ -212,19 +115,11 @@ namespace ai_editor
 			}
 		}
 
-		public override ImageInfo DefaultImageInfo 
-		{
-			get
-			{
-				return info;
-			}
-		}
 	}
 
 
 	public class SequenceNode : Node
 	{
-		private static ImageInfo info;
 		private static int nodeCnt;
 
 		public SequenceNode()
@@ -232,34 +127,6 @@ namespace ai_editor
 			id = ++nodeCnt;
 		}
 
-		public static Node NewNode()
-		{
-			return new SequenceNode();
-		}
-
-		public static Image NodeImage()
-		{
-			if (info.image != null)
-				return info.image;
-
-			info.name = Name;
-			info.chName = ChineseName;
-			info.size = new Size(50, 50);
-			info.image = new Bitmap(info.size.Width + 2, info.size.Height + 2);
-			info.newNode = new ImageInfo.NewNodeFunc(NewNode);
-
-			Font font = new Font("宋体", 12, FontStyle.Regular, GraphicsUnit.Pixel);
-			Graphics g = Graphics.FromImage(info.image);
-			g.SmoothingMode = SmoothingMode.AntiAlias;
-			{
-				Rectangle rect = new Rectangle(0, 0, info.size.Width, info.size.Height);
-				g.FillEllipse(Brushes.Green, rect);
-				g.DrawEllipse(Pens.Black, rect);
-				g.DrawString(ChineseName, font, Brushes.Black, new Point(12, 18));
-			}
-			ImageInfoMap.Add(info.name, info);
-			return info.image;
-		}
 
 		public static string Name
 		{
@@ -285,14 +152,6 @@ namespace ai_editor
 			}
 		}
 
-		public override Bitmap DefaultBitmap
-		{
-			get
-			{
-				return new Bitmap(NodeImage());
-			}
-		}
-
 		public override NodeProperties DefaultProperties
 		{
 			get
@@ -301,53 +160,16 @@ namespace ai_editor
 			}
 		}
 
-		public override ImageInfo DefaultImageInfo
-		{
-			get
-			{
-				return info;
-			}
-		}
 	}
 
 
 	public class ParallelNode : Node
 	{
-		private static ImageInfo info;
 		private static int nodeCnt;
 
 		public ParallelNode()
 		{
 			id = ++nodeCnt;
-		}
-
-		public static Node NewNode()
-		{
-			return new ParallelNode();
-		}
-
-		public static Image NodeImage()
-		{
-			if (info.image != null)
-				return info.image;
-
-			info.name = Name;
-			info.chName = ChineseName;
-			info.size = new Size(50, 50);
-			info.image = new Bitmap(info.size.Width + 2, info.size.Height + 2);
-			info.newNode = new ImageInfo.NewNodeFunc(NewNode);
-
-			Font font = new Font("宋体", 12, FontStyle.Regular, GraphicsUnit.Pixel);
-			Graphics g = Graphics.FromImage(info.image);
-			g.SmoothingMode = SmoothingMode.AntiAlias;
-			{
-				Rectangle rect = new Rectangle(0, 0, info.size.Width, info.size.Height);
-				g.FillEllipse(Brushes.LightBlue, rect);
-				g.DrawEllipse(Pens.Black, rect);
-				g.DrawString(ChineseName, font, Brushes.Black, new Point(12, 18));
-			}
-			ImageInfoMap.Add(info.name, info);
-			return info.image;
 		}
 
 		public static string Name
@@ -374,14 +196,6 @@ namespace ai_editor
 			}
 		}
 
-		public override Bitmap DefaultBitmap
-		{
-			get
-			{
-				return new Bitmap(NodeImage());
-			}
-		}
-
 		public override NodeProperties DefaultProperties
 		{
 			get
@@ -390,53 +204,16 @@ namespace ai_editor
 			}
 		}
 
-		public override ImageInfo DefaultImageInfo
-		{
-			get
-			{
-				return info;
-			}
-		}
 	}
 
 
 	public class ConditionNode : Node
 	{
-		private static ImageInfo info;
 		private static int nodeCnt;
 
 		public ConditionNode()
 		{
 			id = ++nodeCnt;
-		}
-
-		public static Node NewNode()
-		{
-			return new ConditionNode();
-		}
-
-		public static Image NodeImage()
-		{
-			if (info.image != null)
-				return info.image;
-
-			info.name = Name;
-			info.chName = ChineseName;
-			info.size = new Size(60, 30);
-			info.image = new Bitmap(info.size.Width + 2, info.size.Height + 2);
-			info.newNode = new ImageInfo.NewNodeFunc(NewNode);
-
-			Font font = new Font("宋体", 12, FontStyle.Regular, GraphicsUnit.Pixel);
-			Graphics g = Graphics.FromImage(info.image);
-			g.SmoothingMode = SmoothingMode.AntiAlias;
-			{
-				Rectangle rect = new Rectangle(0, 0, info.size.Width, info.size.Height);
-				g.FillRectangle(Brushes.Violet, rect);
-				g.DrawRectangle(Pens.Black, rect);
-				g.DrawString(ChineseName, font, Brushes.Black, new Point(15, 5));
-			}
-			ImageInfoMap.Add(info.name, info);
-			return info.image;
 		}
 
 		public static string Name
@@ -463,34 +240,18 @@ namespace ai_editor
 			}
 		}
 
-		public override Bitmap DefaultBitmap
-		{
-			get
-			{
-				return new Bitmap(NodeImage());
-			}
-		}
-
 		public override NodeProperties DefaultProperties
 		{
 			get
 			{
-				return new NodeProperties(this);
+				return new ConditionProperties(this);
 			}
 		}
 
-		public override ImageInfo DefaultImageInfo
-		{
-			get
-			{
-				return info;
-			}
-		}
 	}
 
 	public class ActionNode : Node
 	{
-		private static ImageInfo info;
 		private static int nodeCnt;
 
 		public ActionNode()
@@ -498,34 +259,6 @@ namespace ai_editor
 			id = ++nodeCnt;
 		}
 
-		public static Node NewNode()
-		{
-			return new ActionNode();
-		}
-
-		public static Image NodeImage()
-		{
-			if (info.image != null)
-				return info.image;
-
-			info.name = Name;
-			info.chName = ChineseName;
-			info.size = new Size(60, 30);
-			info.image = new Bitmap(info.size.Width + 2, info.size.Height + 2);
-			info.newNode = new ImageInfo.NewNodeFunc(NewNode);
-
-			Font font = new Font("宋体", 12, FontStyle.Regular, GraphicsUnit.Pixel);
-			Graphics g = Graphics.FromImage(info.image);
-			g.SmoothingMode = SmoothingMode.AntiAlias;
-			{
-				Rectangle rect = new Rectangle(0, 0, info.size.Width, info.size.Height);
-				g.FillRectangle(Brushes.OrangeRed, rect);
-				g.DrawRectangle(Pens.Black, rect);
-				g.DrawString(ChineseName, font, Brushes.Black, new Point(15, 5));
-			}
-			ImageInfoMap.Add(info.name, info);
-			return info.image;
-		}
 
 		public static string Name
 		{
@@ -551,28 +284,13 @@ namespace ai_editor
 			}
 		}
 
-		public override Bitmap DefaultBitmap
-		{
-			get
-			{
-				return new Bitmap(NodeImage());
-			}
-		}
-
 		public override NodeProperties DefaultProperties
 		{
 			get
 			{
-				return new NodeProperties(this);
+				return new ActionProperties(this);
 			}
 		}
 
-		public override ImageInfo DefaultImageInfo
-		{
-			get
-			{
-				return info;
-			}
-		}
 	}
 }
