@@ -23,15 +23,13 @@ namespace BehaviorTree
 /**
  * 
  */
-class ActionNode : public Node
+class ActionNode : public LeafNode
 {
 public:
 	ActionNode()						{}
 	virtual ~ActionNode()				{}
 
-	virtual Type		GetType()		{return NodeType_Action;}
-	virtual TypeStr		GetTypeStr()	{return "Action";}
-
+	virtual int				GetType()	{return NodeType_Action;}
 
 	/**
 	 * @brief ActionNode Execute
@@ -41,9 +39,9 @@ public:
 	 * for example to plan a path and move on it, to sense for the nearest enemies. 
 	 * Actions will typically coordinate and call into different game systems. 
 	 * They might run for one simulation tick ¨C one frame ¨C or might need to be ticked for multiple frames to finish their work.
-	 * @return 		ExecState
+	 * @return 		NodeExecState
 	 */
-	virtual ExecState	Execute()		{return NodeExec_Success;}
+	virtual NodeExecState	Execute()	{return NodeExec_Success;}
 
 protected:
 

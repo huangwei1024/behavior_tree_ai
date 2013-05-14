@@ -1,0 +1,46 @@
+package BehaviorPB;
+
+message Composite {
+	message Parallel {
+		required int32	policy		= 1;
+	}
+	optional Parallel	parallel	= 1;
+}
+	
+message Decorator {
+	message Loop {
+		required int32	loop_cnt	= 1;
+	}
+	optional Loop		loop		= 1;
+	
+	message Counter {
+		required int32	limit_cnt	= 1;
+	}
+	optional Counter	counter		= 2;
+}
+
+message Condition {
+}
+
+message Action {
+}
+
+message Link {
+	required string		sub_tree_name	= 1;
+}
+	
+message Node {
+	repeated Node		nodes		= 1;
+
+	required int32		type		= 2;
+	optional Composite	composite	= 3;
+	optional Decorator	decorator	= 4;
+	optional Condition	condition	= 5;
+	optional Action		action		= 6;
+	optional Link		link		= 7;
+}
+
+message Tree {
+	required string		name = 1;
+	required Node		root = 2;
+}

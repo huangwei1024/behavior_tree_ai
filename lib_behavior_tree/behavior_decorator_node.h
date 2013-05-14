@@ -23,12 +23,27 @@ namespace BehaviorTree
 /**
  * 
  */
-class DecoratorNode : public Node
+class DecoratorNode : public NonLeafNode
 {
 public:
-	virtual Type		GetType()		{return NodeType_Decorator;}
-	virtual TypeStr		GetTypeStr()	{return "Decorator";}
 
+	virtual int GetType()	{return NodeType_Decorator;}
+
+	virtual void AddChild(BaseNode* pChild)
+	{
+		if (!m_vChilds.empty())
+		{
+			assert(false);
+			return;
+		}
+
+		NonLeafNode::AddChild(pChild);
+	}
+
+	virtual void SwapChild(BaseNode* pChild1, BaseNode* pChild2)
+	{
+		assert(false);
+	}
 
 	/**
 	 * @brief DecoratorNode Execute
@@ -37,9 +52,9 @@ public:
 	 * Decorator nodes typically have only one child and are used to enforce a certain return state 
 	 * or to implement timers to restrict how often the child will run in a given amount 
 	 * of time or how often it can be executed without a pause.
-	 * @return 		ExecState
+	 * @return 		NodeExecState
 	 */
-	virtual ExecState Execute()
+	virtual NodeExecState Execute()
 	{
 		if (m_vChilds.empty())
 			return NodeExec_Fail;
@@ -49,7 +64,7 @@ public:
 	}
 
 protected:
-	virtual ExecState	_Decorate() = 0;
+	virtual NodeExecState	_Decorate() = 0;
 };
 
 /**
@@ -58,8 +73,7 @@ protected:
 class DecoratorNotNode : public DecoratorNode
 {
 public:
-	virtual Type		GetType()		{return NodeType_DecoratorNot;}
-	virtual TypeStr		GetTypeStr()	{return "DecoratorNot";}
+	virtual int GetType()	{return NodeType_DecoratorNot;}
 
 protected:
 	/**
@@ -67,11 +81,11 @@ protected:
 	 *
 	 * virtual protected 
 	 * Logic-Not, !exec;
-	 * @return 		ExecState
+	 * @return 		NodeExecState
 	 */
-	virtual ExecState _Decorate()
+	virtual NodeExecState _Decorate()
 	{
-		ExecState nOld = m_vChilds.front()->Execute();
+		NodeExecState nOld = m_vChilds.front()->Execute();
 		switch (nOld)
 		{
 		case NodeExec_Fail:
@@ -82,6 +96,7 @@ protected:
 			return NodeExec_Running;
 		}
 		assert(false);
+		return NodeExec_Fail;
 	}
 };
 
@@ -94,10 +109,12 @@ public:
 	DecoratorLoopNode() : m_nLoop(0)	{}
 	virtual ~DecoratorLoopNode()		{}
 
-	virtual Type		GetType()		{return NodeType_DecoratorLoop;}
-	virtual TypeStr		GetTypeStr()	{return "DecoratorLoop";}
+	virtual int	GetType()				{return NodeType_DecoratorLoop;}
 
-	void				SetLoop(int nLoop)		{m_nLoop = nLoop;}
+	void SetLoop(int nLoop)				{m_nLoop = nLoop;}
+
+	virtual bool LoadProto(const Proto* pProto);
+	virtual bool DumpProto(Proto* pProto);
 
 protected:
 	/**
@@ -105,11 +122,11 @@ protected:
 	 *
 	 * virtual protected 
 	 * Logic-Loop, for (loop) exec;
-	 * @return 		ExecState		last state
+	 * @return 		NodeExecState		last state
 	 */
-	virtual ExecState _Decorate()
+	virtual NodeExecState _Decorate()
 	{
-		ExecState nOld;
+		NodeExecState nOld;
 		for (int i = 0; i < m_nLoop; ++ i)
 			nOld = m_vChilds.front()->Execute();
 		return nOld;
@@ -118,7 +135,6 @@ protected:
 protected:
 	int					m_nLoop;
 };
-
 
 /**
  * 
@@ -130,37 +146,41 @@ public:
 		: m_nCount(0), m_nLimit(1)		{}
 	virtual ~DecoratorCounterNode()		{}
 
-	virtual Type		GetType()		{return NodeType_DecoratorCounter;}
-	virtual TypeStr		GetTypeStr()	{return "DecoratorCounter";}
+	virtual int GetType()				{return NodeType_DecoratorCounter;}
 
-	void				SetLimit(int nLimit)	{m_nLimit = nLimit;}
-	void				ClearCount()	{m_nCount = 0;}
+	void SetLimit(int nLimit)			{m_nLimit = nLimit;}
+	void ClearCount()					{m_nCount = 0;}
+
+	virtual bool LoadProto(const Proto* pProto);
+	virtual bool DumpProto(Proto* pProto);
 
 protected:
+
 	/**
 	 * @brief DecoratorLoopNode _Decorate
 	 *
 	 * virtual protected 
 	 * Logic-Loop, for (loop) exec;
-	 * @return 		ExecState		last state
+	 * @return 		NodeExecState		last state
 	 * @TODO if last Execute is running, will result false limit
 	 */
-	virtual ExecState _Decorate()
+	virtual NodeExecState _Decorate()
 	{
 		// TODO
 		if (m_nCount >= m_nLimit)
 			return NodeExec_Fail;
 
-		ExecState nOld = m_vChilds.front()->Execute();
-		if (nOld != NodeExec_Running)
+		NodeExecState nRet = m_vChilds.front()->Execute();
+		if (nRet == NodeExec_Success)
 			++ m_nCount;
-		return nOld;
+		return nRet;
 	}
 
 protected:
 	int					m_nLimit;
 	int					m_nCount;
 };
+
 
 };
 

@@ -23,15 +23,13 @@ namespace BehaviorTree
 /**
  * 
  */
-class ConditionNode : public Node
+class ConditionNode : public LeafNode
 {
 public:
 	ConditionNode()						{}
 	virtual ~ConditionNode()			{}
 
-	virtual Type		GetType()		{return NodeType_Condition;}
-	virtual TypeStr		GetTypeStr()	{return "Condition";}
-
+	virtual int				GetType()	{return NodeType_Condition;}
 
 	/**
 	 * @brief ConditionNode Execute
@@ -42,9 +40,9 @@ public:
 	 * will prevent the following nodes from being traversed during the update. 
 	 * When placed below a concurrent node, 
 	 * conditions become a kind of invariant check that prevents its sibling nodes from running if a necessary state becomes invalid.
-	 * @return 		ExecState
+	 * @return 		NodeExecState
 	 */
-	virtual ExecState	Execute()		{return NodeExec_Success;}
+	virtual NodeExecState	Execute()		{return NodeExec_Success;}
 
 protected:
 

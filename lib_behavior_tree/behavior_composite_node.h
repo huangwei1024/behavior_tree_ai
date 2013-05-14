@@ -21,17 +21,16 @@ namespace BehaviorTree
 {
 
 /**
+ * SelectorNode
  * 
  */
-class SelectorNode : public Node
+class SelectorNode : public NonLeafNode
 {
 public:
 	SelectorNode()						{}
 	virtual ~SelectorNode()				{}
 
-	virtual Type		GetType()		{return NodeType_Selector;}
-	virtual TypeStr		GetTypeStr()	{return "Selector";}
-
+	virtual int GetType()				{return NodeType_Selector;}
 
 	/**
 	 * @brief SelectorNode Execute
@@ -41,14 +40,14 @@ public:
 	 * if a child returns success then the selector will return success also. 
 	 * if a selector returns Failure the selector will move on to the next child and return running.
 	 * if a selector reaches the end of its child then it return failure and the next time it will start at the first child.
-	 * @return 		ExecState
+	 * @return 		NodeExecState
 	 */
-	virtual ExecState Execute()
+	virtual NodeExecState Execute()
 	{
 		PtrList::iterator it, itEnd = m_vChilds.end();
 		for (it = m_vChilds.begin(); it != itEnd; ++ it)
 		{
-			ExecState nRet = *it->Execute();
+			NodeExecState nRet = (*it)->Execute();
 			switch (nRet)
 			{
 			case NodeExec_Success:
@@ -66,14 +65,13 @@ protected:
 /**
  * 
  */
-class SequenceNode : public Node
+class SequenceNode : public NonLeafNode
 {
 public:
 	SequenceNode()						{}
 	virtual ~SequenceNode()				{}
 
-	virtual Type		GetType()		{return NodeType_Sequence;}
-	virtual TypeStr		GetTypeStr()	{return "Sequence";}
+	virtual int				GetType()	{return NodeType_Sequence;}
 
 	/**
 	 * @brief SequenceNode Execute
@@ -84,14 +82,14 @@ public:
 	 * return running will cause the sequence to return running and the next time the sequence is called the child that was running is called.
 	 * If all child would return success the sequence executes. When the sequence finishes the return result is success.
 	 * if a child fails then the sequence stops and also returns failure and the next time the sequence will start with the first child.
-	 * @return 		ExecState
+	 * @return 		NodeExecState
 	 */
-	virtual ExecState Execute()
+	virtual NodeExecState Execute()
 	{
 		PtrList::iterator it, itEnd = m_vChilds.end();
 		for (it = m_vChilds.begin(); it != itEnd; ++ it)
 		{
-			ExecState nRet = *it->Execute();
+			NodeExecState nRet = (*it)->Execute();
 			switch (nRet)
 			{
 			case NodeExec_Fail:
@@ -108,7 +106,10 @@ protected:
 
 
 /**
- * 
+ * ParallelPolicy_FailOnAll
+ *	全部fail，返回fail，否则succ
+ * ParallelPolicy_SuccOnAll
+ *	全部succ，返回succ，否则fail
  */
 
 enum ParallelPolicy
@@ -117,7 +118,10 @@ enum ParallelPolicy
 	ParallelPolicy_SuccOnAll,
 };
 
-class ParallelNode : public Node
+/**
+ * 
+ */
+class ParallelNode : public NonLeafNode
 {
 public:
 	ParallelNode() 
@@ -125,32 +129,31 @@ public:
 										{}
 	virtual ~ParallelNode()				{}
 
-	virtual Type		GetType()		{return NodeType_Sequence;}
-	virtual TypeStr		GetTypeStr()	{return "Parallel";}
+	virtual int				GetType()	{return NodeType_Parallel;}
 
 	/**
 	 * @brief ParallelNode Execute
 	 *
 	 * virtual public 
-	 * A parrallel component will tick all it’s childs the same time, 
+	 * A parallel component will tick all it’s childs the same time, 
 	 * unlike the sequence and selector (those will tick its child one by one).
-	 * @return 		ExecState
+	 * @return 		NodeExecState
 	 */
-	virtual ExecState Execute()
+	virtual NodeExecState Execute()
 	{
 		int nRetCnt[NodeExec_Total] = {0};
 		PtrList::iterator it, itEnd = m_vChilds.end();
 		for (it = m_vChilds.begin(); it != itEnd; ++ it)
 		{
-			++ nRetCnt[*it->Execute()];
+			++ nRetCnt[(*it)->Execute()];
 		}
 
 		switch (m_nPolicy)
 		{
 		case ParallelPolicy_FailOnAll:
-			return nRetCnt[NodeExec_Success] == 0;
+			return (nRetCnt[NodeExec_Success] == 0) ? NodeExec_Fail : NodeExec_Success;
 		case ParallelPolicy_SuccOnAll:
-			return nRetCnt[NodeExec_Fail] == 0;
+			return (nRetCnt[NodeExec_Fail] == 0) ? NodeExec_Success : NodeExec_Fail;
 		}
 		return NodeExec_Fail;
 	}
@@ -163,9 +166,13 @@ public:
 	 */
 	void SetPolicy(ParallelPolicy nPolicy)	{m_nPolicy = nPolicy;}
 
+	virtual bool LoadProto(const Proto* pProto);
+	virtual bool DumpProto(Proto* pProto);
+
 protected:
 	ParallelPolicy		m_nPolicy;
 };
+
 
 };
 

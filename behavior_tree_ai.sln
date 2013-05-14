@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ai_editor", "ai_editor\ai_editor.csproj", "{ED0E447C-A36E-41D4-98D5-BC454AAB120D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "behavior_tree_ai", "behavior_tree_ai\behavior_tree_ai.vcproj", "{CB6F2A15-4079-4666-B681-E6B0500A4742}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1} = {F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib_behavior_tree", "lib_behavior_tree\lib_behavior_tree.vcproj", "{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}"
 EndProject
@@ -36,8 +39,8 @@ Global
 		{CB6F2A15-4079-4666-B681-E6B0500A4742}.Release|Any CPU.ActiveCfg = Release|Win32
 		{CB6F2A15-4079-4666-B681-E6B0500A4742}.Release|Mixed Platforms.ActiveCfg = Release|Win32
 		{CB6F2A15-4079-4666-B681-E6B0500A4742}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{CB6F2A15-4079-4666-B681-E6B0500A4742}.Release|Win32.ActiveCfg = Debug|Win32
-		{CB6F2A15-4079-4666-B681-E6B0500A4742}.Release|Win32.Build.0 = Debug|Win32
+		{CB6F2A15-4079-4666-B681-E6B0500A4742}.Release|Win32.ActiveCfg = Release|Win32
+		{CB6F2A15-4079-4666-B681-E6B0500A4742}.Release|Win32.Build.0 = Release|Win32
 		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}.Debug|Mixed Platforms.Build.0 = Debug|Win32
@@ -46,8 +49,8 @@ Global
 		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}.Release|Any CPU.ActiveCfg = Release|Win32
 		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}.Release|Mixed Platforms.ActiveCfg = Release|Win32
 		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}.Release|Win32.ActiveCfg = Debug|Win32
-		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}.Release|Win32.Build.0 = Debug|Win32
+		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}.Release|Win32.ActiveCfg = Release|Win32
+		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
