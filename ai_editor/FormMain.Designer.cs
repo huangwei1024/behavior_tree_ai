@@ -35,16 +35,13 @@
 			this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-			this.treeView_BTree = new ai_editor.AiTreeView();
 			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
 			this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
 			this.contextMenuStrip_Node = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -57,12 +54,12 @@
 			this.删除节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.contextMenuStrip_Tree = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.新建根节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.treeView_BTree = new ai_editor.AiTreeView();
+			this.validateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
-			this.statusStrip1.SuspendLayout();
 			this.contextMenuStrip_Node.SuspendLayout();
 			this.contextMenuStrip_Tree.SuspendLayout();
 			this.SuspendLayout();
@@ -85,8 +82,7 @@
             this.newToolStripMenuItem,
             this.openToolStripMenuItem,
             this.saveToolStripMenuItem,
-            this.saveAsToolStripMenuItem,
-            this.closeToolStripMenuItem});
+            this.saveAsToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(39, 21);
 			this.fileToolStripMenuItem.Text = "File";
@@ -112,14 +108,17 @@
 			this.saveToolStripMenuItem.Text = "Save";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
-			// closeToolStripMenuItem
+			// saveAsToolStripMenuItem
 			// 
-			this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-			this.closeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.closeToolStripMenuItem.Text = "Close";
+			this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.saveAsToolStripMenuItem.Text = "SaveAs";
+			this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
 			// 
 			// editToolStripMenuItem
 			// 
+			this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.validateToolStripMenuItem});
 			this.editToolStripMenuItem.Name = "editToolStripMenuItem";
 			this.editToolStripMenuItem.Size = new System.Drawing.Size(42, 21);
 			this.editToolStripMenuItem.Text = "Edit";
@@ -157,23 +156,6 @@
 			this.splitContainer1.SplitterDistance = 558;
 			this.splitContainer1.TabIndex = 1;
 			// 
-			// treeView_BTree
-			// 
-			this.treeView_BTree.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.treeView_BTree.HideSelection = false;
-			this.treeView_BTree.ImageKey = "Action.png";
-			this.treeView_BTree.ImageList = this.imageList1;
-			this.treeView_BTree.Indent = 20;
-			this.treeView_BTree.Location = new System.Drawing.Point(0, 0);
-			this.treeView_BTree.Name = "treeView_BTree";
-			this.treeView_BTree.SelectedImageIndex = 0;
-			this.treeView_BTree.ShowNodeToolTips = true;
-			this.treeView_BTree.Size = new System.Drawing.Size(558, 449);
-			this.treeView_BTree.TabIndex = 0;
-			this.treeView_BTree.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeView_BTree_MouseClick);
-			this.treeView_BTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_BTree_AfterSelect);
-			this.treeView_BTree.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView_BTree_MouseDown);
-			// 
 			// imageList1
 			// 
 			this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
@@ -197,22 +179,6 @@
 			this.propertyGrid1.Name = "propertyGrid1";
 			this.propertyGrid1.Size = new System.Drawing.Size(265, 449);
 			this.propertyGrid1.TabIndex = 0;
-			// 
-			// statusStrip1
-			// 
-			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1});
-			this.statusStrip1.Location = new System.Drawing.Point(0, 452);
-			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(827, 22);
-			this.statusStrip1.TabIndex = 2;
-			this.statusStrip1.Text = "statusStrip1";
-			// 
-			// toolStripStatusLabel1
-			// 
-			this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-			this.toolStripStatusLabel1.Size = new System.Drawing.Size(131, 17);
-			this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
 			// 
 			// openFileDialog1
 			// 
@@ -297,19 +263,36 @@
 			this.新建根节点ToolStripMenuItem.Text = "新建根节点";
 			this.新建根节点ToolStripMenuItem.Click += new System.EventHandler(this.新建根节点ToolStripMenuItem_Click);
 			// 
-			// saveAsToolStripMenuItem
+			// treeView_BTree
 			// 
-			this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.saveAsToolStripMenuItem.Text = "SaveAs";
-			this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+			this.treeView_BTree.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.treeView_BTree.HideSelection = false;
+			this.treeView_BTree.HotTracking = true;
+			this.treeView_BTree.ImageKey = "Action.png";
+			this.treeView_BTree.ImageList = this.imageList1;
+			this.treeView_BTree.Indent = 30;
+			this.treeView_BTree.ItemHeight = 20;
+			this.treeView_BTree.Location = new System.Drawing.Point(0, 0);
+			this.treeView_BTree.Name = "treeView_BTree";
+			this.treeView_BTree.SelectedImageIndex = 0;
+			this.treeView_BTree.ShowNodeToolTips = true;
+			this.treeView_BTree.Size = new System.Drawing.Size(558, 449);
+			this.treeView_BTree.TabIndex = 0;
+			this.treeView_BTree.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeView_BTree_MouseUp);
+			this.treeView_BTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_BTree_AfterSelect);
+			// 
+			// validateToolStripMenuItem
+			// 
+			this.validateToolStripMenuItem.Name = "validateToolStripMenuItem";
+			this.validateToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.validateToolStripMenuItem.Text = "Validate";
+			this.validateToolStripMenuItem.Click += new System.EventHandler(this.validateToolStripMenuItem_Click);
 			// 
 			// FormMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(827, 474);
-			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
@@ -322,8 +305,6 @@
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			this.splitContainer1.ResumeLayout(false);
-			this.statusStrip1.ResumeLayout(false);
-			this.statusStrip1.PerformLayout();
 			this.contextMenuStrip_Node.ResumeLayout(false);
 			this.contextMenuStrip_Tree.ResumeLayout(false);
 			this.ResumeLayout(false);
@@ -340,15 +321,12 @@
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private AiTreeView treeView_BTree;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
 		private System.Windows.Forms.OpenFileDialog openFileDialog1;
 		private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
 		private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-		private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
 		private System.Windows.Forms.ContextMenuStrip contextMenuStrip_Node;
 		private System.Windows.Forms.PropertyGrid propertyGrid1;
 		private System.Windows.Forms.ToolStripMenuItem 新建节点ToolStripMenuItem;
@@ -361,6 +339,7 @@
 		private System.Windows.Forms.ContextMenuStrip contextMenuStrip_Tree;
 		private System.Windows.Forms.ToolStripMenuItem 新建根节点ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem validateToolStripMenuItem;
 
     }
 }

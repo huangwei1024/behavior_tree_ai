@@ -34,6 +34,7 @@ namespace ai_editor
 		}
 
 		public abstract string ClassName { get;}
+		public abstract string ClassNameEn { get;}
 		public abstract NodeProperties DefaultProperties { get;}
 		public virtual string Key
 		{
@@ -51,8 +52,8 @@ namespace ai_editor
 			get
 			{
 				if (Props.Name == null || Props.Name.Length == 0)
-					return Key;
-				return string.Format("{0}:{1}", Key, Props.Name);
+					return ClassName;
+				return string.Format("{0}:{1}", ClassName, Props.Name);
 			}
 		}
 
@@ -99,11 +100,29 @@ namespace ai_editor
 			}
 		}
 
+		public static int ObjCnt
+		{
+			set
+			{
+				nodeCnt = value;
+			}
+			get
+			{
+				return nodeCnt;
+			}
+		}
 		public override string ClassName
 		{
 			get
 			{
 				return ChineseName;
+			}
+		}
+		public override string ClassNameEn
+		{
+			get
+			{
+				return Name;
 			}
 		}
 
@@ -143,7 +162,17 @@ namespace ai_editor
 				return "顺序";
 			}
 		}
-
+		public static int ObjCnt
+		{
+			set
+			{
+				nodeCnt = value;
+			}
+			get
+			{
+				return nodeCnt;
+			}
+		}
 		public override string ClassName
 		{
 			get
@@ -151,7 +180,13 @@ namespace ai_editor
 				return ChineseName;
 			}
 		}
-
+		public override string ClassNameEn
+		{
+			get
+			{
+				return Name;
+			}
+		}
 		public override NodeProperties DefaultProperties
 		{
 			get
@@ -187,7 +222,17 @@ namespace ai_editor
 				return "并行";
 			}
 		}
-
+		public static int ObjCnt
+		{
+			set
+			{
+				nodeCnt = value;
+			}
+			get
+			{
+				return nodeCnt;
+			}
+		}
 		public override string ClassName
 		{
 			get
@@ -195,7 +240,13 @@ namespace ai_editor
 				return ChineseName;
 			}
 		}
-
+		public override string ClassNameEn
+		{
+			get
+			{
+				return Name;
+			}
+		}
 		public override NodeProperties DefaultProperties
 		{
 			get
@@ -231,7 +282,17 @@ namespace ai_editor
 				return "条件";
 			}
 		}
-
+		public static int ObjCnt
+		{
+			set
+			{
+				nodeCnt = value;
+			}
+			get
+			{
+				return nodeCnt;
+			}
+		}
 		public override string ClassName
 		{
 			get
@@ -239,7 +300,13 @@ namespace ai_editor
 				return ChineseName;
 			}
 		}
-
+		public override string ClassNameEn
+		{
+			get
+			{
+				return Name;
+			}
+		}
 		public override NodeProperties DefaultProperties
 		{
 			get
@@ -275,7 +342,17 @@ namespace ai_editor
 				return "行为";
 			}
 		}
-
+		public static int ObjCnt
+		{
+			set
+			{
+				nodeCnt = value;
+			}
+			get
+			{
+				return nodeCnt;
+			}
+		}
 		public override string ClassName
 		{
 			get
@@ -283,7 +360,13 @@ namespace ai_editor
 				return ChineseName;
 			}
 		}
-
+		public override string ClassNameEn
+		{
+			get
+			{
+				return Name;
+			}
+		}
 		public override NodeProperties DefaultProperties
 		{
 			get

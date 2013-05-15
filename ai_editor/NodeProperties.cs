@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Drawing.Design;
 using System.Windows.Forms.Design;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace ai_editor
 {
@@ -43,6 +44,30 @@ namespace ai_editor
 		{
 			get { return desc; }
 			set { desc = value; }
+		}
+
+		public static string GetNodeTypeFromXML(XmlElement elem)
+		{
+			return elem.GetAttribute("ClassNameEn");
+		}
+		public static string GetNodeKeyFromXML(XmlElement elem)
+		{
+			return elem.GetAttribute("Key");
+		}
+
+		public virtual void Save(XmlDocument doc, XmlElement elem)
+		{
+			elem.SetAttribute("ClassNameEn", node.ClassNameEn);
+			elem.SetAttribute("Key", Key);
+			elem.SetAttribute("Name", Name);
+			elem.SetAttribute("Desc", Desc);
+		}
+
+		public virtual void Load(XmlElement elem)
+		{
+			//Key = elem.GetAttribute("Key");
+			Name = elem.GetAttribute("Name");
+			Desc = elem.GetAttribute("Desc");
 		}
 	}
 
@@ -91,6 +116,21 @@ namespace ai_editor
 			get { return scriptPath; }
 			set { scriptPath = value; }
 		}
+
+		public override void Save(XmlDocument doc, XmlElement elem)
+		{
+			base.Save(doc, elem);
+
+			XmlElement props = doc.CreateElement("Condition");
+			props.SetAttribute("ScriptPath", ScriptPath);
+			elem.AppendChild(props);
+		}
+
+		public override void Load(XmlElement elem)
+		{
+			base.Load(elem);
+		
+		}
 	}
 
 	public class ActionProperties : NodeProperties
@@ -128,7 +168,7 @@ namespace ai_editor
 			Script,
 		}
 
-		private Action_Type actionMode;
+		private Action_Type actionType;
 		private Action_Move actionMove;
 		private string scriptPath;
 
@@ -146,7 +186,6 @@ namespace ai_editor
 			set { scriptPath = value; }
 		}
 
-
 		[CategoryAttribute("Action设置"),
 		DescriptionAttribute("类型"),
 		DefaultValueAttribute(Action_Type.Move)]
@@ -154,17 +193,17 @@ namespace ai_editor
 		{
 			set
 			{
-				actionMode = value;
+				actionType = value;
 				actionMove = null;
-				if (actionMode == Action_Type.PlayAni)
+				if (actionType == Action_Type.PlayAni)
 				{
 				}
-				else if (actionMode == Action_Type.Move)
+				else if (actionType == Action_Type.Move)
 				{
 					actionMove = new Action_Move();
 				}
 			}
-			get { return actionMode; }
+			get { return actionType; }
 		}
 
 		[CategoryAttribute("Action设置"),
@@ -173,6 +212,22 @@ namespace ai_editor
 		{
 			set { actionMove = value; }
 			get { return actionMove; }
+		}
+
+		public override void Save(XmlDocument doc, XmlElement elem)
+		{
+			base.Save(doc, elem);
+
+			XmlElement props = doc.CreateElement("Action");
+			props.SetAttribute("ScriptPath", ScriptPath);
+			props.SetAttribute("ActionMode", ActionType.ToString());
+			elem.AppendChild(props);
+		}
+
+		public override void Load(XmlElement elem)
+		{
+			base.Load(elem);
+
 		}
 	}
 }

@@ -26,6 +26,21 @@ namespace ai_editor
 			treeView_BTree.Refresh();
 		}
 
+		private void selectedNodeChange(AiTreeNode newSelected)
+		{
+			if (newSelected == selectedNode)
+				return;
+
+			selectedNode = newSelected;
+			if (selectedNode != null)
+			{
+				propertyGrid1.SelectedObject = newSelected.LogicNode.Props;
+				selectedNode.ExpandAll();
+			}
+			else
+				propertyGrid1.SelectedObject = null;
+		}
+
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			using (AboutBox about = new AboutBox())
@@ -37,20 +52,15 @@ namespace ai_editor
 
 		private void newToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			
+			filePath = null;
+			treeView_BTree.Nodes.Clear();
+			SelectorNode.ObjCnt = 0;
+			SequenceNode.ObjCnt = 0;
+			ParallelNode.ObjCnt = 0;
+			ActionNode.ObjCnt = 0;
+			ConditionNode.ObjCnt = 0;
 		}
 
-		private void dfs_save(XmlDocument doc, XmlElement root, TreeNodeCollection nodes)
-		{
-
-
-			foreach (AiTreeNode node in nodes)
-			{
-				XmlElement elem = doc.CreateElement("BTreeNode");
-				dfs_save(doc, elem, node.Nodes);
-				root.AppendChild(elem);
-			}
-		}
 
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -64,8 +74,7 @@ namespace ai_editor
 				return;
 
 			XmlDocument xmldoc = new XmlDocument();
-			XmlElement root = xmldoc.CreateElement("BTree");
-			dfs_save(xmldoc, root, treeView_BTree.Nodes);
+			treeView_BTree.SaveXML(xmldoc);
 			xmldoc.Save(filePath);
 		}
 
@@ -86,7 +95,10 @@ namespace ai_editor
 			if (filePath == null || filePath.Length == 0)
 				return;
 
-			// TODO load
+			XmlDocument xmldoc = new XmlDocument();
+			xmldoc.Load(filePath);
+			treeView_BTree.LoadXML(xmldoc);
+			treeView_BTree.ExpandAll();
 		}
 
 		private void FormMain_Load(object sender, EventArgs e)
@@ -105,31 +117,6 @@ namespace ai_editor
 			if (selectedNode == null)
 				return;
 
-		}
-
-		private void treeView_BTree_MouseClick(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Left)
-			{
-			}
-			else if (e.Button == MouseButtons.Right)
-			{
-				删除节点ToolStripMenuItem.Enabled = true;
-				selectedNode = (AiTreeNode)treeView_BTree.SelectedNode;
-				contextMenuStrip_Node.Show(treeView_BTree.PointToScreen(new Point(e.X, e.Y)));
-			}
-		}
-
-		private void treeView_BTree_MouseDown(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Left)
-			{
-			}
-			else if (e.Button == MouseButtons.Right)
-			{
-				selectedNode = null;
-				contextMenuStrip_Tree.Show(treeView_BTree.PointToScreen(new Point(e.X, e.Y)));
-			}
 		}
 
 		private AiTreeNode insertAiTreeNode(string nodeType)
@@ -174,9 +161,7 @@ namespace ai_editor
 
 		private void treeView_BTree_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			e.Node.ExpandAll();
-			AiTreeNode aiNode = (AiTreeNode)e.Node;
-			propertyGrid1.SelectedObject = aiNode.LogicNode.Props;
+			selectedNodeChange((AiTreeNode)e.Node);
 		}
 
 		private void 新建根节点ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -185,7 +170,42 @@ namespace ai_editor
 			insertAiTreeNode(SelectorNode.Name);
 		}
 
-		
+		private void treeView_BTree_MouseUp(object sender, MouseEventArgs e)
+		{
+			TreeViewHitTestInfo info = treeView_BTree.HitTest(e.X, e.Y);
+			
+			if (e.Button == MouseButtons.Left)
+			{
+			}
+			else if (e.Button == MouseButtons.Right)
+			{
+				if (info.Location == TreeViewHitTestLocations.RightOfLabel ||
+					info.Location == TreeViewHitTestLocations.None)
+					selectedNodeChange(null);
+				else
+					selectedNodeChange((AiTreeNode)treeView_BTree.SelectedNode);
+
+				if (selectedNode != null)
+				{
+					contextMenuStrip_Node.Show(Cursor.Position);
+				}
+				else
+				{
+					contextMenuStrip_Tree.Show(Cursor.Position);
+				}
+			}
+		}
+
+	
+		private void validateToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			string desc = new string;
+			if (treeView_BTree.IsValid(desc))
+				MessageBox.Show("BTree节点正常");
+			else
+				MessageBox.Show(desc);
+		}
+
 
 	}
 
