@@ -50,6 +50,7 @@
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
+				DisableSpecificWarnings="4244;4267;4311;4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -62,6 +63,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="Winmm.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -111,6 +113,7 @@
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
+				DisableSpecificWarnings="4244;4267;4311;4996"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -123,6 +126,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="Winmm.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"

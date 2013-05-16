@@ -28,6 +28,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net, Version=2.0.0.622, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -49,14 +50,25 @@
     <Compile Include="AiTree.Designer.cs">
       <DependentUpon>AiTree.cs</DependentUpon>
     </Compile>
+    <Compile Include="BehaviorPB.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Node.cs" />
-    <Compile Include="NodeProperties.cs" />
+    <Compile Include="NodeDef\ActionNode.cs" />
+    <Compile Include="NodeDef\ConditionNode.cs" />
+    <Compile Include="NodeDef\DecoratorCounterNode.cs" />
+    <Compile Include="NodeDef\DecoratorLoopNode.cs" />
+    <Compile Include="NodeDef\DecoratorNotNode.cs" />
+    <Compile Include="NodeDef\DecoratorTimerNode.cs" />
+    <Compile Include="NodeDef\LinkNode.cs" />
+    <Compile Include="NodeDef\Node.cs" />
+    <Compile Include="NodeDef\ParallelNode.cs" />
+    <Compile Include="NodeDef\SelectorNode.cs" />
+    <Compile Include="NodeDef\SequenceNode.cs" />
+    <Compile Include="NodeDef\Tree.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutBox.resx">

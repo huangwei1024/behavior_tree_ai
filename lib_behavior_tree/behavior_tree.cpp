@@ -10,8 +10,6 @@
 #include "behavior_action_node.h"
 #include "behavior_link_node.h"
 
-#include "protobuf/BehaviorPB.pb.h"
-
 namespace BehaviorTree
 {
 
@@ -57,13 +55,12 @@ bool NonLeafNode::LoadProto( const Proto* pProto )
 	{
 		const Proto* pChildProto = &pProto->nodes(i);
 		BaseNode* pChild = NodeFactory::CreateInstance(pChildProto->type());
+		AddChild(pChild);
 		if (!pChild->LoadProto(pChildProto))
 		{
-			SafeDelete(pChild);
+			ClearChild();
 			return false;
 		}
-
-		AddChild(pChild);
 	}
 
 	return true;
@@ -93,14 +90,10 @@ bool ParallelNode::LoadProto( const Proto* pProto )
 	if (!NonLeafNode::LoadProto(pProto))
 		return false;
 	
-	if (!pProto->has_composite())
+	if (!pProto->has_parallel())
 		return false;
 
-	const BehaviorPB::Composite* comp = &pProto->composite();
-	if (!comp->has_parallel())
-		return false;
-
-	const BehaviorPB::Composite::Parallel* paral = &comp->parallel();
+	const BehaviorPB::Parallel* paral = &pProto->parallel();
 	m_nPolicy = (ParallelPolicy)paral->policy();
 
 	return true;
@@ -111,8 +104,7 @@ bool ParallelNode::DumpProto( Proto* pProto )
 	if (!NonLeafNode::DumpProto(pProto))
 		return false;
 
-	BehaviorPB::Composite* comp = pProto->mutable_composite();
-	BehaviorPB::Composite::Parallel* paral = comp->mutable_parallel();
+	BehaviorPB::Parallel* paral = pProto->mutable_parallel();
 
 	paral->set_policy(m_nPolicy);
 	return true;
@@ -123,14 +115,10 @@ bool DecoratorLoopNode::LoadProto( const Proto* pProto )
 	if (!DecoratorNode::LoadProto(pProto))
 		return false;
 
-	if (!pProto->has_decorator())
+	if (!pProto->has_d_loop())
 		return false;
 
-	const BehaviorPB::Decorator* decor = &pProto->decorator();
-	if (!decor->has_loop())
-		return false;
-
-	const BehaviorPB::Decorator::Loop* loop = &decor->loop();
+	const BehaviorPB::DecoratorLoop* loop = &pProto->d_loop();
 	m_nLoop = loop->loop_cnt();
 
 	return true;
@@ -141,8 +129,7 @@ bool DecoratorLoopNode::DumpProto( Proto* pProto )
 	if (!DecoratorNode::DumpProto(pProto))
 		return false;
 
-	BehaviorPB::Decorator* decor = pProto->mutable_decorator();
-	BehaviorPB::Decorator::Loop* loop = decor->mutable_loop();
+	BehaviorPB::DecoratorLoop* loop = pProto->mutable_d_loop();
 
 	loop->set_loop_cnt(m_nLoop);
 	return true;
@@ -154,14 +141,10 @@ bool DecoratorCounterNode::LoadProto( const Proto* pProto )
 	if (!DecoratorNode::LoadProto(pProto))
 		return false;
 
-	if (!pProto->has_decorator())
+	if (!pProto->has_d_counter())
 		return false;
 
-	const BehaviorPB::Decorator* decor = &pProto->decorator();
-	if (!decor->has_counter())
-		return false;
-
-	const BehaviorPB::Decorator::Counter* counter = &decor->counter();
+	const BehaviorPB::DecoratorCounter* counter = &pProto->d_counter();
 	m_nLimit = counter->limit_cnt();
 
 	return true;
@@ -172,8 +155,7 @@ bool DecoratorCounterNode::DumpProto( Proto* pProto )
 	if (!DecoratorNode::DumpProto(pProto))
 		return false;
 
-	BehaviorPB::Decorator* decor = pProto->mutable_decorator();
-	BehaviorPB::Decorator::Counter* counter = decor->mutable_counter();
+	BehaviorPB::DecoratorCounter* counter = pProto->mutable_d_counter();
 
 	counter->set_limit_cnt(m_nLimit);
 	return true;
@@ -201,6 +183,32 @@ bool LinkNode::DumpProto( Proto* pProto )
 	BehaviorPB::Link* link = pProto->mutable_link();
 
 	link->set_sub_tree_name(m_sSubTreeName);
+	return true;
+}
+
+//-------------------------------------------------------------------------
+bool DecoratorTimerNode::LoadProto( const Proto* pProto )
+{
+	if (!LeafNode::LoadProto(pProto))
+		return false;
+
+	if (!pProto->has_d_timer())
+		return false;
+
+	const BehaviorPB::DecoratorTimer* d_timer = &pProto->d_timer();
+	SetElpase(d_timer->elpase());
+
+	return true;
+}
+
+bool DecoratorTimerNode::DumpProto( Proto* pProto )
+{
+	if (!LeafNode::DumpProto(pProto))
+		return false;
+
+	BehaviorPB::DecoratorTimer* d_timer = pProto->mutable_d_timer();
+
+	d_timer->set_elpase(m_nElpase);
 	return true;
 }
 
@@ -236,9 +244,8 @@ BaseNode* NodeFactory::CreateInstance( int nType )
 		return new DecoratorLoopNode();
 	case NodeType_DecoratorCounter:
 		return new DecoratorCounterNode();
-	case NodeType_DecoratorTime:
-		assert(false);
-		return NULL;
+	case NodeType_DecoratorTimer:
+		return new DecoratorTimerNode();
 	}
 
 	NodeClassMap::iterator it = ms_mapNodes.find(nType);
@@ -333,18 +340,24 @@ bool Tree::LoadFile( const char* szFile )
 	if (!pProto->ParseFromIstream(&input))
 		return false;
 
-	pProto->PrintDebugString();
+	pProto->PrintDebugString(); // debug output
 
 	m_sName = pProto->name();
 
 	const NonLeafNode::Proto* pRootProto = &pProto->root();
 	BaseNode* pNode = NodeFactory::CreateInstance(pRootProto->type());
-	if (NULL == pNode || !pNode->LoadProto(pRootProto))
+	if (NULL == pNode)
 	{
 		SafeDelete(pNode);
 		return false;
 	}
+
 	SetRoot(pNode);
+	if (!pNode->LoadProto(pRootProto))
+	{
+		SafeDelete(pNode);
+		return false;
+	}
 
 	delete pProto;
 	TreeProtoFactory::Register(m_sName, szFile);
@@ -356,13 +369,16 @@ bool Tree::LoadFile( const char* szFile )
 TreeProtoFactory::TreeProtoMap TreeProtoFactory::ms_mapTree;
 
 
-Tree* TreeProtoFactory::CreateInstance( TreeName sName )
+Tree* TreeProtoFactory::CreateInstance( TreeName sName, Tree* pParentTree /*= NULL*/, BlackBoard* pBlackboard /*= NULL*/ )
 {
 	TreeProtoMap::iterator it = ms_mapTree.find(sName);
 	if (it == ms_mapTree.end())
 		return NULL;
+	
+	if (pBlackboard == NULL && pParentTree != NULL)
+		pBlackboard = pParentTree->GetBlackboard();
 
-	Tree* pTree = new Tree;
+	Tree* pTree = new Tree(pBlackboard);
 	if (!pTree->LoadFile(it->second.c_str()))
 		SafeDelete(pTree);
 	

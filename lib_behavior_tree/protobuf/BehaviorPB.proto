@@ -1,46 +1,102 @@
+// 1.不要更改任何已有的字段的数值标识。
+// 2.你添加的任何字段都必须是optional或repeated的。
+// 3.数值标示范围1 - 536,870,911，不能包含19000 - 19999 
+
 package BehaviorPB;
 
-message Composite {
-	message Parallel {
-		required int32	policy		= 1;
-	}
-	optional Parallel	parallel	= 1;
+enum NodeType {
+	NodeType_Null				= 0;
+	NodeType_Selector			= 1;
+	NodeType_Sequence			= 2;
+	NodeType_Parallel			= 3;
+	NodeType_Action				= 4;
+	NodeType_Condition			= 5;
+	NodeType_Link				= 6;
+	NodeType_Decorator			= 7;
+	NodeType_DecoratorNot		= 8;
+	NodeType_DecoratorLoop		= 9;
+	NodeType_DecoratorCounter	= 10;
+	NodeType_DecoratorTimer		= 11;
+	
+	// NodeType_(类名)
+	// 不一致会导致BehaviorTree::NodeFactory::Register编译不过
+	
+	
+	
+	NodeType_PrintfDecoratorCounter	= 997; // test
+	NodeType_PrintfCondtion			= 998; // test
+	NodeType_PrintfAction			= 999; // test
 }
 	
-message Decorator {
-	message Loop {
-		required int32	loop_cnt	= 1;
-	}
-	optional Loop		loop		= 1;
-	
-	message Counter {
-		required int32	limit_cnt	= 1;
-	}
-	optional Counter	counter		= 2;
+message Selector {
 }
 
-message Condition {
+message Sequence {
+}
+
+message Parallel {
+	required int32		policy				= 1;
 }
 
 message Action {
+	required string		script_path			= 1;
+}
+
+message Condition {
+	required string		script_path			= 1;
 }
 
 message Link {
-	required string		sub_tree_name	= 1;
+	required string		sub_tree_name		= 1;
 }
 	
-message Node {
-	repeated Node		nodes		= 1;
+message DecoratorNot {
+}
 
-	required int32		type		= 2;
-	optional Composite	composite	= 3;
-	optional Decorator	decorator	= 4;
-	optional Condition	condition	= 5;
-	optional Action		action		= 6;
-	optional Link		link		= 7;
+message DecoratorLoop {
+	required int32	loop_cnt				= 1;
+}
+
+message DecoratorCounter {
+	required int32	limit_cnt				= 1;
+}
+
+message DecoratorTimer {
+	required int32	elpase					= 1;
+}
+
+
+message Node {
+	message Editor {
+		required int32	id					= 1;
+		required string	key					= 2;
+		required string	name				= 3;
+		required string	desc				= 4;
+	}
+	
+	optional Editor				editor		= 1; // editor only
+	repeated Node				nodes		= 2;
+	required int32				type		= 3; // NodeType
+	optional Selector			selector	= 4;
+	optional Sequence			sequence	= 5;
+	optional Parallel			parallel	= 6;
+	optional Action				action		= 7;
+	optional Condition			condition	= 8;
+	optional Link				link		= 9;
+	optional DecoratorNot		d_not		= 10;
+	optional DecoratorLoop		d_loop		= 11;
+	optional DecoratorCounter	d_counter	= 12;
+	optional DecoratorTimer		d_timer		= 13;
+	// 新增类型序号递增，一定得是optional
+	// 没有相关配置属性的，这里可以不定义
 }
 
 message Tree {
-	required string		name = 1;
-	required Node		root = 2;
+	message Editor {
+		required string	desc				= 1;
+	}
+	
+	optional Editor		editor				= 1; // editor only
+	required string		name				= 2;
+	required Node		root				= 3;
 }

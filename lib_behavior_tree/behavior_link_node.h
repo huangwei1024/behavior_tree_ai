@@ -39,7 +39,7 @@ public:
 	{
 		m_sSubTreeName = sTreeName;
 		SafeDelete(m_pSubTree);
-		m_pSubTree = TreeProtoFactory::CreateInstance(sTreeName);
+		m_pSubTree = TreeProtoFactory::CreateInstance(sTreeName, m_pTree);
 	}
 
 	/**

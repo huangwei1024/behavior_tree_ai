@@ -25,6 +25,15 @@
 #include <algorithm>
 #include <functional>
 
+// conversion from '__w64 int' to 'int', possible loss of data
+#pragma warning(disable : 4244)
+// conversion from 'size_t' to 'int', possible loss of data
+#pragma warning(disable : 4267)
+// pointer truncation from 'void *' to 'int'
+#pragma warning(disable : 4311)
+
+#include "protobuf/BehaviorPB.pb.h"
+
 //-------------------------------------------------------------------------
 
 #define SafeDelete(p)			{if (p) {delete (p); (p) = NULL;}}
@@ -33,10 +42,6 @@
 //-------------------------------------------------------------------------
 // Node Register Macro Sample 
 // 
-// enum {
-//		NodeType_UserTypeStart = NodeType_UserCustom,
-// 		NodeTypeDef(class1),
-// };
 // 
 // class class1 : public ConditionNode {
 // public:
@@ -62,12 +67,30 @@
  * use in every derived node class
  */
 #define NodeFactoryDef(cls) \
-	static BehaviorTree::BaseNode* CreateInstance() {return new cls;} \
-	static void Register() {BehaviorTree::NodeFactory::Register(NodeType_##cls, \
+	static BehaviorTree::BaseNode* CreateInstance() {return new cls();} \
+	static void Register() {BehaviorTree::NodeFactory::Register(BehaviorPB::NodeType_##cls, \
 	BehaviorTree::NodeFactory::CreateCallback(&cls::CreateInstance));} \
-	virtual int	GetType() {return NodeType_##cls;}
+	virtual int	GetType() {return BehaviorPB::NodeType_##cls;}
 
 //-------------------------------------------------------------------------
+namespace BehaviorPB
+{
+	class Tree;
+	class Node;
+};
+
+using BehaviorPB::NodeType_Null;
+using BehaviorPB::NodeType_Selector;
+using BehaviorPB::NodeType_Sequence;
+using BehaviorPB::NodeType_Parallel;
+using BehaviorPB::NodeType_Action;
+using BehaviorPB::NodeType_Condition;
+using BehaviorPB::NodeType_Link;
+using BehaviorPB::NodeType_Decorator;
+using BehaviorPB::NodeType_DecoratorNot;
+using BehaviorPB::NodeType_DecoratorLoop;
+using BehaviorPB::NodeType_DecoratorCounter;
+using BehaviorPB::NodeType_DecoratorTimer;
 
 namespace BehaviorTree
 {
@@ -89,24 +112,6 @@ enum NodeExecState
 	NodeExec_Running,
 
 	NodeExec_Total
-};
-
-enum NodeType
-{
-	NodeType_Null = 0,
-	NodeType_Selector,
-	NodeType_Sequence,
-	NodeType_Parallel,
-	NodeType_Action,
-	NodeType_Condition,
-	NodeType_Link,
-	NodeType_Decorator,
-	NodeType_DecoratorNot,
-	NodeType_DecoratorLoop,
-	NodeType_DecoratorCounter,
-	NodeType_DecoratorTime,
-
-	NodeType_UserCustom = 100,
 };
 
 };

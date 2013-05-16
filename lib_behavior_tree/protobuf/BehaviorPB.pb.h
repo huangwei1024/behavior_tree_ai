@@ -23,6 +23,7 @@
 #include <google/protobuf/message.h>
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
+#include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 
@@ -33,27 +34,63 @@ void  protobuf_AddDesc_BehaviorPB_2eproto();
 void protobuf_AssignDesc_BehaviorPB_2eproto();
 void protobuf_ShutdownFile_BehaviorPB_2eproto();
 
-class Composite;
-class Composite_Parallel;
-class Decorator;
-class Decorator_Loop;
-class Decorator_Counter;
-class Condition;
+class Selector;
+class Sequence;
+class Parallel;
 class Action;
+class Condition;
 class Link;
+class DecoratorNot;
+class DecoratorLoop;
+class DecoratorCounter;
+class DecoratorTimer;
 class Node;
+class Node_Editor;
 class Tree;
+class Tree_Editor;
 
+enum NodeType {
+  NodeType_Null = 0,
+  NodeType_Selector = 1,
+  NodeType_Sequence = 2,
+  NodeType_Parallel = 3,
+  NodeType_Action = 4,
+  NodeType_Condition = 5,
+  NodeType_Link = 6,
+  NodeType_Decorator = 7,
+  NodeType_DecoratorNot = 8,
+  NodeType_DecoratorLoop = 9,
+  NodeType_DecoratorCounter = 10,
+  NodeType_DecoratorTimer = 11,
+  NodeType_PrintfDecoratorCounter = 997,
+  NodeType_PrintfCondtion = 998,
+  NodeType_PrintfAction = 999
+};
+bool NodeType_IsValid(int value);
+const NodeType NodeType_MIN = NodeType_Null;
+const NodeType NodeType_MAX = NodeType_PrintfAction;
+const int NodeType_ARRAYSIZE = NodeType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* NodeType_descriptor();
+inline const ::std::string& NodeType_Name(NodeType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    NodeType_descriptor(), value);
+}
+inline bool NodeType_Parse(
+    const ::std::string& name, NodeType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<NodeType>(
+    NodeType_descriptor(), name, value);
+}
 // ===================================================================
 
-class Composite_Parallel : public ::google::protobuf::Message {
+class Selector : public ::google::protobuf::Message {
  public:
-  Composite_Parallel();
-  virtual ~Composite_Parallel();
+  Selector();
+  virtual ~Selector();
 
-  Composite_Parallel(const Composite_Parallel& from);
+  Selector(const Selector& from);
 
-  inline Composite_Parallel& operator=(const Composite_Parallel& from) {
+  inline Selector& operator=(const Selector& from) {
     CopyFrom(from);
     return *this;
   }
@@ -67,17 +104,161 @@ class Composite_Parallel : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Composite_Parallel& default_instance();
+  static const Selector& default_instance();
 
-  void Swap(Composite_Parallel* other);
+  void Swap(Selector* other);
 
   // implements Message ----------------------------------------------
 
-  Composite_Parallel* New() const;
+  Selector* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Composite_Parallel& from);
-  void MergeFrom(const Composite_Parallel& from);
+  void CopyFrom(const Selector& from);
+  void MergeFrom(const Selector& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:BehaviorPB.Selector)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[1];
+
+  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
+  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
+  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
+
+  void InitAsDefaultInstance();
+  static Selector* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Sequence : public ::google::protobuf::Message {
+ public:
+  Sequence();
+  virtual ~Sequence();
+
+  Sequence(const Sequence& from);
+
+  inline Sequence& operator=(const Sequence& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Sequence& default_instance();
+
+  void Swap(Sequence* other);
+
+  // implements Message ----------------------------------------------
+
+  Sequence* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Sequence& from);
+  void MergeFrom(const Sequence& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:BehaviorPB.Sequence)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[1];
+
+  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
+  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
+  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
+
+  void InitAsDefaultInstance();
+  static Sequence* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Parallel : public ::google::protobuf::Message {
+ public:
+  Parallel();
+  virtual ~Parallel();
+
+  Parallel(const Parallel& from);
+
+  inline Parallel& operator=(const Parallel& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Parallel& default_instance();
+
+  void Swap(Parallel* other);
+
+  // implements Message ----------------------------------------------
+
+  Parallel* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Parallel& from);
+  void MergeFrom(const Parallel& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -107,7 +288,7 @@ class Composite_Parallel : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 policy() const;
   inline void set_policy(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:BehaviorPB.Composite.Parallel)
+  // @@protoc_insertion_point(class_scope:BehaviorPB.Parallel)
  private:
   inline void set_has_policy();
   inline void clear_has_policy();
@@ -124,428 +305,7 @@ class Composite_Parallel : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
 
   void InitAsDefaultInstance();
-  static Composite_Parallel* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class Composite : public ::google::protobuf::Message {
- public:
-  Composite();
-  virtual ~Composite();
-
-  Composite(const Composite& from);
-
-  inline Composite& operator=(const Composite& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Composite& default_instance();
-
-  void Swap(Composite* other);
-
-  // implements Message ----------------------------------------------
-
-  Composite* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Composite& from);
-  void MergeFrom(const Composite& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  typedef Composite_Parallel Parallel;
-
-  // accessors -------------------------------------------------------
-
-  // optional .BehaviorPB.Composite.Parallel parallel = 1;
-  inline bool has_parallel() const;
-  inline void clear_parallel();
-  static const int kParallelFieldNumber = 1;
-  inline const ::BehaviorPB::Composite_Parallel& parallel() const;
-  inline ::BehaviorPB::Composite_Parallel* mutable_parallel();
-  inline ::BehaviorPB::Composite_Parallel* release_parallel();
-  inline void set_allocated_parallel(::BehaviorPB::Composite_Parallel* parallel);
-
-  // @@protoc_insertion_point(class_scope:BehaviorPB.Composite)
- private:
-  inline void set_has_parallel();
-  inline void clear_has_parallel();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::BehaviorPB::Composite_Parallel* parallel_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
-
-  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
-  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
-  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
-
-  void InitAsDefaultInstance();
-  static Composite* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class Decorator_Loop : public ::google::protobuf::Message {
- public:
-  Decorator_Loop();
-  virtual ~Decorator_Loop();
-
-  Decorator_Loop(const Decorator_Loop& from);
-
-  inline Decorator_Loop& operator=(const Decorator_Loop& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Decorator_Loop& default_instance();
-
-  void Swap(Decorator_Loop* other);
-
-  // implements Message ----------------------------------------------
-
-  Decorator_Loop* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Decorator_Loop& from);
-  void MergeFrom(const Decorator_Loop& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required int32 loop_cnt = 1;
-  inline bool has_loop_cnt() const;
-  inline void clear_loop_cnt();
-  static const int kLoopCntFieldNumber = 1;
-  inline ::google::protobuf::int32 loop_cnt() const;
-  inline void set_loop_cnt(::google::protobuf::int32 value);
-
-  // @@protoc_insertion_point(class_scope:BehaviorPB.Decorator.Loop)
- private:
-  inline void set_has_loop_cnt();
-  inline void clear_has_loop_cnt();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::int32 loop_cnt_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
-
-  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
-  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
-  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
-
-  void InitAsDefaultInstance();
-  static Decorator_Loop* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class Decorator_Counter : public ::google::protobuf::Message {
- public:
-  Decorator_Counter();
-  virtual ~Decorator_Counter();
-
-  Decorator_Counter(const Decorator_Counter& from);
-
-  inline Decorator_Counter& operator=(const Decorator_Counter& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Decorator_Counter& default_instance();
-
-  void Swap(Decorator_Counter* other);
-
-  // implements Message ----------------------------------------------
-
-  Decorator_Counter* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Decorator_Counter& from);
-  void MergeFrom(const Decorator_Counter& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required int32 limit_cnt = 1;
-  inline bool has_limit_cnt() const;
-  inline void clear_limit_cnt();
-  static const int kLimitCntFieldNumber = 1;
-  inline ::google::protobuf::int32 limit_cnt() const;
-  inline void set_limit_cnt(::google::protobuf::int32 value);
-
-  // @@protoc_insertion_point(class_scope:BehaviorPB.Decorator.Counter)
- private:
-  inline void set_has_limit_cnt();
-  inline void clear_has_limit_cnt();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::int32 limit_cnt_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
-
-  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
-  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
-  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
-
-  void InitAsDefaultInstance();
-  static Decorator_Counter* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class Decorator : public ::google::protobuf::Message {
- public:
-  Decorator();
-  virtual ~Decorator();
-
-  Decorator(const Decorator& from);
-
-  inline Decorator& operator=(const Decorator& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Decorator& default_instance();
-
-  void Swap(Decorator* other);
-
-  // implements Message ----------------------------------------------
-
-  Decorator* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Decorator& from);
-  void MergeFrom(const Decorator& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  typedef Decorator_Loop Loop;
-  typedef Decorator_Counter Counter;
-
-  // accessors -------------------------------------------------------
-
-  // optional .BehaviorPB.Decorator.Loop loop = 1;
-  inline bool has_loop() const;
-  inline void clear_loop();
-  static const int kLoopFieldNumber = 1;
-  inline const ::BehaviorPB::Decorator_Loop& loop() const;
-  inline ::BehaviorPB::Decorator_Loop* mutable_loop();
-  inline ::BehaviorPB::Decorator_Loop* release_loop();
-  inline void set_allocated_loop(::BehaviorPB::Decorator_Loop* loop);
-
-  // optional .BehaviorPB.Decorator.Counter counter = 2;
-  inline bool has_counter() const;
-  inline void clear_counter();
-  static const int kCounterFieldNumber = 2;
-  inline const ::BehaviorPB::Decorator_Counter& counter() const;
-  inline ::BehaviorPB::Decorator_Counter* mutable_counter();
-  inline ::BehaviorPB::Decorator_Counter* release_counter();
-  inline void set_allocated_counter(::BehaviorPB::Decorator_Counter* counter);
-
-  // @@protoc_insertion_point(class_scope:BehaviorPB.Decorator)
- private:
-  inline void set_has_loop();
-  inline void clear_has_loop();
-  inline void set_has_counter();
-  inline void clear_has_counter();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::BehaviorPB::Decorator_Loop* loop_;
-  ::BehaviorPB::Decorator_Counter* counter_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
-
-  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
-  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
-  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
-
-  void InitAsDefaultInstance();
-  static Decorator* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class Condition : public ::google::protobuf::Message {
- public:
-  Condition();
-  virtual ~Condition();
-
-  Condition(const Condition& from);
-
-  inline Condition& operator=(const Condition& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Condition& default_instance();
-
-  void Swap(Condition* other);
-
-  // implements Message ----------------------------------------------
-
-  Condition* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Condition& from);
-  void MergeFrom(const Condition& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // @@protoc_insertion_point(class_scope:BehaviorPB.Condition)
- private:
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[1];
-
-  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
-  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
-  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
-
-  void InitAsDefaultInstance();
-  static Condition* default_instance_;
+  static Parallel* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -603,14 +363,29 @@ class Action : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
+  // required string script_path = 1;
+  inline bool has_script_path() const;
+  inline void clear_script_path();
+  static const int kScriptPathFieldNumber = 1;
+  inline const ::std::string& script_path() const;
+  inline void set_script_path(const ::std::string& value);
+  inline void set_script_path(const char* value);
+  inline void set_script_path(const char* value, size_t size);
+  inline ::std::string* mutable_script_path();
+  inline ::std::string* release_script_path();
+  inline void set_allocated_script_path(::std::string* script_path);
+
   // @@protoc_insertion_point(class_scope:BehaviorPB.Action)
  private:
+  inline void set_has_script_path();
+  inline void clear_has_script_path();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* script_path_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[1];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_BehaviorPB_2eproto();
   friend void protobuf_AssignDesc_BehaviorPB_2eproto();
@@ -618,6 +393,93 @@ class Action : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Action* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Condition : public ::google::protobuf::Message {
+ public:
+  Condition();
+  virtual ~Condition();
+
+  Condition(const Condition& from);
+
+  inline Condition& operator=(const Condition& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Condition& default_instance();
+
+  void Swap(Condition* other);
+
+  // implements Message ----------------------------------------------
+
+  Condition* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Condition& from);
+  void MergeFrom(const Condition& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required string script_path = 1;
+  inline bool has_script_path() const;
+  inline void clear_script_path();
+  static const int kScriptPathFieldNumber = 1;
+  inline const ::std::string& script_path() const;
+  inline void set_script_path(const ::std::string& value);
+  inline void set_script_path(const char* value);
+  inline void set_script_path(const char* value, size_t size);
+  inline ::std::string* mutable_script_path();
+  inline ::std::string* release_script_path();
+  inline void set_allocated_script_path(::std::string* script_path);
+
+  // @@protoc_insertion_point(class_scope:BehaviorPB.Condition)
+ private:
+  inline void set_has_script_path();
+  inline void clear_has_script_path();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* script_path_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
+  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
+  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
+
+  void InitAsDefaultInstance();
+  static Condition* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -708,6 +570,451 @@ class Link : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class DecoratorNot : public ::google::protobuf::Message {
+ public:
+  DecoratorNot();
+  virtual ~DecoratorNot();
+
+  DecoratorNot(const DecoratorNot& from);
+
+  inline DecoratorNot& operator=(const DecoratorNot& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DecoratorNot& default_instance();
+
+  void Swap(DecoratorNot* other);
+
+  // implements Message ----------------------------------------------
+
+  DecoratorNot* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DecoratorNot& from);
+  void MergeFrom(const DecoratorNot& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:BehaviorPB.DecoratorNot)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[1];
+
+  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
+  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
+  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
+
+  void InitAsDefaultInstance();
+  static DecoratorNot* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DecoratorLoop : public ::google::protobuf::Message {
+ public:
+  DecoratorLoop();
+  virtual ~DecoratorLoop();
+
+  DecoratorLoop(const DecoratorLoop& from);
+
+  inline DecoratorLoop& operator=(const DecoratorLoop& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DecoratorLoop& default_instance();
+
+  void Swap(DecoratorLoop* other);
+
+  // implements Message ----------------------------------------------
+
+  DecoratorLoop* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DecoratorLoop& from);
+  void MergeFrom(const DecoratorLoop& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 loop_cnt = 1;
+  inline bool has_loop_cnt() const;
+  inline void clear_loop_cnt();
+  static const int kLoopCntFieldNumber = 1;
+  inline ::google::protobuf::int32 loop_cnt() const;
+  inline void set_loop_cnt(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:BehaviorPB.DecoratorLoop)
+ private:
+  inline void set_has_loop_cnt();
+  inline void clear_has_loop_cnt();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 loop_cnt_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
+  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
+  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
+
+  void InitAsDefaultInstance();
+  static DecoratorLoop* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DecoratorCounter : public ::google::protobuf::Message {
+ public:
+  DecoratorCounter();
+  virtual ~DecoratorCounter();
+
+  DecoratorCounter(const DecoratorCounter& from);
+
+  inline DecoratorCounter& operator=(const DecoratorCounter& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DecoratorCounter& default_instance();
+
+  void Swap(DecoratorCounter* other);
+
+  // implements Message ----------------------------------------------
+
+  DecoratorCounter* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DecoratorCounter& from);
+  void MergeFrom(const DecoratorCounter& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 limit_cnt = 1;
+  inline bool has_limit_cnt() const;
+  inline void clear_limit_cnt();
+  static const int kLimitCntFieldNumber = 1;
+  inline ::google::protobuf::int32 limit_cnt() const;
+  inline void set_limit_cnt(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:BehaviorPB.DecoratorCounter)
+ private:
+  inline void set_has_limit_cnt();
+  inline void clear_has_limit_cnt();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 limit_cnt_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
+  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
+  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
+
+  void InitAsDefaultInstance();
+  static DecoratorCounter* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DecoratorTimer : public ::google::protobuf::Message {
+ public:
+  DecoratorTimer();
+  virtual ~DecoratorTimer();
+
+  DecoratorTimer(const DecoratorTimer& from);
+
+  inline DecoratorTimer& operator=(const DecoratorTimer& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DecoratorTimer& default_instance();
+
+  void Swap(DecoratorTimer* other);
+
+  // implements Message ----------------------------------------------
+
+  DecoratorTimer* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DecoratorTimer& from);
+  void MergeFrom(const DecoratorTimer& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 elpase = 1;
+  inline bool has_elpase() const;
+  inline void clear_elpase();
+  static const int kElpaseFieldNumber = 1;
+  inline ::google::protobuf::int32 elpase() const;
+  inline void set_elpase(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:BehaviorPB.DecoratorTimer)
+ private:
+  inline void set_has_elpase();
+  inline void clear_has_elpase();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 elpase_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
+  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
+  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
+
+  void InitAsDefaultInstance();
+  static DecoratorTimer* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Node_Editor : public ::google::protobuf::Message {
+ public:
+  Node_Editor();
+  virtual ~Node_Editor();
+
+  Node_Editor(const Node_Editor& from);
+
+  inline Node_Editor& operator=(const Node_Editor& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Node_Editor& default_instance();
+
+  void Swap(Node_Editor* other);
+
+  // implements Message ----------------------------------------------
+
+  Node_Editor* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Node_Editor& from);
+  void MergeFrom(const Node_Editor& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 id = 1;
+  inline bool has_id() const;
+  inline void clear_id();
+  static const int kIdFieldNumber = 1;
+  inline ::google::protobuf::int32 id() const;
+  inline void set_id(::google::protobuf::int32 value);
+
+  // required string key = 2;
+  inline bool has_key() const;
+  inline void clear_key();
+  static const int kKeyFieldNumber = 2;
+  inline const ::std::string& key() const;
+  inline void set_key(const ::std::string& value);
+  inline void set_key(const char* value);
+  inline void set_key(const char* value, size_t size);
+  inline ::std::string* mutable_key();
+  inline ::std::string* release_key();
+  inline void set_allocated_key(::std::string* key);
+
+  // required string name = 3;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 3;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // required string desc = 4;
+  inline bool has_desc() const;
+  inline void clear_desc();
+  static const int kDescFieldNumber = 4;
+  inline const ::std::string& desc() const;
+  inline void set_desc(const ::std::string& value);
+  inline void set_desc(const char* value);
+  inline void set_desc(const char* value, size_t size);
+  inline ::std::string* mutable_desc();
+  inline ::std::string* release_desc();
+  inline void set_allocated_desc(::std::string* desc);
+
+  // @@protoc_insertion_point(class_scope:BehaviorPB.Node.Editor)
+ private:
+  inline void set_has_id();
+  inline void clear_has_id();
+  inline void set_has_key();
+  inline void clear_has_key();
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_desc();
+  inline void clear_has_desc();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* key_;
+  ::std::string* name_;
+  ::std::string* desc_;
+  ::google::protobuf::int32 id_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
+  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
+  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
+
+  void InitAsDefaultInstance();
+  static Node_Editor* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Node : public ::google::protobuf::Message {
  public:
   Node();
@@ -760,12 +1067,23 @@ class Node : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
+  typedef Node_Editor Editor;
+
   // accessors -------------------------------------------------------
 
-  // repeated .BehaviorPB.Node nodes = 1;
+  // optional .BehaviorPB.Node.Editor editor = 1;
+  inline bool has_editor() const;
+  inline void clear_editor();
+  static const int kEditorFieldNumber = 1;
+  inline const ::BehaviorPB::Node_Editor& editor() const;
+  inline ::BehaviorPB::Node_Editor* mutable_editor();
+  inline ::BehaviorPB::Node_Editor* release_editor();
+  inline void set_allocated_editor(::BehaviorPB::Node_Editor* editor);
+
+  // repeated .BehaviorPB.Node nodes = 2;
   inline int nodes_size() const;
   inline void clear_nodes();
-  static const int kNodesFieldNumber = 1;
+  static const int kNodesFieldNumber = 2;
   inline const ::BehaviorPB::Node& nodes(int index) const;
   inline ::BehaviorPB::Node* mutable_nodes(int index);
   inline ::BehaviorPB::Node* add_nodes();
@@ -774,85 +1092,148 @@ class Node : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::BehaviorPB::Node >*
       mutable_nodes();
 
-  // required int32 type = 2;
+  // required int32 type = 3;
   inline bool has_type() const;
   inline void clear_type();
-  static const int kTypeFieldNumber = 2;
+  static const int kTypeFieldNumber = 3;
   inline ::google::protobuf::int32 type() const;
   inline void set_type(::google::protobuf::int32 value);
 
-  // optional .BehaviorPB.Composite composite = 3;
-  inline bool has_composite() const;
-  inline void clear_composite();
-  static const int kCompositeFieldNumber = 3;
-  inline const ::BehaviorPB::Composite& composite() const;
-  inline ::BehaviorPB::Composite* mutable_composite();
-  inline ::BehaviorPB::Composite* release_composite();
-  inline void set_allocated_composite(::BehaviorPB::Composite* composite);
+  // optional .BehaviorPB.Selector selector = 4;
+  inline bool has_selector() const;
+  inline void clear_selector();
+  static const int kSelectorFieldNumber = 4;
+  inline const ::BehaviorPB::Selector& selector() const;
+  inline ::BehaviorPB::Selector* mutable_selector();
+  inline ::BehaviorPB::Selector* release_selector();
+  inline void set_allocated_selector(::BehaviorPB::Selector* selector);
 
-  // optional .BehaviorPB.Decorator decorator = 4;
-  inline bool has_decorator() const;
-  inline void clear_decorator();
-  static const int kDecoratorFieldNumber = 4;
-  inline const ::BehaviorPB::Decorator& decorator() const;
-  inline ::BehaviorPB::Decorator* mutable_decorator();
-  inline ::BehaviorPB::Decorator* release_decorator();
-  inline void set_allocated_decorator(::BehaviorPB::Decorator* decorator);
+  // optional .BehaviorPB.Sequence sequence = 5;
+  inline bool has_sequence() const;
+  inline void clear_sequence();
+  static const int kSequenceFieldNumber = 5;
+  inline const ::BehaviorPB::Sequence& sequence() const;
+  inline ::BehaviorPB::Sequence* mutable_sequence();
+  inline ::BehaviorPB::Sequence* release_sequence();
+  inline void set_allocated_sequence(::BehaviorPB::Sequence* sequence);
 
-  // optional .BehaviorPB.Condition condition = 5;
-  inline bool has_condition() const;
-  inline void clear_condition();
-  static const int kConditionFieldNumber = 5;
-  inline const ::BehaviorPB::Condition& condition() const;
-  inline ::BehaviorPB::Condition* mutable_condition();
-  inline ::BehaviorPB::Condition* release_condition();
-  inline void set_allocated_condition(::BehaviorPB::Condition* condition);
+  // optional .BehaviorPB.Parallel parallel = 6;
+  inline bool has_parallel() const;
+  inline void clear_parallel();
+  static const int kParallelFieldNumber = 6;
+  inline const ::BehaviorPB::Parallel& parallel() const;
+  inline ::BehaviorPB::Parallel* mutable_parallel();
+  inline ::BehaviorPB::Parallel* release_parallel();
+  inline void set_allocated_parallel(::BehaviorPB::Parallel* parallel);
 
-  // optional .BehaviorPB.Action action = 6;
+  // optional .BehaviorPB.Action action = 7;
   inline bool has_action() const;
   inline void clear_action();
-  static const int kActionFieldNumber = 6;
+  static const int kActionFieldNumber = 7;
   inline const ::BehaviorPB::Action& action() const;
   inline ::BehaviorPB::Action* mutable_action();
   inline ::BehaviorPB::Action* release_action();
   inline void set_allocated_action(::BehaviorPB::Action* action);
 
-  // optional .BehaviorPB.Link link = 7;
+  // optional .BehaviorPB.Condition condition = 8;
+  inline bool has_condition() const;
+  inline void clear_condition();
+  static const int kConditionFieldNumber = 8;
+  inline const ::BehaviorPB::Condition& condition() const;
+  inline ::BehaviorPB::Condition* mutable_condition();
+  inline ::BehaviorPB::Condition* release_condition();
+  inline void set_allocated_condition(::BehaviorPB::Condition* condition);
+
+  // optional .BehaviorPB.Link link = 9;
   inline bool has_link() const;
   inline void clear_link();
-  static const int kLinkFieldNumber = 7;
+  static const int kLinkFieldNumber = 9;
   inline const ::BehaviorPB::Link& link() const;
   inline ::BehaviorPB::Link* mutable_link();
   inline ::BehaviorPB::Link* release_link();
   inline void set_allocated_link(::BehaviorPB::Link* link);
 
+  // optional .BehaviorPB.DecoratorNot d_not = 10;
+  inline bool has_d_not() const;
+  inline void clear_d_not();
+  static const int kDNotFieldNumber = 10;
+  inline const ::BehaviorPB::DecoratorNot& d_not() const;
+  inline ::BehaviorPB::DecoratorNot* mutable_d_not();
+  inline ::BehaviorPB::DecoratorNot* release_d_not();
+  inline void set_allocated_d_not(::BehaviorPB::DecoratorNot* d_not);
+
+  // optional .BehaviorPB.DecoratorLoop d_loop = 11;
+  inline bool has_d_loop() const;
+  inline void clear_d_loop();
+  static const int kDLoopFieldNumber = 11;
+  inline const ::BehaviorPB::DecoratorLoop& d_loop() const;
+  inline ::BehaviorPB::DecoratorLoop* mutable_d_loop();
+  inline ::BehaviorPB::DecoratorLoop* release_d_loop();
+  inline void set_allocated_d_loop(::BehaviorPB::DecoratorLoop* d_loop);
+
+  // optional .BehaviorPB.DecoratorCounter d_counter = 12;
+  inline bool has_d_counter() const;
+  inline void clear_d_counter();
+  static const int kDCounterFieldNumber = 12;
+  inline const ::BehaviorPB::DecoratorCounter& d_counter() const;
+  inline ::BehaviorPB::DecoratorCounter* mutable_d_counter();
+  inline ::BehaviorPB::DecoratorCounter* release_d_counter();
+  inline void set_allocated_d_counter(::BehaviorPB::DecoratorCounter* d_counter);
+
+  // optional .BehaviorPB.DecoratorTimer d_timer = 13;
+  inline bool has_d_timer() const;
+  inline void clear_d_timer();
+  static const int kDTimerFieldNumber = 13;
+  inline const ::BehaviorPB::DecoratorTimer& d_timer() const;
+  inline ::BehaviorPB::DecoratorTimer* mutable_d_timer();
+  inline ::BehaviorPB::DecoratorTimer* release_d_timer();
+  inline void set_allocated_d_timer(::BehaviorPB::DecoratorTimer* d_timer);
+
   // @@protoc_insertion_point(class_scope:BehaviorPB.Node)
  private:
+  inline void set_has_editor();
+  inline void clear_has_editor();
   inline void set_has_type();
   inline void clear_has_type();
-  inline void set_has_composite();
-  inline void clear_has_composite();
-  inline void set_has_decorator();
-  inline void clear_has_decorator();
-  inline void set_has_condition();
-  inline void clear_has_condition();
+  inline void set_has_selector();
+  inline void clear_has_selector();
+  inline void set_has_sequence();
+  inline void clear_has_sequence();
+  inline void set_has_parallel();
+  inline void clear_has_parallel();
   inline void set_has_action();
   inline void clear_has_action();
+  inline void set_has_condition();
+  inline void clear_has_condition();
   inline void set_has_link();
   inline void clear_has_link();
+  inline void set_has_d_not();
+  inline void clear_has_d_not();
+  inline void set_has_d_loop();
+  inline void clear_has_d_loop();
+  inline void set_has_d_counter();
+  inline void clear_has_d_counter();
+  inline void set_has_d_timer();
+  inline void clear_has_d_timer();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::BehaviorPB::Node_Editor* editor_;
   ::google::protobuf::RepeatedPtrField< ::BehaviorPB::Node > nodes_;
-  ::BehaviorPB::Composite* composite_;
-  ::BehaviorPB::Decorator* decorator_;
-  ::BehaviorPB::Condition* condition_;
+  ::BehaviorPB::Selector* selector_;
+  ::BehaviorPB::Sequence* sequence_;
+  ::BehaviorPB::Parallel* parallel_;
   ::BehaviorPB::Action* action_;
+  ::BehaviorPB::Condition* condition_;
   ::BehaviorPB::Link* link_;
+  ::BehaviorPB::DecoratorNot* d_not_;
+  ::BehaviorPB::DecoratorLoop* d_loop_;
+  ::BehaviorPB::DecoratorCounter* d_counter_;
+  ::BehaviorPB::DecoratorTimer* d_timer_;
   ::google::protobuf::int32 type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(13 + 31) / 32];
 
   friend void  protobuf_AddDesc_BehaviorPB_2eproto();
   friend void protobuf_AssignDesc_BehaviorPB_2eproto();
@@ -860,6 +1241,93 @@ class Node : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Node* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Tree_Editor : public ::google::protobuf::Message {
+ public:
+  Tree_Editor();
+  virtual ~Tree_Editor();
+
+  Tree_Editor(const Tree_Editor& from);
+
+  inline Tree_Editor& operator=(const Tree_Editor& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Tree_Editor& default_instance();
+
+  void Swap(Tree_Editor* other);
+
+  // implements Message ----------------------------------------------
+
+  Tree_Editor* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Tree_Editor& from);
+  void MergeFrom(const Tree_Editor& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required string desc = 1;
+  inline bool has_desc() const;
+  inline void clear_desc();
+  static const int kDescFieldNumber = 1;
+  inline const ::std::string& desc() const;
+  inline void set_desc(const ::std::string& value);
+  inline void set_desc(const char* value);
+  inline void set_desc(const char* value, size_t size);
+  inline ::std::string* mutable_desc();
+  inline ::std::string* release_desc();
+  inline void set_allocated_desc(::std::string* desc);
+
+  // @@protoc_insertion_point(class_scope:BehaviorPB.Tree.Editor)
+ private:
+  inline void set_has_desc();
+  inline void clear_has_desc();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* desc_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
+  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
+  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
+
+  void InitAsDefaultInstance();
+  static Tree_Editor* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -915,12 +1383,23 @@ class Tree : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
+  typedef Tree_Editor Editor;
+
   // accessors -------------------------------------------------------
 
-  // required string name = 1;
+  // optional .BehaviorPB.Tree.Editor editor = 1;
+  inline bool has_editor() const;
+  inline void clear_editor();
+  static const int kEditorFieldNumber = 1;
+  inline const ::BehaviorPB::Tree_Editor& editor() const;
+  inline ::BehaviorPB::Tree_Editor* mutable_editor();
+  inline ::BehaviorPB::Tree_Editor* release_editor();
+  inline void set_allocated_editor(::BehaviorPB::Tree_Editor* editor);
+
+  // required string name = 2;
   inline bool has_name() const;
   inline void clear_name();
-  static const int kNameFieldNumber = 1;
+  static const int kNameFieldNumber = 2;
   inline const ::std::string& name() const;
   inline void set_name(const ::std::string& value);
   inline void set_name(const char* value);
@@ -929,10 +1408,10 @@ class Tree : public ::google::protobuf::Message {
   inline ::std::string* release_name();
   inline void set_allocated_name(::std::string* name);
 
-  // required .BehaviorPB.Node root = 2;
+  // required .BehaviorPB.Node root = 3;
   inline bool has_root() const;
   inline void clear_root();
-  static const int kRootFieldNumber = 2;
+  static const int kRootFieldNumber = 3;
   inline const ::BehaviorPB::Node& root() const;
   inline ::BehaviorPB::Node* mutable_root();
   inline ::BehaviorPB::Node* release_root();
@@ -940,6 +1419,8 @@ class Tree : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:BehaviorPB.Tree)
  private:
+  inline void set_has_editor();
+  inline void clear_has_editor();
   inline void set_has_name();
   inline void clear_has_name();
   inline void set_has_root();
@@ -947,11 +1428,12 @@ class Tree : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::BehaviorPB::Tree_Editor* editor_;
   ::std::string* name_;
   ::BehaviorPB::Node* root_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_BehaviorPB_2eproto();
   friend void protobuf_AssignDesc_BehaviorPB_2eproto();
@@ -965,201 +1447,109 @@ class Tree : public ::google::protobuf::Message {
 
 // ===================================================================
 
-// Composite_Parallel
+// Selector
+
+// -------------------------------------------------------------------
+
+// Sequence
+
+// -------------------------------------------------------------------
+
+// Parallel
 
 // required int32 policy = 1;
-inline bool Composite_Parallel::has_policy() const {
+inline bool Parallel::has_policy() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Composite_Parallel::set_has_policy() {
+inline void Parallel::set_has_policy() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Composite_Parallel::clear_has_policy() {
+inline void Parallel::clear_has_policy() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Composite_Parallel::clear_policy() {
+inline void Parallel::clear_policy() {
   policy_ = 0;
   clear_has_policy();
 }
-inline ::google::protobuf::int32 Composite_Parallel::policy() const {
+inline ::google::protobuf::int32 Parallel::policy() const {
   return policy_;
 }
-inline void Composite_Parallel::set_policy(::google::protobuf::int32 value) {
+inline void Parallel::set_policy(::google::protobuf::int32 value) {
   set_has_policy();
   policy_ = value;
 }
 
 // -------------------------------------------------------------------
 
-// Composite
+// Action
 
-// optional .BehaviorPB.Composite.Parallel parallel = 1;
-inline bool Composite::has_parallel() const {
+// required string script_path = 1;
+inline bool Action::has_script_path() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Composite::set_has_parallel() {
+inline void Action::set_has_script_path() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Composite::clear_has_parallel() {
+inline void Action::clear_has_script_path() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Composite::clear_parallel() {
-  if (parallel_ != NULL) parallel_->::BehaviorPB::Composite_Parallel::Clear();
-  clear_has_parallel();
+inline void Action::clear_script_path() {
+  if (script_path_ != &::google::protobuf::internal::kEmptyString) {
+    script_path_->clear();
+  }
+  clear_has_script_path();
 }
-inline const ::BehaviorPB::Composite_Parallel& Composite::parallel() const {
-  return parallel_ != NULL ? *parallel_ : *default_instance_->parallel_;
+inline const ::std::string& Action::script_path() const {
+  return *script_path_;
 }
-inline ::BehaviorPB::Composite_Parallel* Composite::mutable_parallel() {
-  set_has_parallel();
-  if (parallel_ == NULL) parallel_ = new ::BehaviorPB::Composite_Parallel;
-  return parallel_;
+inline void Action::set_script_path(const ::std::string& value) {
+  set_has_script_path();
+  if (script_path_ == &::google::protobuf::internal::kEmptyString) {
+    script_path_ = new ::std::string;
+  }
+  script_path_->assign(value);
 }
-inline ::BehaviorPB::Composite_Parallel* Composite::release_parallel() {
-  clear_has_parallel();
-  ::BehaviorPB::Composite_Parallel* temp = parallel_;
-  parallel_ = NULL;
-  return temp;
+inline void Action::set_script_path(const char* value) {
+  set_has_script_path();
+  if (script_path_ == &::google::protobuf::internal::kEmptyString) {
+    script_path_ = new ::std::string;
+  }
+  script_path_->assign(value);
 }
-inline void Composite::set_allocated_parallel(::BehaviorPB::Composite_Parallel* parallel) {
-  delete parallel_;
-  parallel_ = parallel;
-  if (parallel) {
-    set_has_parallel();
+inline void Action::set_script_path(const char* value, size_t size) {
+  set_has_script_path();
+  if (script_path_ == &::google::protobuf::internal::kEmptyString) {
+    script_path_ = new ::std::string;
+  }
+  script_path_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Action::mutable_script_path() {
+  set_has_script_path();
+  if (script_path_ == &::google::protobuf::internal::kEmptyString) {
+    script_path_ = new ::std::string;
+  }
+  return script_path_;
+}
+inline ::std::string* Action::release_script_path() {
+  clear_has_script_path();
+  if (script_path_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
   } else {
-    clear_has_parallel();
+    ::std::string* temp = script_path_;
+    script_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
   }
 }
-
-// -------------------------------------------------------------------
-
-// Decorator_Loop
-
-// required int32 loop_cnt = 1;
-inline bool Decorator_Loop::has_loop_cnt() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void Decorator_Loop::set_has_loop_cnt() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void Decorator_Loop::clear_has_loop_cnt() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void Decorator_Loop::clear_loop_cnt() {
-  loop_cnt_ = 0;
-  clear_has_loop_cnt();
-}
-inline ::google::protobuf::int32 Decorator_Loop::loop_cnt() const {
-  return loop_cnt_;
-}
-inline void Decorator_Loop::set_loop_cnt(::google::protobuf::int32 value) {
-  set_has_loop_cnt();
-  loop_cnt_ = value;
-}
-
-// -------------------------------------------------------------------
-
-// Decorator_Counter
-
-// required int32 limit_cnt = 1;
-inline bool Decorator_Counter::has_limit_cnt() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void Decorator_Counter::set_has_limit_cnt() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void Decorator_Counter::clear_has_limit_cnt() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void Decorator_Counter::clear_limit_cnt() {
-  limit_cnt_ = 0;
-  clear_has_limit_cnt();
-}
-inline ::google::protobuf::int32 Decorator_Counter::limit_cnt() const {
-  return limit_cnt_;
-}
-inline void Decorator_Counter::set_limit_cnt(::google::protobuf::int32 value) {
-  set_has_limit_cnt();
-  limit_cnt_ = value;
-}
-
-// -------------------------------------------------------------------
-
-// Decorator
-
-// optional .BehaviorPB.Decorator.Loop loop = 1;
-inline bool Decorator::has_loop() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void Decorator::set_has_loop() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void Decorator::clear_has_loop() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void Decorator::clear_loop() {
-  if (loop_ != NULL) loop_->::BehaviorPB::Decorator_Loop::Clear();
-  clear_has_loop();
-}
-inline const ::BehaviorPB::Decorator_Loop& Decorator::loop() const {
-  return loop_ != NULL ? *loop_ : *default_instance_->loop_;
-}
-inline ::BehaviorPB::Decorator_Loop* Decorator::mutable_loop() {
-  set_has_loop();
-  if (loop_ == NULL) loop_ = new ::BehaviorPB::Decorator_Loop;
-  return loop_;
-}
-inline ::BehaviorPB::Decorator_Loop* Decorator::release_loop() {
-  clear_has_loop();
-  ::BehaviorPB::Decorator_Loop* temp = loop_;
-  loop_ = NULL;
-  return temp;
-}
-inline void Decorator::set_allocated_loop(::BehaviorPB::Decorator_Loop* loop) {
-  delete loop_;
-  loop_ = loop;
-  if (loop) {
-    set_has_loop();
-  } else {
-    clear_has_loop();
+inline void Action::set_allocated_script_path(::std::string* script_path) {
+  if (script_path_ != &::google::protobuf::internal::kEmptyString) {
+    delete script_path_;
   }
-}
-
-// optional .BehaviorPB.Decorator.Counter counter = 2;
-inline bool Decorator::has_counter() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void Decorator::set_has_counter() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void Decorator::clear_has_counter() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void Decorator::clear_counter() {
-  if (counter_ != NULL) counter_->::BehaviorPB::Decorator_Counter::Clear();
-  clear_has_counter();
-}
-inline const ::BehaviorPB::Decorator_Counter& Decorator::counter() const {
-  return counter_ != NULL ? *counter_ : *default_instance_->counter_;
-}
-inline ::BehaviorPB::Decorator_Counter* Decorator::mutable_counter() {
-  set_has_counter();
-  if (counter_ == NULL) counter_ = new ::BehaviorPB::Decorator_Counter;
-  return counter_;
-}
-inline ::BehaviorPB::Decorator_Counter* Decorator::release_counter() {
-  clear_has_counter();
-  ::BehaviorPB::Decorator_Counter* temp = counter_;
-  counter_ = NULL;
-  return temp;
-}
-inline void Decorator::set_allocated_counter(::BehaviorPB::Decorator_Counter* counter) {
-  delete counter_;
-  counter_ = counter;
-  if (counter) {
-    set_has_counter();
+  if (script_path) {
+    set_has_script_path();
+    script_path_ = script_path;
   } else {
-    clear_has_counter();
+    clear_has_script_path();
+    script_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
@@ -1167,9 +1557,75 @@ inline void Decorator::set_allocated_counter(::BehaviorPB::Decorator_Counter* co
 
 // Condition
 
-// -------------------------------------------------------------------
-
-// Action
+// required string script_path = 1;
+inline bool Condition::has_script_path() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Condition::set_has_script_path() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Condition::clear_has_script_path() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Condition::clear_script_path() {
+  if (script_path_ != &::google::protobuf::internal::kEmptyString) {
+    script_path_->clear();
+  }
+  clear_has_script_path();
+}
+inline const ::std::string& Condition::script_path() const {
+  return *script_path_;
+}
+inline void Condition::set_script_path(const ::std::string& value) {
+  set_has_script_path();
+  if (script_path_ == &::google::protobuf::internal::kEmptyString) {
+    script_path_ = new ::std::string;
+  }
+  script_path_->assign(value);
+}
+inline void Condition::set_script_path(const char* value) {
+  set_has_script_path();
+  if (script_path_ == &::google::protobuf::internal::kEmptyString) {
+    script_path_ = new ::std::string;
+  }
+  script_path_->assign(value);
+}
+inline void Condition::set_script_path(const char* value, size_t size) {
+  set_has_script_path();
+  if (script_path_ == &::google::protobuf::internal::kEmptyString) {
+    script_path_ = new ::std::string;
+  }
+  script_path_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Condition::mutable_script_path() {
+  set_has_script_path();
+  if (script_path_ == &::google::protobuf::internal::kEmptyString) {
+    script_path_ = new ::std::string;
+  }
+  return script_path_;
+}
+inline ::std::string* Condition::release_script_path() {
+  clear_has_script_path();
+  if (script_path_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = script_path_;
+    script_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Condition::set_allocated_script_path(::std::string* script_path) {
+  if (script_path_ != &::google::protobuf::internal::kEmptyString) {
+    delete script_path_;
+  }
+  if (script_path) {
+    set_has_script_path();
+    script_path_ = script_path;
+  } else {
+    clear_has_script_path();
+    script_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
 
 // -------------------------------------------------------------------
 
@@ -1247,9 +1703,365 @@ inline void Link::set_allocated_sub_tree_name(::std::string* sub_tree_name) {
 
 // -------------------------------------------------------------------
 
+// DecoratorNot
+
+// -------------------------------------------------------------------
+
+// DecoratorLoop
+
+// required int32 loop_cnt = 1;
+inline bool DecoratorLoop::has_loop_cnt() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DecoratorLoop::set_has_loop_cnt() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DecoratorLoop::clear_has_loop_cnt() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DecoratorLoop::clear_loop_cnt() {
+  loop_cnt_ = 0;
+  clear_has_loop_cnt();
+}
+inline ::google::protobuf::int32 DecoratorLoop::loop_cnt() const {
+  return loop_cnt_;
+}
+inline void DecoratorLoop::set_loop_cnt(::google::protobuf::int32 value) {
+  set_has_loop_cnt();
+  loop_cnt_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// DecoratorCounter
+
+// required int32 limit_cnt = 1;
+inline bool DecoratorCounter::has_limit_cnt() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DecoratorCounter::set_has_limit_cnt() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DecoratorCounter::clear_has_limit_cnt() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DecoratorCounter::clear_limit_cnt() {
+  limit_cnt_ = 0;
+  clear_has_limit_cnt();
+}
+inline ::google::protobuf::int32 DecoratorCounter::limit_cnt() const {
+  return limit_cnt_;
+}
+inline void DecoratorCounter::set_limit_cnt(::google::protobuf::int32 value) {
+  set_has_limit_cnt();
+  limit_cnt_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// DecoratorTimer
+
+// required int32 elpase = 1;
+inline bool DecoratorTimer::has_elpase() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DecoratorTimer::set_has_elpase() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DecoratorTimer::clear_has_elpase() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DecoratorTimer::clear_elpase() {
+  elpase_ = 0;
+  clear_has_elpase();
+}
+inline ::google::protobuf::int32 DecoratorTimer::elpase() const {
+  return elpase_;
+}
+inline void DecoratorTimer::set_elpase(::google::protobuf::int32 value) {
+  set_has_elpase();
+  elpase_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// Node_Editor
+
+// required int32 id = 1;
+inline bool Node_Editor::has_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Node_Editor::set_has_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Node_Editor::clear_has_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Node_Editor::clear_id() {
+  id_ = 0;
+  clear_has_id();
+}
+inline ::google::protobuf::int32 Node_Editor::id() const {
+  return id_;
+}
+inline void Node_Editor::set_id(::google::protobuf::int32 value) {
+  set_has_id();
+  id_ = value;
+}
+
+// required string key = 2;
+inline bool Node_Editor::has_key() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Node_Editor::set_has_key() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Node_Editor::clear_has_key() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Node_Editor::clear_key() {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    key_->clear();
+  }
+  clear_has_key();
+}
+inline const ::std::string& Node_Editor::key() const {
+  return *key_;
+}
+inline void Node_Editor::set_key(const ::std::string& value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void Node_Editor::set_key(const char* value) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(value);
+}
+inline void Node_Editor::set_key(const char* value, size_t size) {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Node_Editor::mutable_key() {
+  set_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    key_ = new ::std::string;
+  }
+  return key_;
+}
+inline ::std::string* Node_Editor::release_key() {
+  clear_has_key();
+  if (key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = key_;
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Node_Editor::set_allocated_key(::std::string* key) {
+  if (key_ != &::google::protobuf::internal::kEmptyString) {
+    delete key_;
+  }
+  if (key) {
+    set_has_key();
+    key_ = key;
+  } else {
+    clear_has_key();
+    key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// required string name = 3;
+inline bool Node_Editor::has_name() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Node_Editor::set_has_name() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Node_Editor::clear_has_name() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Node_Editor::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& Node_Editor::name() const {
+  return *name_;
+}
+inline void Node_Editor::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void Node_Editor::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void Node_Editor::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Node_Editor::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* Node_Editor::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Node_Editor::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// required string desc = 4;
+inline bool Node_Editor::has_desc() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Node_Editor::set_has_desc() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Node_Editor::clear_has_desc() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Node_Editor::clear_desc() {
+  if (desc_ != &::google::protobuf::internal::kEmptyString) {
+    desc_->clear();
+  }
+  clear_has_desc();
+}
+inline const ::std::string& Node_Editor::desc() const {
+  return *desc_;
+}
+inline void Node_Editor::set_desc(const ::std::string& value) {
+  set_has_desc();
+  if (desc_ == &::google::protobuf::internal::kEmptyString) {
+    desc_ = new ::std::string;
+  }
+  desc_->assign(value);
+}
+inline void Node_Editor::set_desc(const char* value) {
+  set_has_desc();
+  if (desc_ == &::google::protobuf::internal::kEmptyString) {
+    desc_ = new ::std::string;
+  }
+  desc_->assign(value);
+}
+inline void Node_Editor::set_desc(const char* value, size_t size) {
+  set_has_desc();
+  if (desc_ == &::google::protobuf::internal::kEmptyString) {
+    desc_ = new ::std::string;
+  }
+  desc_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Node_Editor::mutable_desc() {
+  set_has_desc();
+  if (desc_ == &::google::protobuf::internal::kEmptyString) {
+    desc_ = new ::std::string;
+  }
+  return desc_;
+}
+inline ::std::string* Node_Editor::release_desc() {
+  clear_has_desc();
+  if (desc_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = desc_;
+    desc_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Node_Editor::set_allocated_desc(::std::string* desc) {
+  if (desc_ != &::google::protobuf::internal::kEmptyString) {
+    delete desc_;
+  }
+  if (desc) {
+    set_has_desc();
+    desc_ = desc;
+  } else {
+    clear_has_desc();
+    desc_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
 // Node
 
-// repeated .BehaviorPB.Node nodes = 1;
+// optional .BehaviorPB.Node.Editor editor = 1;
+inline bool Node::has_editor() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Node::set_has_editor() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Node::clear_has_editor() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Node::clear_editor() {
+  if (editor_ != NULL) editor_->::BehaviorPB::Node_Editor::Clear();
+  clear_has_editor();
+}
+inline const ::BehaviorPB::Node_Editor& Node::editor() const {
+  return editor_ != NULL ? *editor_ : *default_instance_->editor_;
+}
+inline ::BehaviorPB::Node_Editor* Node::mutable_editor() {
+  set_has_editor();
+  if (editor_ == NULL) editor_ = new ::BehaviorPB::Node_Editor;
+  return editor_;
+}
+inline ::BehaviorPB::Node_Editor* Node::release_editor() {
+  clear_has_editor();
+  ::BehaviorPB::Node_Editor* temp = editor_;
+  editor_ = NULL;
+  return temp;
+}
+inline void Node::set_allocated_editor(::BehaviorPB::Node_Editor* editor) {
+  delete editor_;
+  editor_ = editor;
+  if (editor) {
+    set_has_editor();
+  } else {
+    clear_has_editor();
+  }
+}
+
+// repeated .BehaviorPB.Node nodes = 2;
 inline int Node::nodes_size() const {
   return nodes_.size();
 }
@@ -1274,15 +2086,15 @@ Node::mutable_nodes() {
   return &nodes_;
 }
 
-// required int32 type = 2;
+// required int32 type = 3;
 inline bool Node::has_type() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void Node::set_has_type() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void Node::clear_has_type() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void Node::clear_type() {
   type_ = 0;
@@ -1296,129 +2108,129 @@ inline void Node::set_type(::google::protobuf::int32 value) {
   type_ = value;
 }
 
-// optional .BehaviorPB.Composite composite = 3;
-inline bool Node::has_composite() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void Node::set_has_composite() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void Node::clear_has_composite() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void Node::clear_composite() {
-  if (composite_ != NULL) composite_->::BehaviorPB::Composite::Clear();
-  clear_has_composite();
-}
-inline const ::BehaviorPB::Composite& Node::composite() const {
-  return composite_ != NULL ? *composite_ : *default_instance_->composite_;
-}
-inline ::BehaviorPB::Composite* Node::mutable_composite() {
-  set_has_composite();
-  if (composite_ == NULL) composite_ = new ::BehaviorPB::Composite;
-  return composite_;
-}
-inline ::BehaviorPB::Composite* Node::release_composite() {
-  clear_has_composite();
-  ::BehaviorPB::Composite* temp = composite_;
-  composite_ = NULL;
-  return temp;
-}
-inline void Node::set_allocated_composite(::BehaviorPB::Composite* composite) {
-  delete composite_;
-  composite_ = composite;
-  if (composite) {
-    set_has_composite();
-  } else {
-    clear_has_composite();
-  }
-}
-
-// optional .BehaviorPB.Decorator decorator = 4;
-inline bool Node::has_decorator() const {
+// optional .BehaviorPB.Selector selector = 4;
+inline bool Node::has_selector() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void Node::set_has_decorator() {
+inline void Node::set_has_selector() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void Node::clear_has_decorator() {
+inline void Node::clear_has_selector() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void Node::clear_decorator() {
-  if (decorator_ != NULL) decorator_->::BehaviorPB::Decorator::Clear();
-  clear_has_decorator();
+inline void Node::clear_selector() {
+  if (selector_ != NULL) selector_->::BehaviorPB::Selector::Clear();
+  clear_has_selector();
 }
-inline const ::BehaviorPB::Decorator& Node::decorator() const {
-  return decorator_ != NULL ? *decorator_ : *default_instance_->decorator_;
+inline const ::BehaviorPB::Selector& Node::selector() const {
+  return selector_ != NULL ? *selector_ : *default_instance_->selector_;
 }
-inline ::BehaviorPB::Decorator* Node::mutable_decorator() {
-  set_has_decorator();
-  if (decorator_ == NULL) decorator_ = new ::BehaviorPB::Decorator;
-  return decorator_;
+inline ::BehaviorPB::Selector* Node::mutable_selector() {
+  set_has_selector();
+  if (selector_ == NULL) selector_ = new ::BehaviorPB::Selector;
+  return selector_;
 }
-inline ::BehaviorPB::Decorator* Node::release_decorator() {
-  clear_has_decorator();
-  ::BehaviorPB::Decorator* temp = decorator_;
-  decorator_ = NULL;
+inline ::BehaviorPB::Selector* Node::release_selector() {
+  clear_has_selector();
+  ::BehaviorPB::Selector* temp = selector_;
+  selector_ = NULL;
   return temp;
 }
-inline void Node::set_allocated_decorator(::BehaviorPB::Decorator* decorator) {
-  delete decorator_;
-  decorator_ = decorator;
-  if (decorator) {
-    set_has_decorator();
+inline void Node::set_allocated_selector(::BehaviorPB::Selector* selector) {
+  delete selector_;
+  selector_ = selector;
+  if (selector) {
+    set_has_selector();
   } else {
-    clear_has_decorator();
+    clear_has_selector();
   }
 }
 
-// optional .BehaviorPB.Condition condition = 5;
-inline bool Node::has_condition() const {
+// optional .BehaviorPB.Sequence sequence = 5;
+inline bool Node::has_sequence() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void Node::set_has_condition() {
+inline void Node::set_has_sequence() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void Node::clear_has_condition() {
+inline void Node::clear_has_sequence() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void Node::clear_condition() {
-  if (condition_ != NULL) condition_->::BehaviorPB::Condition::Clear();
-  clear_has_condition();
+inline void Node::clear_sequence() {
+  if (sequence_ != NULL) sequence_->::BehaviorPB::Sequence::Clear();
+  clear_has_sequence();
 }
-inline const ::BehaviorPB::Condition& Node::condition() const {
-  return condition_ != NULL ? *condition_ : *default_instance_->condition_;
+inline const ::BehaviorPB::Sequence& Node::sequence() const {
+  return sequence_ != NULL ? *sequence_ : *default_instance_->sequence_;
 }
-inline ::BehaviorPB::Condition* Node::mutable_condition() {
-  set_has_condition();
-  if (condition_ == NULL) condition_ = new ::BehaviorPB::Condition;
-  return condition_;
+inline ::BehaviorPB::Sequence* Node::mutable_sequence() {
+  set_has_sequence();
+  if (sequence_ == NULL) sequence_ = new ::BehaviorPB::Sequence;
+  return sequence_;
 }
-inline ::BehaviorPB::Condition* Node::release_condition() {
-  clear_has_condition();
-  ::BehaviorPB::Condition* temp = condition_;
-  condition_ = NULL;
+inline ::BehaviorPB::Sequence* Node::release_sequence() {
+  clear_has_sequence();
+  ::BehaviorPB::Sequence* temp = sequence_;
+  sequence_ = NULL;
   return temp;
 }
-inline void Node::set_allocated_condition(::BehaviorPB::Condition* condition) {
-  delete condition_;
-  condition_ = condition;
-  if (condition) {
-    set_has_condition();
+inline void Node::set_allocated_sequence(::BehaviorPB::Sequence* sequence) {
+  delete sequence_;
+  sequence_ = sequence;
+  if (sequence) {
+    set_has_sequence();
   } else {
-    clear_has_condition();
+    clear_has_sequence();
   }
 }
 
-// optional .BehaviorPB.Action action = 6;
-inline bool Node::has_action() const {
+// optional .BehaviorPB.Parallel parallel = 6;
+inline bool Node::has_parallel() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
-inline void Node::set_has_action() {
+inline void Node::set_has_parallel() {
   _has_bits_[0] |= 0x00000020u;
 }
-inline void Node::clear_has_action() {
+inline void Node::clear_has_parallel() {
   _has_bits_[0] &= ~0x00000020u;
+}
+inline void Node::clear_parallel() {
+  if (parallel_ != NULL) parallel_->::BehaviorPB::Parallel::Clear();
+  clear_has_parallel();
+}
+inline const ::BehaviorPB::Parallel& Node::parallel() const {
+  return parallel_ != NULL ? *parallel_ : *default_instance_->parallel_;
+}
+inline ::BehaviorPB::Parallel* Node::mutable_parallel() {
+  set_has_parallel();
+  if (parallel_ == NULL) parallel_ = new ::BehaviorPB::Parallel;
+  return parallel_;
+}
+inline ::BehaviorPB::Parallel* Node::release_parallel() {
+  clear_has_parallel();
+  ::BehaviorPB::Parallel* temp = parallel_;
+  parallel_ = NULL;
+  return temp;
+}
+inline void Node::set_allocated_parallel(::BehaviorPB::Parallel* parallel) {
+  delete parallel_;
+  parallel_ = parallel;
+  if (parallel) {
+    set_has_parallel();
+  } else {
+    clear_has_parallel();
+  }
+}
+
+// optional .BehaviorPB.Action action = 7;
+inline bool Node::has_action() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void Node::set_has_action() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void Node::clear_has_action() {
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void Node::clear_action() {
   if (action_ != NULL) action_->::BehaviorPB::Action::Clear();
@@ -1448,15 +2260,53 @@ inline void Node::set_allocated_action(::BehaviorPB::Action* action) {
   }
 }
 
-// optional .BehaviorPB.Link link = 7;
+// optional .BehaviorPB.Condition condition = 8;
+inline bool Node::has_condition() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void Node::set_has_condition() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void Node::clear_has_condition() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void Node::clear_condition() {
+  if (condition_ != NULL) condition_->::BehaviorPB::Condition::Clear();
+  clear_has_condition();
+}
+inline const ::BehaviorPB::Condition& Node::condition() const {
+  return condition_ != NULL ? *condition_ : *default_instance_->condition_;
+}
+inline ::BehaviorPB::Condition* Node::mutable_condition() {
+  set_has_condition();
+  if (condition_ == NULL) condition_ = new ::BehaviorPB::Condition;
+  return condition_;
+}
+inline ::BehaviorPB::Condition* Node::release_condition() {
+  clear_has_condition();
+  ::BehaviorPB::Condition* temp = condition_;
+  condition_ = NULL;
+  return temp;
+}
+inline void Node::set_allocated_condition(::BehaviorPB::Condition* condition) {
+  delete condition_;
+  condition_ = condition;
+  if (condition) {
+    set_has_condition();
+  } else {
+    clear_has_condition();
+  }
+}
+
+// optional .BehaviorPB.Link link = 9;
 inline bool Node::has_link() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void Node::set_has_link() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void Node::clear_has_link() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void Node::clear_link() {
   if (link_ != NULL) link_->::BehaviorPB::Link::Clear();
@@ -1486,19 +2336,283 @@ inline void Node::set_allocated_link(::BehaviorPB::Link* link) {
   }
 }
 
+// optional .BehaviorPB.DecoratorNot d_not = 10;
+inline bool Node::has_d_not() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void Node::set_has_d_not() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void Node::clear_has_d_not() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void Node::clear_d_not() {
+  if (d_not_ != NULL) d_not_->::BehaviorPB::DecoratorNot::Clear();
+  clear_has_d_not();
+}
+inline const ::BehaviorPB::DecoratorNot& Node::d_not() const {
+  return d_not_ != NULL ? *d_not_ : *default_instance_->d_not_;
+}
+inline ::BehaviorPB::DecoratorNot* Node::mutable_d_not() {
+  set_has_d_not();
+  if (d_not_ == NULL) d_not_ = new ::BehaviorPB::DecoratorNot;
+  return d_not_;
+}
+inline ::BehaviorPB::DecoratorNot* Node::release_d_not() {
+  clear_has_d_not();
+  ::BehaviorPB::DecoratorNot* temp = d_not_;
+  d_not_ = NULL;
+  return temp;
+}
+inline void Node::set_allocated_d_not(::BehaviorPB::DecoratorNot* d_not) {
+  delete d_not_;
+  d_not_ = d_not;
+  if (d_not) {
+    set_has_d_not();
+  } else {
+    clear_has_d_not();
+  }
+}
+
+// optional .BehaviorPB.DecoratorLoop d_loop = 11;
+inline bool Node::has_d_loop() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void Node::set_has_d_loop() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void Node::clear_has_d_loop() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void Node::clear_d_loop() {
+  if (d_loop_ != NULL) d_loop_->::BehaviorPB::DecoratorLoop::Clear();
+  clear_has_d_loop();
+}
+inline const ::BehaviorPB::DecoratorLoop& Node::d_loop() const {
+  return d_loop_ != NULL ? *d_loop_ : *default_instance_->d_loop_;
+}
+inline ::BehaviorPB::DecoratorLoop* Node::mutable_d_loop() {
+  set_has_d_loop();
+  if (d_loop_ == NULL) d_loop_ = new ::BehaviorPB::DecoratorLoop;
+  return d_loop_;
+}
+inline ::BehaviorPB::DecoratorLoop* Node::release_d_loop() {
+  clear_has_d_loop();
+  ::BehaviorPB::DecoratorLoop* temp = d_loop_;
+  d_loop_ = NULL;
+  return temp;
+}
+inline void Node::set_allocated_d_loop(::BehaviorPB::DecoratorLoop* d_loop) {
+  delete d_loop_;
+  d_loop_ = d_loop;
+  if (d_loop) {
+    set_has_d_loop();
+  } else {
+    clear_has_d_loop();
+  }
+}
+
+// optional .BehaviorPB.DecoratorCounter d_counter = 12;
+inline bool Node::has_d_counter() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void Node::set_has_d_counter() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void Node::clear_has_d_counter() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void Node::clear_d_counter() {
+  if (d_counter_ != NULL) d_counter_->::BehaviorPB::DecoratorCounter::Clear();
+  clear_has_d_counter();
+}
+inline const ::BehaviorPB::DecoratorCounter& Node::d_counter() const {
+  return d_counter_ != NULL ? *d_counter_ : *default_instance_->d_counter_;
+}
+inline ::BehaviorPB::DecoratorCounter* Node::mutable_d_counter() {
+  set_has_d_counter();
+  if (d_counter_ == NULL) d_counter_ = new ::BehaviorPB::DecoratorCounter;
+  return d_counter_;
+}
+inline ::BehaviorPB::DecoratorCounter* Node::release_d_counter() {
+  clear_has_d_counter();
+  ::BehaviorPB::DecoratorCounter* temp = d_counter_;
+  d_counter_ = NULL;
+  return temp;
+}
+inline void Node::set_allocated_d_counter(::BehaviorPB::DecoratorCounter* d_counter) {
+  delete d_counter_;
+  d_counter_ = d_counter;
+  if (d_counter) {
+    set_has_d_counter();
+  } else {
+    clear_has_d_counter();
+  }
+}
+
+// optional .BehaviorPB.DecoratorTimer d_timer = 13;
+inline bool Node::has_d_timer() const {
+  return (_has_bits_[0] & 0x00001000u) != 0;
+}
+inline void Node::set_has_d_timer() {
+  _has_bits_[0] |= 0x00001000u;
+}
+inline void Node::clear_has_d_timer() {
+  _has_bits_[0] &= ~0x00001000u;
+}
+inline void Node::clear_d_timer() {
+  if (d_timer_ != NULL) d_timer_->::BehaviorPB::DecoratorTimer::Clear();
+  clear_has_d_timer();
+}
+inline const ::BehaviorPB::DecoratorTimer& Node::d_timer() const {
+  return d_timer_ != NULL ? *d_timer_ : *default_instance_->d_timer_;
+}
+inline ::BehaviorPB::DecoratorTimer* Node::mutable_d_timer() {
+  set_has_d_timer();
+  if (d_timer_ == NULL) d_timer_ = new ::BehaviorPB::DecoratorTimer;
+  return d_timer_;
+}
+inline ::BehaviorPB::DecoratorTimer* Node::release_d_timer() {
+  clear_has_d_timer();
+  ::BehaviorPB::DecoratorTimer* temp = d_timer_;
+  d_timer_ = NULL;
+  return temp;
+}
+inline void Node::set_allocated_d_timer(::BehaviorPB::DecoratorTimer* d_timer) {
+  delete d_timer_;
+  d_timer_ = d_timer;
+  if (d_timer) {
+    set_has_d_timer();
+  } else {
+    clear_has_d_timer();
+  }
+}
+
+// -------------------------------------------------------------------
+
+// Tree_Editor
+
+// required string desc = 1;
+inline bool Tree_Editor::has_desc() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Tree_Editor::set_has_desc() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Tree_Editor::clear_has_desc() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Tree_Editor::clear_desc() {
+  if (desc_ != &::google::protobuf::internal::kEmptyString) {
+    desc_->clear();
+  }
+  clear_has_desc();
+}
+inline const ::std::string& Tree_Editor::desc() const {
+  return *desc_;
+}
+inline void Tree_Editor::set_desc(const ::std::string& value) {
+  set_has_desc();
+  if (desc_ == &::google::protobuf::internal::kEmptyString) {
+    desc_ = new ::std::string;
+  }
+  desc_->assign(value);
+}
+inline void Tree_Editor::set_desc(const char* value) {
+  set_has_desc();
+  if (desc_ == &::google::protobuf::internal::kEmptyString) {
+    desc_ = new ::std::string;
+  }
+  desc_->assign(value);
+}
+inline void Tree_Editor::set_desc(const char* value, size_t size) {
+  set_has_desc();
+  if (desc_ == &::google::protobuf::internal::kEmptyString) {
+    desc_ = new ::std::string;
+  }
+  desc_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Tree_Editor::mutable_desc() {
+  set_has_desc();
+  if (desc_ == &::google::protobuf::internal::kEmptyString) {
+    desc_ = new ::std::string;
+  }
+  return desc_;
+}
+inline ::std::string* Tree_Editor::release_desc() {
+  clear_has_desc();
+  if (desc_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = desc_;
+    desc_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void Tree_Editor::set_allocated_desc(::std::string* desc) {
+  if (desc_ != &::google::protobuf::internal::kEmptyString) {
+    delete desc_;
+  }
+  if (desc) {
+    set_has_desc();
+    desc_ = desc;
+  } else {
+    clear_has_desc();
+    desc_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // Tree
 
-// required string name = 1;
-inline bool Tree::has_name() const {
+// optional .BehaviorPB.Tree.Editor editor = 1;
+inline bool Tree::has_editor() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Tree::set_has_name() {
+inline void Tree::set_has_editor() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Tree::clear_has_name() {
+inline void Tree::clear_has_editor() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void Tree::clear_editor() {
+  if (editor_ != NULL) editor_->::BehaviorPB::Tree_Editor::Clear();
+  clear_has_editor();
+}
+inline const ::BehaviorPB::Tree_Editor& Tree::editor() const {
+  return editor_ != NULL ? *editor_ : *default_instance_->editor_;
+}
+inline ::BehaviorPB::Tree_Editor* Tree::mutable_editor() {
+  set_has_editor();
+  if (editor_ == NULL) editor_ = new ::BehaviorPB::Tree_Editor;
+  return editor_;
+}
+inline ::BehaviorPB::Tree_Editor* Tree::release_editor() {
+  clear_has_editor();
+  ::BehaviorPB::Tree_Editor* temp = editor_;
+  editor_ = NULL;
+  return temp;
+}
+inline void Tree::set_allocated_editor(::BehaviorPB::Tree_Editor* editor) {
+  delete editor_;
+  editor_ = editor;
+  if (editor) {
+    set_has_editor();
+  } else {
+    clear_has_editor();
+  }
+}
+
+// required string name = 2;
+inline bool Tree::has_name() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Tree::set_has_name() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Tree::clear_has_name() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void Tree::clear_name() {
   if (name_ != &::google::protobuf::internal::kEmptyString) {
@@ -1560,15 +2674,15 @@ inline void Tree::set_allocated_name(::std::string* name) {
   }
 }
 
-// required .BehaviorPB.Node root = 2;
+// required .BehaviorPB.Node root = 3;
 inline bool Tree::has_root() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void Tree::set_has_root() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void Tree::clear_has_root() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void Tree::clear_root() {
   if (root_ != NULL) root_->::BehaviorPB::Node::Clear();
@@ -1607,6 +2721,10 @@ inline void Tree::set_allocated_root(::BehaviorPB::Node* root) {
 namespace google {
 namespace protobuf {
 
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::BehaviorPB::NodeType>() {
+  return ::BehaviorPB::NodeType_descriptor();
+}
 
 }  // namespace google
 }  // namespace protobuf

@@ -16,6 +16,8 @@
 #define __BEHAVIOR_DECORATOR_NODE_H__
 
 #include "behavior_tree.h"
+#include "windows.h"
+#include "Mmsystem.h"
 
 namespace BehaviorTree
 {
@@ -179,6 +181,59 @@ protected:
 protected:
 	int					m_nLimit;
 	int					m_nCount;
+};
+
+
+
+/**
+ * 
+ */
+class DecoratorTimerNode : public DecoratorNode
+{
+public:
+	DecoratorTimerNode() 
+		: m_nStart(0), m_nElpase(0)		{}
+	virtual ~DecoratorTimerNode()		{}
+
+	virtual int GetType()				{return NodeType_DecoratorTimer;}
+
+	void SetElpase(int nElpase)			{m_nElpase = nElpase;}
+	void ResetTimer()					{m_nStart = 0;}
+
+	virtual bool LoadProto(const Proto* pProto);
+	virtual bool DumpProto(Proto* pProto);
+
+protected:
+
+	/**
+	 * @brief DecoratorTimerNode _Decorate
+	 *
+	 * virtual protected 
+	 * Logic-Timer, on_timer exec;
+	 * @return 		NodeExecState		last state
+	 */
+	virtual NodeExecState _Decorate()
+	{
+		if (m_nStart > 0)
+		{
+			if (::timeGetTime() - m_nStart >= m_nElpase)
+				m_nStart = 0;
+			else
+				return NodeExec_Fail;
+		}
+
+		NodeExecState nRet = m_vChilds.front()->Execute();
+		if (nRet == NodeExec_Success)
+		{
+			if (m_nStart == 0 && m_nElpase > 0)
+				m_nStart = ::timeGetTime();
+		}
+		return nRet;
+	}
+
+protected:
+	int					m_nElpase;
+	int					m_nStart;
 };
 
 

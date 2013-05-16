@@ -16,13 +16,13 @@ const int N = 1000;
 
 using namespace BehaviorTree;
 
-enum
-{
-	NodeType_UserTypeStart = NodeType_UserCustom,
-	NodeTypeDef(PrintfDecoratorCounter),
-	NodeTypeDef(PrintfCondtion),
-	NodeTypeDef(PrintfAction),
-};
+// enum
+// {
+// 	NodeType_UserTypeStart = NodeType_UserCustom,
+// 	NodeTypeDef(PrintfDecoratorCounter),
+// 	NodeTypeDef(PrintfCondtion),
+// 	NodeTypeDef(PrintfAction),
+// };
 
 
 class PrintfDecoratorCounter : public DecoratorCounterNode
@@ -80,13 +80,10 @@ public:
 	}
 };
 
-void test_tree()
+void test_tree_w()
 {
 	BehaviorTree::BlackBoard board;
 	BehaviorTree::Tree tree(&board);
-
-// 	tree.LoadFile("test.pb");
-// 	tree.Clear();
 
 	board.WriteValue("tick", ChalkInk((unsigned int)nFreq.QuadPart));
 
@@ -109,6 +106,22 @@ void test_tree()
 	tree.DumpFile("test.pb");
 }
 
+void test_tree_r()
+{
+	BehaviorTree::BlackBoard board;
+	BehaviorTree::Tree tree(&board);
+
+	tree.LoadFile("test.pb");
+
+	board.WriteValue("tick", ChalkInk((unsigned int)nFreq.QuadPart));
+
+	for (int i = 0; i < 30; i ++)
+	{
+		printf("i = %d\n", i);
+		int ret = tree.Process();
+		printf("ret = %d\n", ret);
+	}
+}
 
 void test_tree2()
 {
@@ -148,7 +161,7 @@ int main()
 
 	QueryPerformanceCounter(&nBeginTime); 
 	{
-		test_tree2();
+		test_tree_r();
 	}
 	QueryPerformanceCounter(&nEndTime);
 

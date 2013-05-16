@@ -15,21 +15,8 @@
 #ifndef __BEHAVIOR_TREE_H__
 #define __BEHAVIOR_TREE_H__
 
-// conversion from '__w64 int' to 'int', possible loss of data
-#pragma warning(disable : 4244)
-// conversion from 'size_t' to 'int', possible loss of data
-#pragma warning(disable : 4267)
-// pointer truncation from 'void *' to 'int'
-#pragma warning(disable : 4311)
-
 #include "behavior_common.h"
 #include "callback.hpp"
-
-namespace BehaviorPB
-{
-class Tree;
-class Node;
-};
 
 
 namespace BehaviorTree
@@ -221,7 +208,7 @@ public:
 
 	struct Content
 	{
-		char type;
+		Type type;
 		union
 		{
 			bool				b;
@@ -347,7 +334,7 @@ public:
 
 public:
 	BlackBoard()
-		: m_pTree(NULL), m_pRunningNode(NULL)
+		: m_pRunningNode(NULL)
 	{}
 
 	virtual ~BlackBoard()
@@ -357,7 +344,6 @@ public:
 	{
 		m_valNull.SetEmpty();
 		m_mapChalks.clear();
-		m_pTree = NULL;
 		m_pRunningNode = NULL;
 	}
 
@@ -384,7 +370,6 @@ public:
 
 
 protected:
-	Tree*				m_pTree;
 	BaseNode*			m_pRunningNode;
 	ChalkMap			m_mapChalks;
 	ChalkInk			m_valNull;
@@ -427,7 +412,6 @@ public:
 	void SetBlackboard(BlackBoard* pBlackboard)
 	{
 		m_pBlackboard = pBlackboard;
-		m_pBlackboard->m_pTree = this;
 	}
 
 	bool				DumpFile(const char* szFile);
@@ -451,7 +435,7 @@ public:
 	typedef std::map <TreeName, ProtoPath>	TreeProtoMap;
 
 public:
-	static Tree*		CreateInstance(TreeName sName);
+	static Tree*		CreateInstance(TreeName sName, Tree* pParentTree = NULL, BlackBoard* pBlackboard = NULL);
 	static void			Register(TreeName sName, ProtoPath sPath);
 
 protected:
