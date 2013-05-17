@@ -13,11 +13,15 @@ namespace ai_editor
 	public partial class FormMain : Form
 	{
 		private AiTreeNode selectedNode;
+		private AiTreeNode dragMoveNode;
 		private string filePath;
 
 		public FormMain()
 		{
 			InitializeComponent();
+
+			treeView_BTree.Clear();
+			selectedNodeChange(null);
 		}
 
 		private void RefreshUI()
@@ -28,6 +32,21 @@ namespace ai_editor
 
 		private void selectedNodeChange(AiTreeNode newSelected)
 		{
+			if (newSelected != null)
+			{
+				新建节点ToolStripMenuItem.Text = "新建节点";
+				删除节点ToolStripMenuItem.Enabled = true;
+				上移节点ToolStripMenuItem.Enabled = true;
+				下移节点ToolStripMenuItem.Enabled = true;
+			}
+			else
+			{
+				新建节点ToolStripMenuItem.Text = "新建根节点";
+				删除节点ToolStripMenuItem.Enabled = false;
+				上移节点ToolStripMenuItem.Enabled = false;
+				下移节点ToolStripMenuItem.Enabled = false;
+			}
+
 			if (newSelected == selectedNode)
 				return;
 
@@ -40,7 +59,10 @@ namespace ai_editor
 				selectedNode.ExpandAll();
 			}
 			else
+			{
 				propertyGrid1.SelectedObject = null;
+			}
+			propertyGrid1.ExpandAllGridItems();
 		}
 
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -55,7 +77,8 @@ namespace ai_editor
 		private void newToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			filePath = null;
-			treeView_BTree.Nodes.Clear();
+			selectedNodeChange(null);
+			treeView_BTree.Clear();
 			NodeDef.Node.sIDCounter = 0;
 		}
 
@@ -201,17 +224,8 @@ namespace ai_editor
 				else
 					selectedNodeChange((AiTreeNode)treeView_BTree.SelectedNode);
 
-				if (selectedNode != null)
-				{
-					新建节点ToolStripMenuItem.Text = "新建节点";
-					删除节点ToolStripMenuItem.Enabled = true;
-				}
-				else
-				{
-					新建节点ToolStripMenuItem.Text = "新建根节点";
-					删除节点ToolStripMenuItem.Enabled = false;
-				}
-				contextMenuStrip_Node.Show(Cursor.Position);
+				if(selectedNode != null || treeView_BTree.Nodes)
+					contextMenuStrip_Node.Show(Cursor.Position);
 			}
 		}
 
@@ -223,7 +237,7 @@ namespace ai_editor
 
 		private void propertyGrid1_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
-			treeView_BTree.Refresh();
+			RefreshUI();
 		}
 
 		private void 删除节点ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -234,6 +248,93 @@ namespace ai_editor
 			treeView_BTree.Remove(selectedNode.LogicNode.Props.Key);
 		}
 
+		private void treeView_BTree_ItemDrag(object sender, ItemDragEventArgs e)
+		{
+			AiTreeNode tn = e.Item as AiTreeNode;
+			//根节点不允许拖放操作
+			if ((e.Button == MouseButtons.Left) && (tn != null) && (tn.Parent != null))
+			{
+				DoDragDrop(tn, DragDropEffects.Move);
+			}
+		}
+
+		private void treeView_BTree_DragEnter(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(typeof(AiTreeNode)))
+			{
+				e.Effect = DragDropEffects.Move;
+			}
+			else
+			{
+				e.Effect = DragDropEffects.None;
+			}
+		}
+
+		private void treeView_BTree_DragDrop(object sender, DragEventArgs e)
+		{
+			AiTreeNode treeNode;;
+			if (e.Data.GetDataPresent(typeof(AiTreeNode)))
+			{
+				// 拖放的目标节点
+				AiTreeNode targetTreeNode;
+				// 获取当前光标所处的坐标
+				// 定义一个位置点的变量，保存当前光标所处的坐标点
+				Point point = ((AiTreeView)sender).PointToClient(new Point(e.X, e.Y));
+				// 根据坐标点取得处于坐标点位置的节点
+				targetTreeNode = (AiTreeNode)((AiTreeView)sender).GetNodeAt(point);
+				// 获取被拖动的节点
+				treeNode = (AiTreeNode)e.Data.GetData(typeof(AiTreeNode));
+				// 判断拖动的节点与目标节点是否是同一个,同一个不予处理
+				if (treeNode.Name != targetTreeNode.Name)
+				{
+					treeNode.Move(targetTreeNode);
+					targetTreeNode.ExpandAll();
+				}
+
+			}
+
+			if (dragMoveNode != null)
+				dragMoveNode.BackColor = Color.White;
+			dragMoveNode = null;
+		}
+
+		private void treeView_BTree_DragLeave(object sender, EventArgs e)
+		{
+
+		}
+
+		private void treeView_BTree_DragOver(object sender, DragEventArgs e)
+		{
+			if (dragMoveNode != null)
+				dragMoveNode.BackColor = Color.White;
+
+			Point point = ((AiTreeView)sender).PointToClient(new Point(e.X, e.Y));
+			AiTreeNode moveNode = (AiTreeNode)((AiTreeView)sender).GetNodeAt(point);
+			moveNode.BackColor = Color.Gray;
+			dragMoveNode = moveNode;
+		}
+
+		private void treeView_BTree_MouseMove(object sender, MouseEventArgs e)
+		{
+		}
+
+		private void 上移节点ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (selectedNode == null)
+				return;
+
+			selectedNode.UpPos();
+		}
+
+		private void 下移节点ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (selectedNode == null)
+				return;
+
+			selectedNode.DownPos();
+		}
+
+		
 	}
 
 

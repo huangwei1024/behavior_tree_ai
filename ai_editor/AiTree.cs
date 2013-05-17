@@ -24,11 +24,6 @@ namespace ai_editor
 			InitializeComponent();
 		}
 
-		private new TreeNodeCollection Nodes
-		{
-			get { return base.Nodes; } 
-		}
-
 		public AiTreeNode AiRoot
 		{
 			get { return aiRoot; }
@@ -95,6 +90,11 @@ namespace ai_editor
 			base.Refresh();
 		}
 
+		public void Clear()
+		{
+			base.Nodes.Clear();
+		}
+
 		public void Remove(string key)
 		{
 			if (key == AiRoot.LogicNode.Props.Key)
@@ -102,6 +102,7 @@ namespace ai_editor
 			else
 				AiRoot.AiNodes.AiRemove(key, true);
 		}
+
 
 		private AiTreeNode aiRoot;
 	}
@@ -131,7 +132,49 @@ namespace ai_editor
 		{
 			Name = logicNode.Props.Key;
 			Text = logicNode.Props.Name;
+			ToolTipText = logicNode.Props.Desc;			
 			ImageKey = SelectedImageKey = logicNode.ImageName;
+		}
+
+		/// <summary>
+		/// 本节点移动到aiParent下面
+		/// </summary>
+		/// <param name="aiParent"></param>
+		public void Move(AiTreeNode aiParent)
+		{
+			AiTreeNode parent = Parent as AiTreeNode;
+			// 本来就是父节点，不动
+			if (parent == aiParent)
+				return;
+			// 自己是aiParent路径上的祖先节点，不动
+			AiTreeNode destParent = aiParent as AiTreeNode;
+			while (destParent != null)
+			{
+				if (destParent == this)
+					return;
+				destParent = destParent.Parent as AiTreeNode;
+			}
+
+			parent.AiNodes.AiRemove(Name, false);
+			aiParent.AiNodes.AiAdd(this);
+		}
+
+		public void UpPos()
+		{
+			AiTreeNode parent = Parent as AiTreeNode;
+			if (parent == null)
+				return;
+
+			parent.AiNodes.AiUpPos(this);
+		}
+
+		public void DownPos()
+		{
+			AiTreeNode parent = Parent as AiTreeNode;
+			if (parent == null)
+				return;
+
+			parent.AiNodes.AiDownPos(this);
 		}
 
 		private Node logicNode;
@@ -191,6 +234,26 @@ namespace ai_editor
 		public void AiClear()
 		{
 			nodes.Clear();
+		}
+
+		public void AiUpPos(AiTreeNode node)
+		{
+			int pos = nodes.IndexOf(node);
+			if (pos == 0)
+				return;
+
+			nodes.RemoveAt(pos);
+			nodes.Insert(pos - 1, node);
+		}
+
+		public void AiDownPos(AiTreeNode node)
+		{
+			int pos = nodes.IndexOf(node);
+			if (pos == nodes.Count - 1)
+				return;
+
+			nodes.RemoveAt(pos);
+			nodes.Insert(pos + 1, node);
 		}
 
 		public void AiRefresh()

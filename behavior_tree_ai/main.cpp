@@ -103,7 +103,7 @@ void test_tree_w()
 		printf("ret = %d\n", ret);
 	}
 
-	tree.DumpFile("test.pb");
+	tree.DumpFile("test.bt");
 }
 
 void test_tree_r()
@@ -111,7 +111,7 @@ void test_tree_r()
 	BehaviorTree::BlackBoard board;
 	BehaviorTree::Tree tree(&board);
 
-	tree.LoadFile("test.pb");
+	tree.LoadFile("export.bt");
 
 	board.WriteValue("tick", ChalkInk((unsigned int)nFreq.QuadPart));
 
@@ -144,7 +144,7 @@ void test_tree2()
 		printf("ret = %d\n", ret);
 	}
 
-	tree.DumpFile("test2.pb");
+	tree.DumpFile("test2.bt");
 }
 
 int main()
@@ -153,8 +153,8 @@ int main()
 	PrintfCondtion::Register();
 	PrintfAction::Register();
 
-	TreeProtoFactory::Register("test_tree", "test.pb");
-	TreeProtoFactory::Register("test_tree2", "test2.pb");
+	TreeProtoFactory::Register("test_tree", "test.bt");
+	TreeProtoFactory::Register("test_tree2", "test2.bt");
 
 
 	QueryPerformanceFrequency(&nFreq);

@@ -22,7 +22,7 @@ namespace ai_editor.NodeDef
 			get { return "Parallel"; }
 		}
 
-		public override int ClassType
+		public override int InitClassType
 		{
 			get { return StaticClassType; }
 		}

@@ -20,7 +20,7 @@ namespace ai_editor.NodeDef
 		public Node()
 		{
 			Props.ID = ++sIDCounter;
-			Props.Type = ClassType;
+			Props.Type = InitClassType;
 			Props.Key = string.Format("Node{0}", Props.ID);
 			Props.Name = string.Format("{0}{1}", ClassNameCn, Props.ID);
 			Props.Desc = "";
@@ -40,7 +40,10 @@ namespace ai_editor.NodeDef
 
 		public abstract string ClassNameEn { get;}
 
-		public abstract int ClassType { get;}
+		// 只在初始化时，基类获取子类初始类型
+		// 某些节点会在后续选择更改节点类型, 如 ActionNode中的NodeType_PrintfAction
+		// 节点类型获取以Props.Type为准，该值写入protobuf
+		public abstract int InitClassType { get;}
 
 		public virtual string ImageName
 		{
@@ -84,7 +87,7 @@ namespace ai_editor.NodeDef
 
 			// test
 			else if (type == (int)BehaviorPB.NodeType.NodeType_PrintfDecoratorCounter)
-				return new SelectorNode();
+				return new DecoratorCounterNode();
 			else if (type == (int)BehaviorPB.NodeType.NodeType_PrintfCondtion)
 				return new ConditionNode();
 			else if (type == (int)BehaviorPB.NodeType.NodeType_PrintfAction)
@@ -151,12 +154,10 @@ namespace ai_editor.NodeDef
 
 		public virtual bool LoadProtoBuf(BehaviorPB.Node node)
 		{
-			if (type != node.type)
-				return false;
-			
 			if (node.editor == null)
 				return false;
 
+			type = node.type;
 			id = node.editor.id;
 			key = node.editor.key;
 			name = node.editor.name;
@@ -207,4 +208,18 @@ namespace ai_editor.NodeDef
 			return value;
 		}
 	}
+
+	public class Util
+	{
+		public static string GetKeyByValue(Dictionary<string, int> dict, int value)
+		{
+			foreach (KeyValuePair<string, int> item in dict)
+			{
+				if (item.Value == value)
+					return item.Key;
+			}
+			return "";
+		}
+	}
 }
+

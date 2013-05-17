@@ -23,7 +23,7 @@ namespace ai_editor.NodeDef
 			get { return "DecoratorCounter"; }
 		}
 
-		public override int ClassType
+		public override int InitClassType
 		{
 			get { return StaticClassType; }
 		}
@@ -43,7 +43,6 @@ namespace ai_editor.NodeDef
 			}
 		}
 
-
 		public DecoratorCounterNodeProperties DerivedProps
 		{
 			get { return properties as DecoratorCounterNodeProperties; }
@@ -56,7 +55,14 @@ namespace ai_editor.NodeDef
 
 	public class DecoratorCounterNodeProperties : NodeProperties
 	{
+		private static Dictionary<string, int> sMapDecoratorCounterName = new Dictionary<string, int>();
 		private int limitCount;
+
+		static DecoratorCounterNodeProperties()
+		{
+			sMapDecoratorCounterName["printf_test"] = (int)BehaviorPB.NodeType.NodeType_PrintfDecoratorCounter;
+		}
+
 
 		[CategoryAttribute("计数器设置"),
 		DescriptionAttribute("次数限制")]
@@ -65,6 +71,42 @@ namespace ai_editor.NodeDef
 			get { return limitCount; }
 			set { limitCount = value; }
 		}
+
+		private string decoratorCounterType;
+		[CategoryAttribute("计数器设置"),
+	   DescriptionAttribute("计数器类型"),
+	   TypeConverter(typeof(DecoratorCounterNameConverter))]
+		public virtual string DecoratorCounterType
+		{
+			get { return decoratorCounterType; }
+			set
+			{
+				if (sMapDecoratorCounterName.ContainsKey(value))
+				{
+					decoratorCounterType = value;
+					Type = sMapDecoratorCounterName[value];
+				}
+				else
+				{
+					decoratorCounterType = "";
+					Type = DecoratorCounterNode.StaticClassType;
+				}
+			}
+		}
+
+		// ConditionType 属性下拉列表
+		public class DecoratorCounterNameConverter : StringConverter
+		{
+			public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+			{
+				return true;
+			}
+
+			public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+			{
+				return new StandardValuesCollection(sMapDecoratorCounterName.Keys);
+			}
+		}  
 
 		public override bool LoadProtoBuf(BehaviorPB.Node node)
 		{
@@ -75,6 +117,7 @@ namespace ai_editor.NodeDef
 				return false;
 
 			limitCount = node.d_counter.limit_cnt;
+			decoratorCounterType = Util.GetKeyByValue(sMapDecoratorCounterName, Type);
 			return true;
 		}
 

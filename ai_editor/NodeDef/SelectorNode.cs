@@ -22,7 +22,7 @@ namespace ai_editor.NodeDef
 			get { return "Selector"; }
 		}
 
-		public override int ClassType
+		public override int InitClassType
 		{
 			get { return StaticClassType; }
 		}

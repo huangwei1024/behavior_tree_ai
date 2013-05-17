@@ -23,7 +23,7 @@ namespace ai_editor.NodeDef
 			get { return "DecoratorNot"; }
 		}
 
-		public override int ClassType
+		public override int InitClassType
 		{
 			get { return StaticClassType; }
 		}
