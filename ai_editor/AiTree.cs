@@ -59,6 +59,8 @@ namespace ai_editor
 
 		public void LoadProtoBuf(string path)
 		{
+			Clear();
+
 			PBTree tree;
 			using (FileStream file = File.OpenRead(path))
 			{
@@ -92,6 +94,7 @@ namespace ai_editor
 
 		public void Clear()
 		{
+			aiRoot = null;
 			base.Nodes.Clear();
 		}
 
@@ -103,6 +106,13 @@ namespace ai_editor
 				AiRoot.AiNodes.AiRemove(key, true);
 		}
 
+		public void RootReplace(int nodeType)
+		{
+			TreeProperties treeProps = AiRoot.LogicNode.TreeNode.Props;
+			AiTreeNode newRoot = AiTreeNodeCollection.AiReplace(AiRoot, nodeType);
+			aiRoot = newRoot;
+			aiRoot.LogicNode.TreeNode = new NodeDef.Tree(aiRoot.LogicNode, treeProps);
+		}
 
 		private AiTreeNode aiRoot;
 	}
@@ -121,6 +131,7 @@ namespace ai_editor
 		public Node LogicNode
 		{
 			get { return logicNode; }
+			set { logicNode = value; }
 		}
 
 		public AiTreeNodeCollection AiNodes
@@ -197,6 +208,14 @@ namespace ai_editor
 			aiNewNode.Refresh();
 
 			return aiNewNode;
+		}
+
+		public static AiTreeNode AiReplace(AiTreeNode node, int nodeType)
+		{
+			node.LogicNode = NodeFactory.CreateInstance(nodeType);
+			node.Refresh();
+
+			return node;
 		}
 
 		public AiTreeNode AiAdd(int nodeType)

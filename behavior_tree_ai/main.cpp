@@ -16,15 +16,6 @@ const int N = 1000;
 
 using namespace BehaviorTree;
 
-// enum
-// {
-// 	NodeType_UserTypeStart = NodeType_UserCustom,
-// 	NodeTypeDef(PrintfDecoratorCounter),
-// 	NodeTypeDef(PrintfCondtion),
-// 	NodeTypeDef(PrintfAction),
-// };
-
-
 class PrintfDecoratorCounter : public DecoratorCounterNode
 {
 public:
@@ -78,6 +69,7 @@ public:
 		printf("hello, cnt %d\n", GetBlackboard()->LookupValue("cnt").Get<int>());
 		return NodeExec_Success;
 	}
+
 };
 
 void test_tree_w()

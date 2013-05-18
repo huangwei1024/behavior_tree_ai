@@ -22,6 +22,7 @@ namespace ai_editor
 
 			treeView_BTree.Clear();
 			selectedNodeChange(null);
+			替换节点ToolStripMenuItem.DropDown = 新建节点ToolStripMenuItem.DropDown;
 		}
 
 		private void RefreshUI()
@@ -35,6 +36,7 @@ namespace ai_editor
 			if (newSelected != null)
 			{
 				新建节点ToolStripMenuItem.Text = "新建节点";
+				替换节点ToolStripMenuItem.Enabled = true;
 				删除节点ToolStripMenuItem.Enabled = true;
 				上移节点ToolStripMenuItem.Enabled = true;
 				下移节点ToolStripMenuItem.Enabled = true;
@@ -42,13 +44,14 @@ namespace ai_editor
 			else
 			{
 				新建节点ToolStripMenuItem.Text = "新建根节点";
+				替换节点ToolStripMenuItem.Enabled = false;
 				删除节点ToolStripMenuItem.Enabled = false;
 				上移节点ToolStripMenuItem.Enabled = false;
 				下移节点ToolStripMenuItem.Enabled = false;
 			}
 
-			if (newSelected == selectedNode)
-				return;
+// 			if (newSelected == selectedNode)
+// 				return;
 
 			selectedNode = newSelected;
 			if (selectedNode != null)
@@ -63,6 +66,7 @@ namespace ai_editor
 				propertyGrid1.SelectedObject = null;
 			}
 			propertyGrid1.ExpandAllGridItems();
+			propertyGrid1.Refresh();
 		}
 
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -138,6 +142,13 @@ namespace ai_editor
 
 		private AiTreeNode insertAiTreeNode(int nodeType)
 		{
+			if (selectedNode != null && Util.IsOneChildLimit(selectedNode.LogicNode.Props.Type)
+				&& selectedNode.Nodes.Count > 0)
+			{
+				MessageBox.Show("该类型节点只能有一个子节点!");
+				return null;
+			}
+
 			AiTreeNode newNode;
 			if (selectedNode != null)
 			{
@@ -152,54 +163,124 @@ namespace ai_editor
 			return newNode;
 		}
 
+		private void replaceAiTreeNode(int nodeType)
+		{
+			if (selectedNode == null || nodeType == selectedNode.LogicNode.Props.Type)
+				return;
+
+			if (Util.IsOneChildLimit(nodeType)
+				&& selectedNode.Nodes.Count > 0)
+			{
+				MessageBox.Show("该类型节点只能有一个子节点!");
+				return;
+			}
+
+			if (treeView_BTree.AiRoot == selectedNode)
+				treeView_BTree.RootReplace(nodeType);
+			else
+				AiTreeNodeCollection.AiReplace(selectedNode, nodeType);
+
+			selectedNodeChange(selectedNode);
+		}
+
 		private void selectorToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			insertAiTreeNode(SelectorNode.StaticClassType);
+			ToolStripMenuItem item = sender as ToolStripMenuItem;
+			int nodeType = SelectorNode.StaticClassType;
+			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+				insertAiTreeNode(nodeType);
+			else
+				replaceAiTreeNode(nodeType);
 		}
 
 		private void sequenceToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			insertAiTreeNode(SequenceNode.StaticClassType);
+			ToolStripMenuItem item = sender as ToolStripMenuItem;
+			int nodeType = SequenceNode.StaticClassType;
+			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+				insertAiTreeNode(nodeType);
+			else
+				replaceAiTreeNode(nodeType);
 		}
 
 		private void parallelToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			insertAiTreeNode(ParallelNode.StaticClassType);
+			ToolStripMenuItem item = sender as ToolStripMenuItem;
+			int nodeType = ParallelNode.StaticClassType;
+			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+				insertAiTreeNode(nodeType);
+			else
+				replaceAiTreeNode(nodeType);
 		}
 
 		private void conditionToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			insertAiTreeNode(ConditionNode.StaticClassType);
+			ToolStripMenuItem item = sender as ToolStripMenuItem;
+			int nodeType = ConditionNode.StaticClassType;
+			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+				insertAiTreeNode(nodeType);
+			else
+				replaceAiTreeNode(nodeType);
 		}
 
 		private void actionToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			insertAiTreeNode(ActionNode.StaticClassType);
+			ToolStripMenuItem item = sender as ToolStripMenuItem;
+			int nodeType = ActionNode.StaticClassType;
+			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+				insertAiTreeNode(nodeType);
+			else
+				replaceAiTreeNode(nodeType);
 		}
 
 		private void linkToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			insertAiTreeNode(LinkNode.StaticClassType);
+			ToolStripMenuItem item = sender as ToolStripMenuItem;
+			int nodeType = LinkNode.StaticClassType;
+			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+				insertAiTreeNode(nodeType);
+			else
+				replaceAiTreeNode(nodeType);
 		}
 
 		private void notToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			insertAiTreeNode(DecoratorNotNode.StaticClassType);
+			ToolStripMenuItem item = sender as ToolStripMenuItem;
+			int nodeType = DecoratorNotNode.StaticClassType;
+			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+				insertAiTreeNode(nodeType);
+			else
+				replaceAiTreeNode(nodeType);
 		}
 
 		private void loopToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			insertAiTreeNode(DecoratorLoopNode.StaticClassType);
+			ToolStripMenuItem item = sender as ToolStripMenuItem;
+			int nodeType = DecoratorLoopNode.StaticClassType;
+			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+				insertAiTreeNode(nodeType);
+			else
+				replaceAiTreeNode(nodeType);
 		}
 
 		private void timerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			insertAiTreeNode(DecoratorTimerNode.StaticClassType);
+			ToolStripMenuItem item = sender as ToolStripMenuItem;
+			int nodeType = DecoratorTimerNode.StaticClassType;
+			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+				insertAiTreeNode(nodeType);
+			else
+				replaceAiTreeNode(nodeType);
 		}
 
 		private void counterToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			insertAiTreeNode(DecoratorCounterNode.StaticClassType);
+			ToolStripMenuItem item = sender as ToolStripMenuItem;
+			int nodeType = DecoratorCounterNode.StaticClassType;
+			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+				insertAiTreeNode(nodeType);
+			else
+				replaceAiTreeNode(nodeType);
 		}
 
 
@@ -207,7 +288,11 @@ namespace ai_editor
 		{
 			selectedNodeChange((AiTreeNode)e.Node);
 		}
-		
+
+		private void treeView_BTree_MouseClick(object sender, MouseEventArgs e)
+		{
+			selectedNodeChange(selectedNode);
+		}
 
 		private void treeView_BTree_MouseUp(object sender, MouseEventArgs e)
 		{
@@ -224,8 +309,8 @@ namespace ai_editor
 				else
 					selectedNodeChange((AiTreeNode)treeView_BTree.SelectedNode);
 
-				if(selectedNode != null || treeView_BTree.Nodes)
-					contextMenuStrip_Node.Show(Cursor.Position);
+				treeView_BTree.SelectedNode = selectedNode;
+				contextMenuStrip_Node.Show(Cursor.Position);
 			}
 		}
 
@@ -333,7 +418,6 @@ namespace ai_editor
 
 			selectedNode.DownPos();
 		}
-
 		
 	}
 

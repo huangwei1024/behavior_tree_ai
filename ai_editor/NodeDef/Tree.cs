@@ -22,6 +22,12 @@ namespace ai_editor.NodeDef
 			Props.Root = root.Props;
 		}
 
+		public Tree(Node root, TreeProperties props)
+		{
+			properties = props;
+			Props.Root = root.Props;
+		}
+
 		public virtual TreeProperties Props
 		{
 			get

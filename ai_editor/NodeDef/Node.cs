@@ -220,6 +220,21 @@ namespace ai_editor.NodeDef
 			}
 			return "";
 		}
+		public static bool IsOneChildLimit(int nodeType)
+		{
+			switch (nodeType)
+			{
+			case (int)NodeType.NodeType_Decorator:
+			case (int)NodeType.NodeType_DecoratorNot:
+			case (int)NodeType.NodeType_DecoratorLoop:
+			case (int)NodeType.NodeType_DecoratorCounter:
+			case (int)NodeType.NodeType_DecoratorTimer:
+			case (int)NodeType.NodeType_PrintfDecoratorCounter:
+				return true;	
+			}
+			return false;
+		}
+
 	}
 }
 
