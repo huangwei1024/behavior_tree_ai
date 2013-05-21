@@ -24,14 +24,14 @@ namespace ai_editor.NodeDef
 			get { return "Action"; }
 		}
 
-		public override int InitClassType
+		public override NodeType InitClassType
 		{
 			get { return StaticClassType; }
 		}
 
-		public static int StaticClassType
+		public static NodeType StaticClassType
 		{
-			get { return (int)NodeType.NodeType_Action; }
+			get { return NodeType.NodeType_Action; }
 		}
 
 		public override NodeProperties Props
@@ -57,15 +57,7 @@ namespace ai_editor.NodeDef
 
 	public class ActionNodeProperties : NodeProperties
 	{
-		private static Dictionary<string, int> sMapActionName = new Dictionary<string, int>();
 		private string scriptPath;
-
-		static ActionNodeProperties()
-		{
-			//Util.InsertStringIntPair(sMapActionName, "printf_test", (int)BehaviorPB.NodeType.NodeType_PrintfAction);
-			sMapActionName["printf_test"] = (int)BehaviorPB.NodeType.NodeType_PrintfAction;
-		}
-
 		[CategoryAttribute("行为设置"),
 		DescriptionAttribute("脚本路径"),
 		EditorAttribute(typeof(PropertyGridFileItem), typeof(System.Drawing.Design.UITypeEditor))]
@@ -76,49 +68,32 @@ namespace ai_editor.NodeDef
 			{ 
 				scriptPath = value;
 				if (value.Length > 0)
-					ActionType = ""; // 互斥
+					ActionType = Action.Type.Null; // 互斥
 			}
 		}
 
 
 		// editor
-		private string actionType;
+		private Action.Type actionType = Action.Type.Null;
 		[CategoryAttribute("行为设置"),
-		DescriptionAttribute("行为类型"),
-		TypeConverter(typeof(ActionNameConverter))]
-		public virtual string ActionType
+		DescriptionAttribute("行为类型")]
+		public virtual Action.Type ActionType
 		{
 			get { return actionType; }
 			set 
 			{
-				if (sMapActionName.ContainsKey(value))
-				{
-					actionType = value;
-					Type = sMapActionName[value];
-					ScriptPath = ""; // 互斥
-				}
+				actionType = value;
+				if (value == Action.Type.Null)
+					Type = ActionNode.StaticClassType;
 				else
 				{
-					actionType = "";
-					Type = ActionNode.StaticClassType;
+					Type = (NodeType)value;
+					scriptPath = ""; // 互斥
 				}
 				
 			}
 		}
 
-		// ActionType 属性下拉列表
-		public class ActionNameConverter : StringConverter 
-		{
-			public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-			{
-				return true;
-			}
-
-			public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
-			{
-				return new StandardValuesCollection(sMapActionName.Keys);
-			}
-		}  
 
 		public override bool LoadProtoBuf(BehaviorPB.Node node)
 		{
@@ -129,7 +104,7 @@ namespace ai_editor.NodeDef
 				return false;
 
 			scriptPath = node.action.script_path;
-			actionType = Util.GetKeyByValue(sMapActionName, Type);
+			actionType = (Action.Type)Type;
 			return true;
 		}
 

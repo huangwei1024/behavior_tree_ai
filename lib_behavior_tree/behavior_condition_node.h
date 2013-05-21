@@ -25,8 +25,11 @@ namespace BehaviorTree
  */
 class ConditionNode : public LeafNode
 {
+	NodeLoadProtoDef(LeafNode, Condition, condition);
+
 public:
-	ConditionNode()						{}
+	ConditionNode()
+		: m_pProto(NULL)				{}
 	virtual ~ConditionNode()			{}
 
 	virtual int				GetType()	{return NodeType_Condition;}
@@ -43,9 +46,6 @@ public:
 	 * @return 		NodeExecState
 	 */
 	virtual NodeExecState	Execute()		{return NodeExec_Success;}
-
-protected:
-
 };
 
 };

@@ -30,7 +30,6 @@ class BaseNode
 public:
 	friend Tree;
 	typedef const char*					TypeStr;
-	typedef BehaviorPB::Node			Proto;
 
 public:
 	BaseNode()
@@ -48,7 +47,12 @@ public:
 	 *
 	 * public 
 	 */
-	void SetParent(NonLeafNode* pParent);
+	void SetParent(NonLeafNode* pParent)
+	{
+		m_pParent = pParent;
+		if (m_pParent)
+			m_pTree = ((BaseNode*)m_pParent)->m_pTree;
+	}
 
 	/**
 	 * @brief GetParent
@@ -71,10 +75,21 @@ public:
 	 */
 	BlackBoard* GetBlackboard();
 
+	/**
+	 * @brief SetRunning
+	 *
+	 * public 
+	 * I running
+	 */
+	void SetRunning();
+
 	virtual void ClearChild() {}
 	virtual void AddChild(BaseNode* pChild) {assert(false);}
 	virtual void DeleteChild(BaseNode* pChild) {assert(false);}
 	virtual void SwapChild(BaseNode* pChild1, BaseNode* pChild2) {assert(false);}
+
+	virtual int				GetType() = 0;
+	virtual NodeExecState	Execute() = 0;
 
 	/**
 	 * @brief LoadProto
@@ -82,18 +97,7 @@ public:
 	 * virtual public 
 	 * @param 		pProto [in]		protobuf pointer
 	 */
-	virtual bool			LoadProto(const Proto* pProto);
-
-	/**
-	 * @brief DumpProto
-	 *
-	 * virtual public 
-	 * @param 		pProto [out]	protobuf pointer
-	 */
-	virtual bool			DumpProto(Proto* pProto);
-
-	virtual int				GetType() = 0;
-	virtual NodeExecState	Execute() = 0;
+	virtual bool			LoadProto(const BehaviorPB::Node* pProto);
 
 protected:
 	Tree*					m_pTree;
@@ -165,8 +169,7 @@ public:
 		}
 	}
 
-	virtual bool	LoadProto(const Proto* pProto);
-	virtual bool	DumpProto(Proto* pProto);
+	virtual bool	LoadProto(const BehaviorPB::Node* pProto);
 
 protected:
 	PtrList			m_vChilds;
@@ -347,9 +350,17 @@ public:
 		m_pRunningNode = NULL;
 	}
 
-	void WriteValue(const ChalkName& sKey, const ChalkInk& oVal)
+	template <class T>
+	ChalkInk& WriteValue(const ChalkName& sKey, const T& tVal)
 	{
-		m_mapChalks[sKey] = oVal;
+		return WriteValue(sKey, ChalkInk(tVal));
+	}
+
+	ChalkInk& WriteValue(const ChalkName& sKey, const ChalkInk& oVal)
+	{
+		typedef std::pair<ChalkMap::iterator, bool> PairItB;
+		PairItB prItB = m_mapChalks.insert(std::make_pair(sKey, oVal));
+		return prItB.first->second;
 	}
 
 	ChalkInk& LookupValue(const ChalkName& sKey)
@@ -368,9 +379,20 @@ public:
 		m_mapChalks.erase(sKey);
 	}
 
+	BaseNode* GetRunning()
+	{
+		return m_pRunningNode;
+	}
+
+	void SetRunning(BaseNode* pRunning)
+	{
+		m_pRunningNode = pRunning;
+	}
 
 protected:
+	// running state
 	BaseNode*			m_pRunningNode;
+
 	ChalkMap			m_mapChalks;
 	ChalkInk			m_valNull;
 };
@@ -384,9 +406,6 @@ protected:
  */
 class Tree
 {
-public:
-	typedef BehaviorPB::Tree	Proto;
-
 public:
 	Tree();
 	Tree(BlackBoard* pBlackboard);
@@ -414,8 +433,7 @@ public:
 		m_pBlackboard = pBlackboard;
 	}
 
-	bool				DumpFile(const char* szFile);
-	bool				LoadFile(const char* szFile);
+	bool LoadFile(BehaviorPB::Tree* pProto);
 
 protected:
 	String				m_sName;
@@ -427,19 +445,32 @@ protected:
 /**
  * behavior tree protobuf factory
  */
-class TreeProtoFactory
+class TreeFactory
 {
 public:
+	struct TreeCache;
 	typedef String							TreeName;
-	typedef String							ProtoPath;
-	typedef std::map <TreeName, ProtoPath>	TreeProtoMap;
+	typedef std::map <TreeName, TreeCache>	TreeProtoMap;
+
+	struct TreeCache
+	{
+		String				sTreeName;
+		String				sFilePath;
+		BehaviorPB::Tree*	pProto;
+	};
 
 public:
-	static Tree*		CreateInstance(TreeName sName, Tree* pParentTree = NULL, BlackBoard* pBlackboard = NULL);
-	static void			Register(TreeName sName, ProtoPath sPath);
+	virtual ~TreeFactory();
+
+	static TreeFactory*			GetInstance()	{static TreeFactory ins; return &ins;}
+	Tree*						CreateTree(TreeName sName, Tree* pParentTree = NULL, BlackBoard* pBlackboard = NULL);
+	void						RegisterTree(String sPath);
 
 protected:
-	static TreeProtoMap	ms_mapTree;
+	TreeFactory()			{}
+
+protected:
+	TreeProtoMap	m_mapTree;
 };
 
 };

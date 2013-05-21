@@ -43,7 +43,7 @@ namespace ai_editor.NodeDef
 		// 只在初始化时，基类获取子类初始类型
 		// 某些节点会在后续选择更改节点类型, 如 ActionNode中的NodeType_PrintfAction
 		// 节点类型获取以Props.Type为准，该值写入protobuf
-		public abstract int InitClassType { get;}
+		public abstract NodeType InitClassType { get;}
 
 		public virtual string ImageName
 		{
@@ -62,36 +62,48 @@ namespace ai_editor.NodeDef
 
 	public class NodeFactory
 	{
-		public static Node CreateInstance(int type)
+		public static Node CreateInstance(NodeType type)
 		{
-			if (type == SelectorNode.StaticClassType)
+			switch (type)
+			{
+			case NodeType.NodeType_Selector:
 				return new SelectorNode();
-			else if (type == SequenceNode.StaticClassType)
+			case NodeType.NodeType_Sequence:
 				return new SequenceNode();
-			else if (type == ParallelNode.StaticClassType)
+			case NodeType.NodeType_Parallel:
 				return new ParallelNode();
-			else if (type == ConditionNode.StaticClassType)
+			case NodeType.NodeType_Condition:
 				return new ConditionNode();
-			else if (type == ActionNode.StaticClassType)
+			case NodeType.NodeType_Action:
 				return new ActionNode();
-			else if (type == LinkNode.StaticClassType)
+			case NodeType.NodeType_Link:
 				return new LinkNode();
-			else if (type == DecoratorNotNode.StaticClassType)
+			case NodeType.NodeType_DecoratorNot:
 				return new DecoratorNotNode();
-			else if (type == DecoratorLoopNode.StaticClassType)
+			case NodeType.NodeType_DecoratorLoop:
 				return new DecoratorLoopNode();
-			else if (type == DecoratorTimerNode.StaticClassType)
+			case NodeType.NodeType_DecoratorTimer:
 				return new DecoratorTimerNode();
-			else if (type == DecoratorCounterNode.StaticClassType)
+			case NodeType.NodeType_DecoratorCounter:
 				return new DecoratorCounterNode();
-
+			case NodeType.NodeType_DecoratorRand:
+				return new DecoratorRandNode();
+			
 			// test
-			else if (type == (int)BehaviorPB.NodeType.NodeType_PrintfDecoratorCounter)
-				return new DecoratorCounterNode();
-			else if (type == (int)BehaviorPB.NodeType.NodeType_PrintfCondtion)
-				return new ConditionNode();
-			else if (type == (int)BehaviorPB.NodeType.NodeType_PrintfAction)
+			case NodeType.NodeType_CntTestAction2_2:
+			case NodeType.NodeType_CntTestAction0:
+			case NodeType.NodeType_CntTestAction1:
+			case NodeType.NodeType_CntTestAction2:
+			case NodeType.NodeType_CntTestAction:
 				return new ActionNode();
+			case NodeType.NodeType_PrintfDecoratorCounter:
+				return new DecoratorCounterNode();
+			case NodeType.NodeType_PrintfCondtion:
+				return new ConditionNode();
+			case NodeType.NodeType_PrintfAction:
+				return new ActionNode();
+			}
+
 			return null;
 		}
 	}
@@ -101,12 +113,12 @@ namespace ai_editor.NodeDef
 
 	public class NodeProperties
 	{
-		private int type;
+		private NodeType type;
 
 		[CategoryAttribute("全局设置"),
 		ReadOnlyAttribute(true),
 		DescriptionAttribute("节点类型")]
-		public virtual int Type
+		public virtual NodeType Type
 		{
 			get { return type; }
 			set { type = value; }
@@ -220,16 +232,17 @@ namespace ai_editor.NodeDef
 			}
 			return "";
 		}
-		public static bool IsOneChildLimit(int nodeType)
+		public static bool IsOneChildLimit(NodeType nodeType)
 		{
 			switch (nodeType)
 			{
-			case (int)NodeType.NodeType_Decorator:
-			case (int)NodeType.NodeType_DecoratorNot:
-			case (int)NodeType.NodeType_DecoratorLoop:
-			case (int)NodeType.NodeType_DecoratorCounter:
-			case (int)NodeType.NodeType_DecoratorTimer:
-			case (int)NodeType.NodeType_PrintfDecoratorCounter:
+			case NodeType.NodeType_Decorator:
+			case NodeType.NodeType_DecoratorNot:
+			case NodeType.NodeType_DecoratorLoop:
+			case NodeType.NodeType_DecoratorCounter:
+			case NodeType.NodeType_DecoratorTimer:
+			case NodeType.NodeType_DecoratorRand:
+			case NodeType.NodeType_PrintfDecoratorCounter:
 				return true;	
 			}
 			return false;

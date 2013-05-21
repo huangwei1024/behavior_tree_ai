@@ -28,19 +28,22 @@ class LinkNode : public LeafNode
 {
 public:
 	LinkNode()
-		: m_pSubTree(NULL)
+		: m_pProto(NULL), m_pSubTree(NULL)
 	{}
 
 	virtual ~LinkNode()				{}
 
 	virtual int GetType()			{return NodeType_Link;}
 
-	void SetLinkTree(String sTreeName)
+	bool SetLinkTree(String sTreeName)
 	{
 		m_sSubTreeName = sTreeName;
 		SafeDelete(m_pSubTree);
-		m_pSubTree = TreeProtoFactory::CreateInstance(sTreeName, m_pTree);
+		m_pSubTree = TreeFactory::GetInstance()->CreateTree(sTreeName, m_pTree);
+		return m_pSubTree != NULL;
 	}
+
+	virtual bool LoadProto(const BehaviorPB::Node* pProto);
 
 	/**
 	 * @brief LinkNode Execute
@@ -58,12 +61,10 @@ public:
 		return NodeExec_Fail;
 	}
 
-	virtual bool LoadProto(const Proto* pProto);
-	virtual bool DumpProto(Proto* pProto);
-
 protected:
-	String		m_sSubTreeName;
-	Tree*		m_pSubTree;
+	const BehaviorPB::Link*		m_pProto;
+	String						m_sSubTreeName;
+	Tree*						m_pSubTree;
 };
 
 }

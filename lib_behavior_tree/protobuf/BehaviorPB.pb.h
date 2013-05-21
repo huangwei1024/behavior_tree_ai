@@ -44,11 +44,74 @@ class DecoratorNot;
 class DecoratorLoop;
 class DecoratorCounter;
 class DecoratorTimer;
+class DecoratorRand;
 class Node;
 class Node_Editor;
 class Tree;
 class Tree_Editor;
 
+enum Action_Type {
+  Action_Type_Null = 0,
+  Action_Type_CntTest2_2 = 992,
+  Action_Type_CntTest0 = 993,
+  Action_Type_CntTest1 = 994,
+  Action_Type_CntTest2 = 995,
+  Action_Type_CntTest = 996,
+  Action_Type_Printf = 999
+};
+bool Action_Type_IsValid(int value);
+const Action_Type Action_Type_Type_MIN = Action_Type_Null;
+const Action_Type Action_Type_Type_MAX = Action_Type_Printf;
+const int Action_Type_Type_ARRAYSIZE = Action_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* Action_Type_descriptor();
+inline const ::std::string& Action_Type_Name(Action_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    Action_Type_descriptor(), value);
+}
+inline bool Action_Type_Parse(
+    const ::std::string& name, Action_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<Action_Type>(
+    Action_Type_descriptor(), name, value);
+}
+enum Condition_Type {
+  Condition_Type_Null = 0,
+  Condition_Type_Printf = 998
+};
+bool Condition_Type_IsValid(int value);
+const Condition_Type Condition_Type_Type_MIN = Condition_Type_Null;
+const Condition_Type Condition_Type_Type_MAX = Condition_Type_Printf;
+const int Condition_Type_Type_ARRAYSIZE = Condition_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* Condition_Type_descriptor();
+inline const ::std::string& Condition_Type_Name(Condition_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    Condition_Type_descriptor(), value);
+}
+inline bool Condition_Type_Parse(
+    const ::std::string& name, Condition_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<Condition_Type>(
+    Condition_Type_descriptor(), name, value);
+}
+enum DecoratorCounter_Type {
+  DecoratorCounter_Type_Null = 0,
+  DecoratorCounter_Type_Printf = 997
+};
+bool DecoratorCounter_Type_IsValid(int value);
+const DecoratorCounter_Type DecoratorCounter_Type_Type_MIN = DecoratorCounter_Type_Null;
+const DecoratorCounter_Type DecoratorCounter_Type_Type_MAX = DecoratorCounter_Type_Printf;
+const int DecoratorCounter_Type_Type_ARRAYSIZE = DecoratorCounter_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* DecoratorCounter_Type_descriptor();
+inline const ::std::string& DecoratorCounter_Type_Name(DecoratorCounter_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    DecoratorCounter_Type_descriptor(), value);
+}
+inline bool DecoratorCounter_Type_Parse(
+    const ::std::string& name, DecoratorCounter_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<DecoratorCounter_Type>(
+    DecoratorCounter_Type_descriptor(), name, value);
+}
 enum NodeType {
   NodeType_Null = 0,
   NodeType_Selector = 1,
@@ -62,6 +125,12 @@ enum NodeType {
   NodeType_DecoratorLoop = 9,
   NodeType_DecoratorCounter = 10,
   NodeType_DecoratorTimer = 11,
+  NodeType_DecoratorRand = 12,
+  NodeType_CntTestAction2_2 = 992,
+  NodeType_CntTestAction0 = 993,
+  NodeType_CntTestAction1 = 994,
+  NodeType_CntTestAction2 = 995,
+  NodeType_CntTestAction = 996,
   NodeType_PrintfDecoratorCounter = 997,
   NodeType_PrintfCondtion = 998,
   NodeType_PrintfAction = 999
@@ -80,6 +149,25 @@ inline bool NodeType_Parse(
     const ::std::string& name, NodeType* value) {
   return ::google::protobuf::internal::ParseNamedEnum<NodeType>(
     NodeType_descriptor(), name, value);
+}
+enum ParallelPolicy {
+  ParallelPolicy_FailOnAll = 0,
+  ParallelPolicy_SuccOnAll = 1
+};
+bool ParallelPolicy_IsValid(int value);
+const ParallelPolicy ParallelPolicy_MIN = ParallelPolicy_FailOnAll;
+const ParallelPolicy ParallelPolicy_MAX = ParallelPolicy_SuccOnAll;
+const int ParallelPolicy_ARRAYSIZE = ParallelPolicy_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* ParallelPolicy_descriptor();
+inline const ::std::string& ParallelPolicy_Name(ParallelPolicy value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    ParallelPolicy_descriptor(), value);
+}
+inline bool ParallelPolicy_Parse(
+    const ::std::string& name, ParallelPolicy* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ParallelPolicy>(
+    ParallelPolicy_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -281,12 +369,12 @@ class Parallel : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required int32 policy = 1;
+  // required .BehaviorPB.ParallelPolicy policy = 1;
   inline bool has_policy() const;
   inline void clear_policy();
   static const int kPolicyFieldNumber = 1;
-  inline ::google::protobuf::int32 policy() const;
-  inline void set_policy(::google::protobuf::int32 value);
+  inline ::BehaviorPB::ParallelPolicy policy() const;
+  inline void set_policy(::BehaviorPB::ParallelPolicy value);
 
   // @@protoc_insertion_point(class_scope:BehaviorPB.Parallel)
  private:
@@ -295,7 +383,7 @@ class Parallel : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::int32 policy_;
+  int policy_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -360,6 +448,35 @@ class Action : public ::google::protobuf::Message {
   ::google::protobuf::Metadata GetMetadata() const;
 
   // nested types ----------------------------------------------------
+
+  typedef Action_Type Type;
+  static const Type Null = Action_Type_Null;
+  static const Type CntTest2_2 = Action_Type_CntTest2_2;
+  static const Type CntTest0 = Action_Type_CntTest0;
+  static const Type CntTest1 = Action_Type_CntTest1;
+  static const Type CntTest2 = Action_Type_CntTest2;
+  static const Type CntTest = Action_Type_CntTest;
+  static const Type Printf = Action_Type_Printf;
+  static inline bool Type_IsValid(int value) {
+    return Action_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    Action_Type_Type_MIN;
+  static const Type Type_MAX =
+    Action_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    Action_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return Action_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return Action_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return Action_Type_Parse(name, value);
+  }
 
   // accessors -------------------------------------------------------
 
@@ -447,6 +564,30 @@ class Condition : public ::google::protobuf::Message {
   ::google::protobuf::Metadata GetMetadata() const;
 
   // nested types ----------------------------------------------------
+
+  typedef Condition_Type Type;
+  static const Type Null = Condition_Type_Null;
+  static const Type Printf = Condition_Type_Printf;
+  static inline bool Type_IsValid(int value) {
+    return Condition_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    Condition_Type_Type_MIN;
+  static const Type Type_MAX =
+    Condition_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    Condition_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return Condition_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return Condition_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return Condition_Type_Parse(name, value);
+  }
 
   // accessors -------------------------------------------------------
 
@@ -703,17 +844,47 @@ class DecoratorLoop : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 loop_cnt() const;
   inline void set_loop_cnt(::google::protobuf::int32 value);
 
+  // required string loop_key = 2;
+  inline bool has_loop_key() const;
+  inline void clear_loop_key();
+  static const int kLoopKeyFieldNumber = 2;
+  inline const ::std::string& loop_key() const;
+  inline void set_loop_key(const ::std::string& value);
+  inline void set_loop_key(const char* value);
+  inline void set_loop_key(const char* value, size_t size);
+  inline ::std::string* mutable_loop_key();
+  inline ::std::string* release_loop_key();
+  inline void set_allocated_loop_key(::std::string* loop_key);
+
+  // required string bb_i = 3;
+  inline bool has_bb_i() const;
+  inline void clear_bb_i();
+  static const int kBbIFieldNumber = 3;
+  inline const ::std::string& bb_i() const;
+  inline void set_bb_i(const ::std::string& value);
+  inline void set_bb_i(const char* value);
+  inline void set_bb_i(const char* value, size_t size);
+  inline ::std::string* mutable_bb_i();
+  inline ::std::string* release_bb_i();
+  inline void set_allocated_bb_i(::std::string* bb_i);
+
   // @@protoc_insertion_point(class_scope:BehaviorPB.DecoratorLoop)
  private:
   inline void set_has_loop_cnt();
   inline void clear_has_loop_cnt();
+  inline void set_has_loop_key();
+  inline void clear_has_loop_key();
+  inline void set_has_bb_i();
+  inline void clear_has_bb_i();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* loop_key_;
+  ::std::string* bb_i_;
   ::google::protobuf::int32 loop_cnt_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_BehaviorPB_2eproto();
   friend void protobuf_AssignDesc_BehaviorPB_2eproto();
@@ -775,6 +946,30 @@ class DecoratorCounter : public ::google::protobuf::Message {
   ::google::protobuf::Metadata GetMetadata() const;
 
   // nested types ----------------------------------------------------
+
+  typedef DecoratorCounter_Type Type;
+  static const Type Null = DecoratorCounter_Type_Null;
+  static const Type Printf = DecoratorCounter_Type_Printf;
+  static inline bool Type_IsValid(int value) {
+    return DecoratorCounter_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    DecoratorCounter_Type_Type_MIN;
+  static const Type Type_MAX =
+    DecoratorCounter_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    DecoratorCounter_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return DecoratorCounter_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return DecoratorCounter_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return DecoratorCounter_Type_Parse(name, value);
+  }
 
   // accessors -------------------------------------------------------
 
@@ -867,17 +1062,27 @@ class DecoratorTimer : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 elpase() const;
   inline void set_elpase(::google::protobuf::int32 value);
 
+  // required int32 start = 2;
+  inline bool has_start() const;
+  inline void clear_start();
+  static const int kStartFieldNumber = 2;
+  inline ::google::protobuf::int32 start() const;
+  inline void set_start(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:BehaviorPB.DecoratorTimer)
  private:
   inline void set_has_elpase();
   inline void clear_has_elpase();
+  inline void set_has_start();
+  inline void clear_has_start();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::int32 elpase_;
+  ::google::protobuf::int32 start_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_BehaviorPB_2eproto();
   friend void protobuf_AssignDesc_BehaviorPB_2eproto();
@@ -885,6 +1090,136 @@ class DecoratorTimer : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static DecoratorTimer* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DecoratorRand : public ::google::protobuf::Message {
+ public:
+  DecoratorRand();
+  virtual ~DecoratorRand();
+
+  DecoratorRand(const DecoratorRand& from);
+
+  inline DecoratorRand& operator=(const DecoratorRand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DecoratorRand& default_instance();
+
+  void Swap(DecoratorRand* other);
+
+  // implements Message ----------------------------------------------
+
+  DecoratorRand* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DecoratorRand& from);
+  void MergeFrom(const DecoratorRand& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 r_idx = 1;
+  inline bool has_r_idx() const;
+  inline void clear_r_idx();
+  static const int kRIdxFieldNumber = 1;
+  inline ::google::protobuf::int32 r_idx() const;
+  inline void set_r_idx(::google::protobuf::int32 value);
+
+  // required int32 r_begin = 2;
+  inline bool has_r_begin() const;
+  inline void clear_r_begin();
+  static const int kRBeginFieldNumber = 2;
+  inline ::google::protobuf::int32 r_begin() const;
+  inline void set_r_begin(::google::protobuf::int32 value);
+
+  // required int32 r_end = 3;
+  inline bool has_r_end() const;
+  inline void clear_r_end();
+  static const int kREndFieldNumber = 3;
+  inline ::google::protobuf::int32 r_end() const;
+  inline void set_r_end(::google::protobuf::int32 value);
+
+  // repeated int32 choose_arr = 4;
+  inline int choose_arr_size() const;
+  inline void clear_choose_arr();
+  static const int kChooseArrFieldNumber = 4;
+  inline ::google::protobuf::int32 choose_arr(int index) const;
+  inline void set_choose_arr(int index, ::google::protobuf::int32 value);
+  inline void add_choose_arr(::google::protobuf::int32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      choose_arr() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_choose_arr();
+
+  // required string bb_rnd = 5;
+  inline bool has_bb_rnd() const;
+  inline void clear_bb_rnd();
+  static const int kBbRndFieldNumber = 5;
+  inline const ::std::string& bb_rnd() const;
+  inline void set_bb_rnd(const ::std::string& value);
+  inline void set_bb_rnd(const char* value);
+  inline void set_bb_rnd(const char* value, size_t size);
+  inline ::std::string* mutable_bb_rnd();
+  inline ::std::string* release_bb_rnd();
+  inline void set_allocated_bb_rnd(::std::string* bb_rnd);
+
+  // @@protoc_insertion_point(class_scope:BehaviorPB.DecoratorRand)
+ private:
+  inline void set_has_r_idx();
+  inline void clear_has_r_idx();
+  inline void set_has_r_begin();
+  inline void clear_has_r_begin();
+  inline void set_has_r_end();
+  inline void clear_has_r_end();
+  inline void set_has_bb_rnd();
+  inline void clear_has_bb_rnd();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 r_idx_;
+  ::google::protobuf::int32 r_begin_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > choose_arr_;
+  ::std::string* bb_rnd_;
+  ::google::protobuf::int32 r_end_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+
+  friend void  protobuf_AddDesc_BehaviorPB_2eproto();
+  friend void protobuf_AssignDesc_BehaviorPB_2eproto();
+  friend void protobuf_ShutdownFile_BehaviorPB_2eproto();
+
+  void InitAsDefaultInstance();
+  static DecoratorRand* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1092,12 +1427,12 @@ class Node : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::BehaviorPB::Node >*
       mutable_nodes();
 
-  // required int32 type = 3;
+  // required .BehaviorPB.NodeType type = 3;
   inline bool has_type() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 3;
-  inline ::google::protobuf::int32 type() const;
-  inline void set_type(::google::protobuf::int32 value);
+  inline ::BehaviorPB::NodeType type() const;
+  inline void set_type(::BehaviorPB::NodeType value);
 
   // optional .BehaviorPB.Selector selector = 4;
   inline bool has_selector() const;
@@ -1189,6 +1524,15 @@ class Node : public ::google::protobuf::Message {
   inline ::BehaviorPB::DecoratorTimer* release_d_timer();
   inline void set_allocated_d_timer(::BehaviorPB::DecoratorTimer* d_timer);
 
+  // optional .BehaviorPB.DecoratorRand d_rand = 14;
+  inline bool has_d_rand() const;
+  inline void clear_d_rand();
+  static const int kDRandFieldNumber = 14;
+  inline const ::BehaviorPB::DecoratorRand& d_rand() const;
+  inline ::BehaviorPB::DecoratorRand* mutable_d_rand();
+  inline ::BehaviorPB::DecoratorRand* release_d_rand();
+  inline void set_allocated_d_rand(::BehaviorPB::DecoratorRand* d_rand);
+
   // @@protoc_insertion_point(class_scope:BehaviorPB.Node)
  private:
   inline void set_has_editor();
@@ -1215,6 +1559,8 @@ class Node : public ::google::protobuf::Message {
   inline void clear_has_d_counter();
   inline void set_has_d_timer();
   inline void clear_has_d_timer();
+  inline void set_has_d_rand();
+  inline void clear_has_d_rand();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1230,10 +1576,11 @@ class Node : public ::google::protobuf::Message {
   ::BehaviorPB::DecoratorLoop* d_loop_;
   ::BehaviorPB::DecoratorCounter* d_counter_;
   ::BehaviorPB::DecoratorTimer* d_timer_;
-  ::google::protobuf::int32 type_;
+  ::BehaviorPB::DecoratorRand* d_rand_;
+  int type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(13 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(14 + 31) / 32];
 
   friend void  protobuf_AddDesc_BehaviorPB_2eproto();
   friend void protobuf_AssignDesc_BehaviorPB_2eproto();
@@ -1457,7 +1804,7 @@ class Tree : public ::google::protobuf::Message {
 
 // Parallel
 
-// required int32 policy = 1;
+// required .BehaviorPB.ParallelPolicy policy = 1;
 inline bool Parallel::has_policy() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1471,10 +1818,11 @@ inline void Parallel::clear_policy() {
   policy_ = 0;
   clear_has_policy();
 }
-inline ::google::protobuf::int32 Parallel::policy() const {
-  return policy_;
+inline ::BehaviorPB::ParallelPolicy Parallel::policy() const {
+  return static_cast< ::BehaviorPB::ParallelPolicy >(policy_);
 }
-inline void Parallel::set_policy(::google::protobuf::int32 value) {
+inline void Parallel::set_policy(::BehaviorPB::ParallelPolicy value) {
+  assert(::BehaviorPB::ParallelPolicy_IsValid(value));
   set_has_policy();
   policy_ = value;
 }
@@ -1731,6 +2079,146 @@ inline void DecoratorLoop::set_loop_cnt(::google::protobuf::int32 value) {
   loop_cnt_ = value;
 }
 
+// required string loop_key = 2;
+inline bool DecoratorLoop::has_loop_key() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DecoratorLoop::set_has_loop_key() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DecoratorLoop::clear_has_loop_key() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DecoratorLoop::clear_loop_key() {
+  if (loop_key_ != &::google::protobuf::internal::kEmptyString) {
+    loop_key_->clear();
+  }
+  clear_has_loop_key();
+}
+inline const ::std::string& DecoratorLoop::loop_key() const {
+  return *loop_key_;
+}
+inline void DecoratorLoop::set_loop_key(const ::std::string& value) {
+  set_has_loop_key();
+  if (loop_key_ == &::google::protobuf::internal::kEmptyString) {
+    loop_key_ = new ::std::string;
+  }
+  loop_key_->assign(value);
+}
+inline void DecoratorLoop::set_loop_key(const char* value) {
+  set_has_loop_key();
+  if (loop_key_ == &::google::protobuf::internal::kEmptyString) {
+    loop_key_ = new ::std::string;
+  }
+  loop_key_->assign(value);
+}
+inline void DecoratorLoop::set_loop_key(const char* value, size_t size) {
+  set_has_loop_key();
+  if (loop_key_ == &::google::protobuf::internal::kEmptyString) {
+    loop_key_ = new ::std::string;
+  }
+  loop_key_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DecoratorLoop::mutable_loop_key() {
+  set_has_loop_key();
+  if (loop_key_ == &::google::protobuf::internal::kEmptyString) {
+    loop_key_ = new ::std::string;
+  }
+  return loop_key_;
+}
+inline ::std::string* DecoratorLoop::release_loop_key() {
+  clear_has_loop_key();
+  if (loop_key_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = loop_key_;
+    loop_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void DecoratorLoop::set_allocated_loop_key(::std::string* loop_key) {
+  if (loop_key_ != &::google::protobuf::internal::kEmptyString) {
+    delete loop_key_;
+  }
+  if (loop_key) {
+    set_has_loop_key();
+    loop_key_ = loop_key;
+  } else {
+    clear_has_loop_key();
+    loop_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// required string bb_i = 3;
+inline bool DecoratorLoop::has_bb_i() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void DecoratorLoop::set_has_bb_i() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void DecoratorLoop::clear_has_bb_i() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void DecoratorLoop::clear_bb_i() {
+  if (bb_i_ != &::google::protobuf::internal::kEmptyString) {
+    bb_i_->clear();
+  }
+  clear_has_bb_i();
+}
+inline const ::std::string& DecoratorLoop::bb_i() const {
+  return *bb_i_;
+}
+inline void DecoratorLoop::set_bb_i(const ::std::string& value) {
+  set_has_bb_i();
+  if (bb_i_ == &::google::protobuf::internal::kEmptyString) {
+    bb_i_ = new ::std::string;
+  }
+  bb_i_->assign(value);
+}
+inline void DecoratorLoop::set_bb_i(const char* value) {
+  set_has_bb_i();
+  if (bb_i_ == &::google::protobuf::internal::kEmptyString) {
+    bb_i_ = new ::std::string;
+  }
+  bb_i_->assign(value);
+}
+inline void DecoratorLoop::set_bb_i(const char* value, size_t size) {
+  set_has_bb_i();
+  if (bb_i_ == &::google::protobuf::internal::kEmptyString) {
+    bb_i_ = new ::std::string;
+  }
+  bb_i_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DecoratorLoop::mutable_bb_i() {
+  set_has_bb_i();
+  if (bb_i_ == &::google::protobuf::internal::kEmptyString) {
+    bb_i_ = new ::std::string;
+  }
+  return bb_i_;
+}
+inline ::std::string* DecoratorLoop::release_bb_i() {
+  clear_has_bb_i();
+  if (bb_i_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = bb_i_;
+    bb_i_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void DecoratorLoop::set_allocated_bb_i(::std::string* bb_i) {
+  if (bb_i_ != &::google::protobuf::internal::kEmptyString) {
+    delete bb_i_;
+  }
+  if (bb_i) {
+    set_has_bb_i();
+    bb_i_ = bb_i;
+  } else {
+    clear_has_bb_i();
+    bb_i_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // DecoratorCounter
@@ -1781,6 +2269,193 @@ inline ::google::protobuf::int32 DecoratorTimer::elpase() const {
 inline void DecoratorTimer::set_elpase(::google::protobuf::int32 value) {
   set_has_elpase();
   elpase_ = value;
+}
+
+// required int32 start = 2;
+inline bool DecoratorTimer::has_start() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DecoratorTimer::set_has_start() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DecoratorTimer::clear_has_start() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DecoratorTimer::clear_start() {
+  start_ = 0;
+  clear_has_start();
+}
+inline ::google::protobuf::int32 DecoratorTimer::start() const {
+  return start_;
+}
+inline void DecoratorTimer::set_start(::google::protobuf::int32 value) {
+  set_has_start();
+  start_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// DecoratorRand
+
+// required int32 r_idx = 1;
+inline bool DecoratorRand::has_r_idx() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DecoratorRand::set_has_r_idx() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DecoratorRand::clear_has_r_idx() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DecoratorRand::clear_r_idx() {
+  r_idx_ = 0;
+  clear_has_r_idx();
+}
+inline ::google::protobuf::int32 DecoratorRand::r_idx() const {
+  return r_idx_;
+}
+inline void DecoratorRand::set_r_idx(::google::protobuf::int32 value) {
+  set_has_r_idx();
+  r_idx_ = value;
+}
+
+// required int32 r_begin = 2;
+inline bool DecoratorRand::has_r_begin() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DecoratorRand::set_has_r_begin() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DecoratorRand::clear_has_r_begin() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DecoratorRand::clear_r_begin() {
+  r_begin_ = 0;
+  clear_has_r_begin();
+}
+inline ::google::protobuf::int32 DecoratorRand::r_begin() const {
+  return r_begin_;
+}
+inline void DecoratorRand::set_r_begin(::google::protobuf::int32 value) {
+  set_has_r_begin();
+  r_begin_ = value;
+}
+
+// required int32 r_end = 3;
+inline bool DecoratorRand::has_r_end() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void DecoratorRand::set_has_r_end() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void DecoratorRand::clear_has_r_end() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void DecoratorRand::clear_r_end() {
+  r_end_ = 0;
+  clear_has_r_end();
+}
+inline ::google::protobuf::int32 DecoratorRand::r_end() const {
+  return r_end_;
+}
+inline void DecoratorRand::set_r_end(::google::protobuf::int32 value) {
+  set_has_r_end();
+  r_end_ = value;
+}
+
+// repeated int32 choose_arr = 4;
+inline int DecoratorRand::choose_arr_size() const {
+  return choose_arr_.size();
+}
+inline void DecoratorRand::clear_choose_arr() {
+  choose_arr_.Clear();
+}
+inline ::google::protobuf::int32 DecoratorRand::choose_arr(int index) const {
+  return choose_arr_.Get(index);
+}
+inline void DecoratorRand::set_choose_arr(int index, ::google::protobuf::int32 value) {
+  choose_arr_.Set(index, value);
+}
+inline void DecoratorRand::add_choose_arr(::google::protobuf::int32 value) {
+  choose_arr_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+DecoratorRand::choose_arr() const {
+  return choose_arr_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+DecoratorRand::mutable_choose_arr() {
+  return &choose_arr_;
+}
+
+// required string bb_rnd = 5;
+inline bool DecoratorRand::has_bb_rnd() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void DecoratorRand::set_has_bb_rnd() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void DecoratorRand::clear_has_bb_rnd() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void DecoratorRand::clear_bb_rnd() {
+  if (bb_rnd_ != &::google::protobuf::internal::kEmptyString) {
+    bb_rnd_->clear();
+  }
+  clear_has_bb_rnd();
+}
+inline const ::std::string& DecoratorRand::bb_rnd() const {
+  return *bb_rnd_;
+}
+inline void DecoratorRand::set_bb_rnd(const ::std::string& value) {
+  set_has_bb_rnd();
+  if (bb_rnd_ == &::google::protobuf::internal::kEmptyString) {
+    bb_rnd_ = new ::std::string;
+  }
+  bb_rnd_->assign(value);
+}
+inline void DecoratorRand::set_bb_rnd(const char* value) {
+  set_has_bb_rnd();
+  if (bb_rnd_ == &::google::protobuf::internal::kEmptyString) {
+    bb_rnd_ = new ::std::string;
+  }
+  bb_rnd_->assign(value);
+}
+inline void DecoratorRand::set_bb_rnd(const char* value, size_t size) {
+  set_has_bb_rnd();
+  if (bb_rnd_ == &::google::protobuf::internal::kEmptyString) {
+    bb_rnd_ = new ::std::string;
+  }
+  bb_rnd_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DecoratorRand::mutable_bb_rnd() {
+  set_has_bb_rnd();
+  if (bb_rnd_ == &::google::protobuf::internal::kEmptyString) {
+    bb_rnd_ = new ::std::string;
+  }
+  return bb_rnd_;
+}
+inline ::std::string* DecoratorRand::release_bb_rnd() {
+  clear_has_bb_rnd();
+  if (bb_rnd_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = bb_rnd_;
+    bb_rnd_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void DecoratorRand::set_allocated_bb_rnd(::std::string* bb_rnd) {
+  if (bb_rnd_ != &::google::protobuf::internal::kEmptyString) {
+    delete bb_rnd_;
+  }
+  if (bb_rnd) {
+    set_has_bb_rnd();
+    bb_rnd_ = bb_rnd;
+  } else {
+    clear_has_bb_rnd();
+    bb_rnd_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------
@@ -2086,7 +2761,7 @@ Node::mutable_nodes() {
   return &nodes_;
 }
 
-// required int32 type = 3;
+// required .BehaviorPB.NodeType type = 3;
 inline bool Node::has_type() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -2100,10 +2775,11 @@ inline void Node::clear_type() {
   type_ = 0;
   clear_has_type();
 }
-inline ::google::protobuf::int32 Node::type() const {
-  return type_;
+inline ::BehaviorPB::NodeType Node::type() const {
+  return static_cast< ::BehaviorPB::NodeType >(type_);
 }
-inline void Node::set_type(::google::protobuf::int32 value) {
+inline void Node::set_type(::BehaviorPB::NodeType value) {
+  assert(::BehaviorPB::NodeType_IsValid(value));
   set_has_type();
   type_ = value;
 }
@@ -2488,6 +3164,44 @@ inline void Node::set_allocated_d_timer(::BehaviorPB::DecoratorTimer* d_timer) {
   }
 }
 
+// optional .BehaviorPB.DecoratorRand d_rand = 14;
+inline bool Node::has_d_rand() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+inline void Node::set_has_d_rand() {
+  _has_bits_[0] |= 0x00002000u;
+}
+inline void Node::clear_has_d_rand() {
+  _has_bits_[0] &= ~0x00002000u;
+}
+inline void Node::clear_d_rand() {
+  if (d_rand_ != NULL) d_rand_->::BehaviorPB::DecoratorRand::Clear();
+  clear_has_d_rand();
+}
+inline const ::BehaviorPB::DecoratorRand& Node::d_rand() const {
+  return d_rand_ != NULL ? *d_rand_ : *default_instance_->d_rand_;
+}
+inline ::BehaviorPB::DecoratorRand* Node::mutable_d_rand() {
+  set_has_d_rand();
+  if (d_rand_ == NULL) d_rand_ = new ::BehaviorPB::DecoratorRand;
+  return d_rand_;
+}
+inline ::BehaviorPB::DecoratorRand* Node::release_d_rand() {
+  clear_has_d_rand();
+  ::BehaviorPB::DecoratorRand* temp = d_rand_;
+  d_rand_ = NULL;
+  return temp;
+}
+inline void Node::set_allocated_d_rand(::BehaviorPB::DecoratorRand* d_rand) {
+  delete d_rand_;
+  d_rand_ = d_rand;
+  if (d_rand) {
+    set_has_d_rand();
+  } else {
+    clear_has_d_rand();
+  }
+}
+
 // -------------------------------------------------------------------
 
 // Tree_Editor
@@ -2722,8 +3436,24 @@ namespace google {
 namespace protobuf {
 
 template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::BehaviorPB::Action_Type>() {
+  return ::BehaviorPB::Action_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::BehaviorPB::Condition_Type>() {
+  return ::BehaviorPB::Condition_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::BehaviorPB::DecoratorCounter_Type>() {
+  return ::BehaviorPB::DecoratorCounter_Type_descriptor();
+}
+template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::BehaviorPB::NodeType>() {
   return ::BehaviorPB::NodeType_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::BehaviorPB::ParallelPolicy>() {
+  return ::BehaviorPB::ParallelPolicy_descriptor();
 }
 
 }  // namespace google

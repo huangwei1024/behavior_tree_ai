@@ -23,14 +23,14 @@ namespace ai_editor.NodeDef
 			get { return "DecoratorCounter"; }
 		}
 
-		public override int InitClassType
+		public override NodeType InitClassType
 		{
 			get { return StaticClassType; }
 		}
 
-		public static int StaticClassType
+		public static NodeType StaticClassType
 		{
-			get { return (int)NodeType.NodeType_DecoratorCounter; }
+			get { return NodeType.NodeType_DecoratorCounter; }
 		}
 
 		public override NodeProperties Props
@@ -55,15 +55,7 @@ namespace ai_editor.NodeDef
 
 	public class DecoratorCounterNodeProperties : NodeProperties
 	{
-		private static Dictionary<string, int> sMapDecoratorCounterName = new Dictionary<string, int>();
 		private int limitCount;
-
-		static DecoratorCounterNodeProperties()
-		{
-			sMapDecoratorCounterName["printf_test"] = (int)BehaviorPB.NodeType.NodeType_PrintfDecoratorCounter;
-		}
-
-
 		[CategoryAttribute("计数器设置"),
 		DescriptionAttribute("次数限制")]
 		public virtual int LimitCount
@@ -72,41 +64,21 @@ namespace ai_editor.NodeDef
 			set { limitCount = value; }
 		}
 
-		private string decoratorCounterType;
+		private DecoratorCounter.Type decoratorCounterType = DecoratorCounter.Type.Null;
 		[CategoryAttribute("计数器设置"),
-	   DescriptionAttribute("计数器类型"),
-	   TypeConverter(typeof(DecoratorCounterNameConverter))]
-		public virtual string DecoratorCounterType
+	   DescriptionAttribute("计数器类型")]
+		public virtual DecoratorCounter.Type DecoratorCounterType
 		{
 			get { return decoratorCounterType; }
 			set
 			{
-				if (sMapDecoratorCounterName.ContainsKey(value))
-				{
-					decoratorCounterType = value;
-					Type = sMapDecoratorCounterName[value];
-				}
-				else
-				{
-					decoratorCounterType = "";
+				decoratorCounterType = value;
+				if (value == DecoratorCounter.Type.Null)
 					Type = DecoratorCounterNode.StaticClassType;
-				}
+				else
+					Type = (NodeType)decoratorCounterType;
 			}
 		}
-
-		// ConditionType 属性下拉列表
-		public class DecoratorCounterNameConverter : StringConverter
-		{
-			public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-			{
-				return true;
-			}
-
-			public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
-			{
-				return new StandardValuesCollection(sMapDecoratorCounterName.Keys);
-			}
-		}  
 
 		public override bool LoadProtoBuf(BehaviorPB.Node node)
 		{
@@ -117,7 +89,7 @@ namespace ai_editor.NodeDef
 				return false;
 
 			limitCount = node.d_counter.limit_cnt;
-			decoratorCounterType = Util.GetKeyByValue(sMapDecoratorCounterName, Type);
+			decoratorCounterType = (DecoratorCounter.Type)Type;
 			return true;
 		}
 

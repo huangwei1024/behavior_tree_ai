@@ -14,12 +14,6 @@ namespace BehaviorTree
 {
 
 //-------------------------------------------------------------------------
-void BaseNode::SetParent( NonLeafNode* pParent )
-{
-	m_pParent = pParent;
-	if (m_pParent)
-		m_pTree = ((BaseNode*)m_pParent)->m_pTree;
-}
 
 BlackBoard* BaseNode::GetBlackboard()
 {
@@ -28,7 +22,7 @@ BlackBoard* BaseNode::GetBlackboard()
 	return m_pTree->GetBlackboard();
 }
 
-bool BaseNode::LoadProto( const Proto* pProto )
+bool BaseNode::LoadProto( const BehaviorPB::Node* pProto )
 {
 	if (pProto->type() != GetType())
 	{
@@ -38,14 +32,13 @@ bool BaseNode::LoadProto( const Proto* pProto )
 	return true;
 }
 
-bool BaseNode::DumpProto( Proto* pProto )
+void BaseNode::SetRunning()
 {
-	pProto->set_type(GetType());
-	return true;
+	GetBlackboard()->SetRunning(this);
 }
 
 //-------------------------------------------------------------------------
-bool NonLeafNode::LoadProto( const Proto* pProto )
+bool NonLeafNode::LoadProto( const BehaviorPB::Node* pProto )
 {
 	if (!BaseNode::LoadProto(pProto))
 		return false;
@@ -53,7 +46,7 @@ bool NonLeafNode::LoadProto( const Proto* pProto )
 	m_vChilds.clear();
 	for (int i = 0; i < pProto->nodes_size(); ++ i)
 	{
-		const Proto* pChildProto = &pProto->nodes(i);
+		const BehaviorPB::Node* pChildProto = &pProto->nodes(i);
 		BaseNode* pChild = NodeFactory::CreateInstance(pChildProto->type());
 		AddChild(pChild);
 		if (!pChild->LoadProto(pChildProto))
@@ -66,102 +59,28 @@ bool NonLeafNode::LoadProto( const Proto* pProto )
 	return true;
 }
 
-bool NonLeafNode::DumpProto( Proto* pProto )
-{
-	BaseNode::DumpProto(pProto);
+// AI编辑器负责生成树
+// bool NonLeafNode::DumpProto( BehaviorPB::Node* pProto )
+// {
+// 	BaseNode::DumpProto(pProto);
+// 
+// 	pProto->clear_nodes();
+// 	for (PtrList::iterator it = m_vChilds.begin(); it != m_vChilds.end(); ++ it)
+// 	{
+// 		BehaviorPB::Node* pChildProto = pProto->add_nodes();
+// 		if (!(*it)->DumpProto(pChildProto))
+// 		{
+// 			pProto->clear_nodes();
+// 			return false;
+// 		}
+// 	}
+// 
+// 	return true;
+// }
 
-	pProto->clear_nodes();
-	for (PtrList::iterator it = m_vChilds.begin(); it != m_vChilds.end(); ++ it)
-	{
-		Proto* pChildProto = pProto->add_nodes();
-		if (!(*it)->DumpProto(pChildProto))
-		{
-			pProto->clear_nodes();
-			return false;
-		}
-	}
-
-	return true;
-}
-
-//-------------------------------------------------------------------------
-bool ParallelNode::LoadProto( const Proto* pProto )
-{
-	if (!NonLeafNode::LoadProto(pProto))
-		return false;
-	
-	if (!pProto->has_parallel())
-		return false;
-
-	const BehaviorPB::Parallel* paral = &pProto->parallel();
-	m_nPolicy = (ParallelPolicy)paral->policy();
-
-	return true;
-}
-
-bool ParallelNode::DumpProto( Proto* pProto )
-{
-	if (!NonLeafNode::DumpProto(pProto))
-		return false;
-
-	BehaviorPB::Parallel* paral = pProto->mutable_parallel();
-
-	paral->set_policy(m_nPolicy);
-	return true;
-}
-//-------------------------------------------------------------------------
-bool DecoratorLoopNode::LoadProto( const Proto* pProto )
-{
-	if (!DecoratorNode::LoadProto(pProto))
-		return false;
-
-	if (!pProto->has_d_loop())
-		return false;
-
-	const BehaviorPB::DecoratorLoop* loop = &pProto->d_loop();
-	m_nLoop = loop->loop_cnt();
-
-	return true;
-}
-
-bool DecoratorLoopNode::DumpProto( Proto* pProto )
-{
-	if (!DecoratorNode::DumpProto(pProto))
-		return false;
-
-	BehaviorPB::DecoratorLoop* loop = pProto->mutable_d_loop();
-
-	loop->set_loop_cnt(m_nLoop);
-	return true;
-}
 
 //-------------------------------------------------------------------------
-bool DecoratorCounterNode::LoadProto( const Proto* pProto )
-{
-	if (!DecoratorNode::LoadProto(pProto))
-		return false;
-
-	if (!pProto->has_d_counter())
-		return false;
-
-	const BehaviorPB::DecoratorCounter* counter = &pProto->d_counter();
-	m_nLimit = counter->limit_cnt();
-
-	return true;
-}
-
-bool DecoratorCounterNode::DumpProto( Proto* pProto )
-{
-	if (!DecoratorNode::DumpProto(pProto))
-		return false;
-
-	BehaviorPB::DecoratorCounter* counter = pProto->mutable_d_counter();
-
-	counter->set_limit_cnt(m_nLimit);
-	return true;
-}
-//-------------------------------------------------------------------------
-bool LinkNode::LoadProto( const Proto* pProto )
+bool LinkNode::LoadProto( const BehaviorPB::Node* pProto )
 {
 	if (!LeafNode::LoadProto(pProto))
 		return false;
@@ -169,46 +88,23 @@ bool LinkNode::LoadProto( const Proto* pProto )
 	if (!pProto->has_link())
 		return false;
 
-	const BehaviorPB::Link* link = &pProto->link();
-	SetLinkTree(link->sub_tree_name());
-
-	return true;
-}
-
-bool LinkNode::DumpProto( Proto* pProto )
-{
-	if (!LeafNode::DumpProto(pProto))
-		return false;
-
-	BehaviorPB::Link* link = pProto->mutable_link();
-
-	link->set_sub_tree_name(m_sSubTreeName);
-	return true;
+	m_pProto = &pProto->link();
+	return SetLinkTree(m_pProto->sub_tree_name());
 }
 
 //-------------------------------------------------------------------------
-bool DecoratorTimerNode::LoadProto( const Proto* pProto )
+
+bool DecoratorRandNode::LoadProto( const BehaviorPB::Node* pProto )
 {
-	if (!LeafNode::LoadProto(pProto))
+	if (!DecoratorNode::LoadProto(pProto))
 		return false;
 
-	if (!pProto->has_d_timer())
+	if (!pProto->has_d_rand())
 		return false;
 
-	const BehaviorPB::DecoratorTimer* d_timer = &pProto->d_timer();
-	SetElpase(d_timer->elpase());
+	m_pProto = &pProto->d_rand();
+	m_rand.reset_seed(m_rand.RANDOM_int(-0xfffffff, 0xfffffff, m_pProto->r_idx()));
 
-	return true;
-}
-
-bool DecoratorTimerNode::DumpProto( Proto* pProto )
-{
-	if (!LeafNode::DumpProto(pProto))
-		return false;
-
-	BehaviorPB::DecoratorTimer* d_timer = pProto->mutable_d_timer();
-
-	d_timer->set_elpase(m_nElpase);
 	return true;
 }
 
@@ -294,11 +190,11 @@ void Tree::Clear()
 
 NodeExecState Tree::Process()
 {
-	if (m_pBlackboard->m_pRunningNode)
+	if (m_pBlackboard->GetRunning())
 	{
-		NodeExecState nRet = m_pBlackboard->m_pRunningNode->Execute();
+		NodeExecState nRet = m_pBlackboard->GetRunning()->Execute();
 		if (nRet != NodeExec_Running)
-			m_pBlackboard->m_pRunningNode = NULL;
+			m_pBlackboard->SetRunning(NULL);
 		return nRet;
 	}
 
@@ -310,41 +206,32 @@ bool Tree::IsValid()
 	return true;
 }
 
-bool Tree::DumpFile( const char* szFile )
+// AI编辑器负责生成树
+// bool Tree::DumpFile( const char* szFile )
+// {
+// 	BehaviorPB::Node* pProto = new BehaviorPB::Node;
+// 
+// 	pProto->set_name(m_sName);
+// 	if (m_pRoot)
+// 	{
+// 		NonLeafNode::BehaviorPB::Node* pRootProto = pProto->mutable_root();
+// 		m_pRoot->DumpProto(pRootProto);
+// 	}
+// 
+// 	std::fstream output(szFile, ios::out | ios::trunc | ios::binary);
+// 	if (!pProto->SerializeToOstream(&output))
+// 		return false;
+// 
+// 	delete pProto;
+// 	TreeProtoFactory::Register(m_sName, szFile);
+// 	return true;
+// }
+
+bool Tree::LoadFile( BehaviorPB::Tree* pProto )
 {
-	Proto* pProto = new Proto;
-
-	pProto->set_name(m_sName);
-	if (m_pRoot)
-	{
-		NonLeafNode::Proto* pRootProto = pProto->mutable_root();
-		m_pRoot->DumpProto(pRootProto);
-	}
-
-	std::fstream output(szFile, ios::out | ios::trunc | ios::binary);
-	if (!pProto->SerializeToOstream(&output))
-		return false;
-
-	delete pProto;
-	TreeProtoFactory::Register(m_sName, szFile);
-	return true;
-}
-
-bool Tree::LoadFile( const char* szFile )
-{
-	//GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-	Proto* pProto = new Proto;
-
-	std::fstream input(szFile, ios::in | ios::binary);
-	if (!pProto->ParseFromIstream(&input))
-		return false;
-
-	pProto->PrintDebugString(); // debug output
-
 	m_sName = pProto->name();
 
-	const NonLeafNode::Proto* pRootProto = &pProto->root();
+	const BehaviorPB::Node* pRootProto = &pProto->root();
 	BaseNode* pNode = NodeFactory::CreateInstance(pRootProto->type());
 	if (NULL == pNode)
 	{
@@ -359,35 +246,63 @@ bool Tree::LoadFile( const char* szFile )
 		return false;
 	}
 
-	delete pProto;
-	TreeProtoFactory::Register(m_sName, szFile);
 	return true;
 }
-
 //-------------------------------------------------------------------------
 
-TreeProtoFactory::TreeProtoMap TreeProtoFactory::ms_mapTree;
-
-
-Tree* TreeProtoFactory::CreateInstance( TreeName sName, Tree* pParentTree /*= NULL*/, BlackBoard* pBlackboard /*= NULL*/ )
+TreeFactory::~TreeFactory()
 {
-	TreeProtoMap::iterator it = ms_mapTree.find(sName);
-	if (it == ms_mapTree.end())
+	for (TreeProtoMap::iterator it = m_mapTree.begin(); it != m_mapTree.end(); ++ it)
+	{
+		TreeCache& item = (it->second);
+		SafeDelete(item.pProto);
+	}
+	m_mapTree.clear();
+}
+
+Tree* TreeFactory::CreateTree( TreeName sName, Tree* pParentTree /*= NULL*/, BlackBoard* pBlackboard /*= NULL*/ )
+{
+	TreeProtoMap::iterator it = m_mapTree.find(sName);
+	if (it == m_mapTree.end())
 		return NULL;
 	
 	if (pBlackboard == NULL && pParentTree != NULL)
 		pBlackboard = pParentTree->GetBlackboard();
 
+	TreeCache& item = (it->second);
 	Tree* pTree = new Tree(pBlackboard);
-	if (!pTree->LoadFile(it->second.c_str()))
+	if (!pTree->LoadFile(item.pProto))
 		SafeDelete(pTree);
 	
 	return pTree;
 }
 
-void TreeProtoFactory::Register( TreeName sName, ProtoPath sPath )
+void TreeFactory::RegisterTree( String sPath )
 {
-	ms_mapTree[sName] = sPath;
+	//GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+	BehaviorPB::Tree* pProto = new BehaviorPB::Tree;
+	std::fstream input(sPath.c_str(), ios::in | ios::binary);
+	if (!pProto->ParseFromIstream(&input))
+	{
+		SafeDelete(pProto);
+		return;
+	}
+
+	pProto->PrintDebugString(); // debug output
+
+	TreeProtoMap::iterator it = m_mapTree.find(pProto->name());
+	if (it != m_mapTree.end())
+	{
+		SafeDelete(pProto);
+		return;
+	}
+
+	TreeCache item;
+	item.sTreeName = pProto->name();
+	item.sFilePath = sPath;
+	item.pProto = pProto;
+	m_mapTree[pProto->name()] = item;
 }
 
 };

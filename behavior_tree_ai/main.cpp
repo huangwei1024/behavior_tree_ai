@@ -7,11 +7,12 @@
 #include "behavior_condition_node.h"
 #include "behavior_decorator_node.h"
 #include "behavior_action_node.h"
+#include "BaseFunc.h"
 
 LARGE_INTEGER nFreq;
 LARGE_INTEGER nBeginTime;
 LARGE_INTEGER nEndTime;
-double ctime, mps;
+double c_time, mps;
 const int N = 1000;
 
 using namespace BehaviorTree;
@@ -21,17 +22,12 @@ class PrintfDecoratorCounter : public DecoratorCounterNode
 public:
 	NodeFactoryDef(PrintfDecoratorCounter);
 
-	PrintfDecoratorCounter()
-	{
-		SetLimit(10);
-	}
-
 	virtual NodeExecState Execute()
 	{
 		NodeExecState ret = DecoratorCounterNode::Execute();
 		if (ret != NodeExec_Fail)
 		{
-			GetBlackboard()->WriteValue("limit", ChalkInk(m_nLimit));
+			GetBlackboard()->WriteValue("limit", ChalkInk(m_pProto->limit_cnt()));
 			GetBlackboard()->WriteValue("cnt", ChalkInk(m_nCount));
 		}
 		return ret;
@@ -72,71 +68,335 @@ public:
 
 };
 
-void test_tree_w()
-{
-	BehaviorTree::BlackBoard board;
-	BehaviorTree::Tree tree(&board);
-
-	board.WriteValue("tick", ChalkInk((unsigned int)nFreq.QuadPart));
-
-	tree.SetRoot(new PrintfDecoratorCounter());
-	tree.SetBlackboard(&board);
-	tree.Name() = "test_tree";
-
-	SequenceNode* node0 = new SequenceNode();
-	tree.GetRoot()->AddChild(node0);
-	node0->AddChild(new PrintfCondtion());
-	node0->AddChild(new PrintfAction());
-
-	for (int i = 0; i < 30; i ++)
-	{
-		printf("i = %d\n", i);
-		int ret = tree.Process();
-		printf("ret = %d\n", ret);
-	}
-
-	tree.DumpFile("test.bt");
-}
+const int SR = 1234;
 
 void test_tree_r()
 {
 	BehaviorTree::BlackBoard board;
-	BehaviorTree::Tree tree(&board);
-
-	tree.LoadFile("export.bt");
+	BehaviorTree::Tree* tree = BehaviorTree::TreeFactory::GetInstance()->CreateTree("test_tree_r", NULL, &board);
 
 	board.WriteValue("tick", ChalkInk((unsigned int)nFreq.QuadPart));
 
 	for (int i = 0; i < 30; i ++)
 	{
 		printf("i = %d\n", i);
-		int ret = tree.Process();
+		int ret = tree->Process();
 		printf("ret = %d\n", ret);
 	}
 }
 
-void test_tree2()
+//////////////////////////////////////////////////////////////////////////
+#define TEST_OPT
+class CntTestAction : public ActionNode
 {
-	BehaviorTree::BlackBoard board;
-	BehaviorTree::Tree* ptree = TreeProtoFactory::CreateInstance("test_tree2");
-	BehaviorTree::Tree& tree = *ptree;
+public:
+	NodeFactoryDef(CntTestAction);
 
-	tree.Clear();
-
-	board.WriteValue("tick", ChalkInk((unsigned int)nFreq.QuadPart));
-
-	tree.SetRoot(new PrintfAction());
-	tree.SetBlackboard(&board);
-	tree.Name() = "test_tree2";
-
-	for (int i = 0; i < 30; i ++)
+	CntTestAction()
 	{
-		printf("i = %d\n", i);
-		int ret = tree.Process();
-		printf("ret = %d\n", ret);
+		p_j = NULL;
+		p_m = NULL;
 	}
 
-	tree.DumpFile("test2.bt");
+	virtual NodeExecState Execute()
+	{
+#ifdef TEST_OPT
+		if (!p_j)
+			p_j = &GetBlackboard()->LookupValue("j");
+		int j = p_j->Get<int>();
+
+		GetBlackboard()->WriteValue("m", ChalkInk(j%3));
+		if (!p_m)
+			p_m = &GetBlackboard()->WriteValue("m", ChalkInk(j%3));
+#else
+		GetBlackboard()->WriteValue("m", ChalkInk(GetBlackboard()->LookupValue("j").Get<int>() % 3));
+#endif
+		return NodeExec_Success;
+	}
+
+protected:
+	ChalkInk* p_j;
+	ChalkInk* p_m;
+};
+
+class CntTestAction0 : public ActionNode
+{
+public:
+	NodeFactoryDef(CntTestAction0);
+
+	CntTestAction0()
+	{
+		p_cnt = NULL;
+		p_ret = NULL;
+		p_m = NULL;
+	}
+
+	virtual NodeExecState Execute()
+	{
+		int m;
+		int cnt;
+		int ret;
+
+#ifdef TEST_OPT
+		if (!p_cnt)
+			p_cnt = &GetBlackboard()->LookupValue("cnt");
+		if (!p_ret)
+			p_ret = &GetBlackboard()->LookupValue("ret");
+		if (!p_m)
+			p_m = &GetBlackboard()->LookupValue("m");
+
+		m = p_m->Get<int>();
+		cnt = p_cnt->Get<int>();
+		ret = p_ret->Get<int>();
+
+		if (m != 0)
+			return NodeExec_Fail;
+		cnt ++;
+		if (ret < 1000)
+			cnt ++;
+		p_cnt->Set(cnt);
+
+#else
+		m = GetBlackboard()->LookupValue("m").Get<int>();
+		cnt = GetBlackboard()->LookupValue("cnt").Get<int>();
+		ret = GetBlackboard()->LookupValue("ret").Get<int>();
+
+		if (m != 0)
+			return NodeExec_Fail;
+		cnt ++;
+		if (ret < 1000)
+			cnt ++;
+		
+		GetBlackboard()->WriteValue("cnt", cnt);
+#endif
+		return NodeExec_Success;
+	}
+
+protected:
+	ChalkInk* p_cnt;
+	ChalkInk* p_ret;
+	ChalkInk* p_m;
+};
+
+class CntTestAction1 : public ActionNode
+{
+public:
+	NodeFactoryDef(CntTestAction1);
+
+	CntTestAction1()
+	{
+		p_cnt = NULL;
+		p_ret = NULL;
+		p_m = NULL;
+	}
+
+	virtual NodeExecState Execute()
+	{
+		int m;
+		int cnt;
+		int ret;
+
+#ifdef TEST_OPT
+		if (!p_cnt)
+			p_cnt = &GetBlackboard()->LookupValue("cnt");
+		if (!p_ret)
+			p_ret = &GetBlackboard()->LookupValue("ret");
+		if (!p_m)
+			p_m = &GetBlackboard()->LookupValue("m");
+
+		m = p_m->Get<int>();
+		cnt = p_cnt->Get<int>();
+		ret = p_ret->Get<int>();
+
+		if (m != 1)
+			return NodeExec_Fail;
+		cnt --;
+		if (ret > 1000)
+			cnt --;
+
+		p_cnt->Set(cnt);
+
+#else
+		m = GetBlackboard()->LookupValue("m").Get<int>();
+		cnt = GetBlackboard()->LookupValue("cnt").Get<int>();
+		ret = GetBlackboard()->LookupValue("ret").Get<int>();
+
+		if (m != 1)
+			return NodeExec_Fail;
+		cnt --;
+		if (ret > 1000)
+			cnt --;
+
+		GetBlackboard()->WriteValue("cnt", cnt);
+#endif
+		return NodeExec_Success;
+	}
+
+protected:
+	ChalkInk* p_cnt;
+	ChalkInk* p_ret;
+	ChalkInk* p_m;
+};
+
+class CntTestAction2 : public ActionNode
+{
+public:
+	NodeFactoryDef(CntTestAction2);
+
+	CntTestAction2()
+	{
+		p_m = NULL;
+		p_ret = NULL;
+		p_absret = NULL;
+	}
+
+	virtual NodeExecState Execute()
+	{
+		int m;
+		int ret;
+
+#ifdef TEST_OPT
+		if (!p_m)
+			p_m = &GetBlackboard()->LookupValue("m");
+		if (!p_ret)
+			p_ret = &GetBlackboard()->LookupValue("ret");
+		if (!p_absret)
+			p_absret = &GetBlackboard()->WriteValue("absret", 0);
+
+		m = p_m->Get<int>();
+		ret = p_ret->Get<int>();
+		if (m != 2)
+			return NodeExec_Fail;
+
+		p_absret->Set(abs(ret));
+
+#else
+		m = GetBlackboard()->LookupValue("m").Get<int>();
+		ret = GetBlackboard()->LookupValue("ret").Get<int>();
+
+		if (m != 2)
+			return NodeExec_Fail;
+
+		GetBlackboard()->WriteValue("absret", abs(ret));
+#endif
+		return NodeExec_Success;
+	}
+
+protected:
+	ChalkInk* p_m;
+	ChalkInk* p_ret;
+	ChalkInk* p_absret;
+};
+
+class CntTestAction2_2 : public ActionNode
+{
+public:
+	NodeFactoryDef(CntTestAction2_2);
+
+	CntTestAction2_2()
+	{
+		p_cnt = NULL;
+		p_rand2 = NULL;
+	}
+
+	virtual NodeExecState Execute()
+	{
+		int cnt;
+		int rand2;
+
+#ifdef TEST_OPT
+		if (!p_cnt)
+			p_cnt = &GetBlackboard()->LookupValue("cnt");
+		if (!p_rand2)
+			p_rand2 = &GetBlackboard()->LookupValue("rand2");
+
+		cnt = p_cnt->Get<int>() + p_rand2->Get<int>();
+		p_cnt->Set(cnt);
+
+#else
+		cnt = GetBlackboard()->LookupValue("cnt").Get<int>();
+		rand2 = GetBlackboard()->LookupValue("rand2").Get<int>();
+
+		cnt += rand2;
+		GetBlackboard()->WriteValue("cnt", cnt);
+#endif
+		
+		if (cnt % 5 == 0)
+			return NodeExec_Fail;
+		return NodeExec_Success;
+	}
+
+protected:
+	ChalkInk* p_cnt;
+	ChalkInk* p_rand2;
+};
+
+//////////////////////////////////////////////////////////////////////////
+void test_tree()
+{
+	BehaviorTree::BlackBoard board;
+	BehaviorTree::Tree* tree = BehaviorTree::TreeFactory::GetInstance()->CreateTree("test_tree", NULL, &board);
+
+	board.WriteValue("ret", BehaviorTree::ChalkInk(0));
+	srand(SR);
+
+	for (int i = 0; i < N; ++ i)
+	{
+		board.WriteValue("cnt", 0);
+		tree->Process();
+	}
+
+	printf("%d\n", board.LookupValue("ret").Get<int>());
+}
+
+void test_non_tree()
+{
+	int ret = 0;
+	srand(SR);
+
+	G_RANDOM_MGR m_rand0;
+	G_RANDOM_MGR m_rand1;
+	G_RANDOM_MGR m_rand2;
+
+	m_rand0.reset_seed(0);
+	m_rand1.reset_seed(0);
+	m_rand2.reset_seed(0);
+
+	for (int i = 0; i < N; ++ i)
+	{
+		int cnt = 0;
+		if (m_rand0.RANDOM_int(0, 1))
+		{
+			int loop = m_rand1.RANDOM_int(0, 8);
+			for (int j = 0; j < loop; j ++)
+			{
+				int m = j % 3;
+				if (0 == m)
+				{
+					cnt ++;
+					if (ret < 1000)
+						cnt ++;
+				}
+				else if (1 == m)
+				{
+					cnt --;
+					if (ret > 1000)
+						cnt --;
+				}
+				else
+				{
+					for (int k = 0; k < abs(ret); k ++)
+					{
+						cnt += m_rand2.RANDOM_int(0, 4);
+						if (cnt % 5 == 0)
+							break;
+					}
+				}
+			}
+		}
+		ret += cnt;
+	}
+	printf("%d\n", ret);
 }
 
 int main()
@@ -145,21 +405,21 @@ int main()
 	PrintfCondtion::Register();
 	PrintfAction::Register();
 
-	TreeProtoFactory::Register("test_tree", "test.bt");
-	TreeProtoFactory::Register("test_tree2", "test2.bt");
-
+	TreeFactory::GetInstance()->RegisterTree("export.bt");
 
 	QueryPerformanceFrequency(&nFreq);
 
 	QueryPerformanceCounter(&nBeginTime); 
 	{
-		test_tree_r();
+		//test_non_tree();
+		//test_tree_r();
+		test_tree();
 	}
 	QueryPerformanceCounter(&nEndTime);
 
-	ctime = (double)(1.0*nEndTime.QuadPart-nBeginTime.QuadPart)/(double)nFreq.QuadPart;
-	mps = 1.0*N/ctime/1024.0/1024.0;
-	printf("%s cost %lf s, %lf MI/s\n", "test_FastDelegate", ctime, mps);
+	c_time = (double)(1.0*nEndTime.QuadPart-nBeginTime.QuadPart)/(double)nFreq.QuadPart;
+	mps = 1.0*N/c_time/1024.0/1024.0;
+	printf("%s cost %lf s, %lf MI/s\n", "test_FastDelegate", c_time, mps);
 
 	return 0;
 }

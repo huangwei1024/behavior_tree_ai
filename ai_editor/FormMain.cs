@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using ai_editor.NodeDef;
+using BehaviorPB;
 
 namespace ai_editor
 {
@@ -140,7 +141,16 @@ namespace ai_editor
 
 		}
 
-		private AiTreeNode insertAiTreeNode(int nodeType)
+		private bool isNewNode(ToolStripMenuItem item)
+		{
+			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+				return true;
+			if (item.OwnerItem.OwnerItem == 新建节点ToolStripMenuItem)
+				return true;
+			return false;
+		}
+
+		private AiTreeNode insertAiTreeNode(NodeType nodeType)
 		{
 			if (selectedNode != null && Util.IsOneChildLimit(selectedNode.LogicNode.Props.Type)
 				&& selectedNode.Nodes.Count > 0)
@@ -163,7 +173,7 @@ namespace ai_editor
 			return newNode;
 		}
 
-		private void replaceAiTreeNode(int nodeType)
+		private void replaceAiTreeNode(NodeType nodeType)
 		{
 			if (selectedNode == null || nodeType == selectedNode.LogicNode.Props.Type)
 				return;
@@ -185,9 +195,8 @@ namespace ai_editor
 
 		private void selectorToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ToolStripMenuItem item = sender as ToolStripMenuItem;
-			int nodeType = SelectorNode.StaticClassType;
-			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+			NodeType nodeType = SelectorNode.StaticClassType;
+			if (isNewNode(sender as ToolStripMenuItem))
 				insertAiTreeNode(nodeType);
 			else
 				replaceAiTreeNode(nodeType);
@@ -195,9 +204,8 @@ namespace ai_editor
 
 		private void sequenceToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ToolStripMenuItem item = sender as ToolStripMenuItem;
-			int nodeType = SequenceNode.StaticClassType;
-			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+			NodeType nodeType = SequenceNode.StaticClassType;
+			if (isNewNode(sender as ToolStripMenuItem))
 				insertAiTreeNode(nodeType);
 			else
 				replaceAiTreeNode(nodeType);
@@ -205,9 +213,8 @@ namespace ai_editor
 
 		private void parallelToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ToolStripMenuItem item = sender as ToolStripMenuItem;
-			int nodeType = ParallelNode.StaticClassType;
-			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+			NodeType nodeType = ParallelNode.StaticClassType;
+			if (isNewNode(sender as ToolStripMenuItem))
 				insertAiTreeNode(nodeType);
 			else
 				replaceAiTreeNode(nodeType);
@@ -215,9 +222,8 @@ namespace ai_editor
 
 		private void conditionToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ToolStripMenuItem item = sender as ToolStripMenuItem;
-			int nodeType = ConditionNode.StaticClassType;
-			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+			NodeType nodeType = ConditionNode.StaticClassType;
+			if (isNewNode(sender as ToolStripMenuItem))
 				insertAiTreeNode(nodeType);
 			else
 				replaceAiTreeNode(nodeType);
@@ -225,9 +231,8 @@ namespace ai_editor
 
 		private void actionToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ToolStripMenuItem item = sender as ToolStripMenuItem;
-			int nodeType = ActionNode.StaticClassType;
-			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+			NodeType nodeType = ActionNode.StaticClassType;
+			if (isNewNode(sender as ToolStripMenuItem))
 				insertAiTreeNode(nodeType);
 			else
 				replaceAiTreeNode(nodeType);
@@ -235,9 +240,8 @@ namespace ai_editor
 
 		private void linkToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ToolStripMenuItem item = sender as ToolStripMenuItem;
-			int nodeType = LinkNode.StaticClassType;
-			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+			NodeType nodeType = LinkNode.StaticClassType;
+			if (isNewNode(sender as ToolStripMenuItem))
 				insertAiTreeNode(nodeType);
 			else
 				replaceAiTreeNode(nodeType);
@@ -245,9 +249,8 @@ namespace ai_editor
 
 		private void notToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ToolStripMenuItem item = sender as ToolStripMenuItem;
-			int nodeType = DecoratorNotNode.StaticClassType;
-			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+			NodeType nodeType = DecoratorNotNode.StaticClassType;
+			if (isNewNode(sender as ToolStripMenuItem))
 				insertAiTreeNode(nodeType);
 			else
 				replaceAiTreeNode(nodeType);
@@ -255,9 +258,8 @@ namespace ai_editor
 
 		private void loopToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ToolStripMenuItem item = sender as ToolStripMenuItem;
-			int nodeType = DecoratorLoopNode.StaticClassType;
-			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+			NodeType nodeType = DecoratorLoopNode.StaticClassType;
+			if (isNewNode(sender as ToolStripMenuItem))
 				insertAiTreeNode(nodeType);
 			else
 				replaceAiTreeNode(nodeType);
@@ -265,9 +267,8 @@ namespace ai_editor
 
 		private void timerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ToolStripMenuItem item = sender as ToolStripMenuItem;
-			int nodeType = DecoratorTimerNode.StaticClassType;
-			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+			NodeType nodeType = DecoratorTimerNode.StaticClassType;
+			if (isNewNode(sender as ToolStripMenuItem))
 				insertAiTreeNode(nodeType);
 			else
 				replaceAiTreeNode(nodeType);
@@ -275,14 +276,21 @@ namespace ai_editor
 
 		private void counterToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			ToolStripMenuItem item = sender as ToolStripMenuItem;
-			int nodeType = DecoratorCounterNode.StaticClassType;
-			if (item.OwnerItem == 新建节点ToolStripMenuItem)
+			NodeType nodeType = DecoratorCounterNode.StaticClassType;
+			if (isNewNode(sender as ToolStripMenuItem))
 				insertAiTreeNode(nodeType);
 			else
 				replaceAiTreeNode(nodeType);
 		}
 
+		private void randToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			NodeType nodeType = DecoratorRandNode.StaticClassType;
+			if (isNewNode(sender as ToolStripMenuItem))
+				insertAiTreeNode(nodeType);
+			else
+				replaceAiTreeNode(nodeType);
+		}
 
 		private void treeView_BTree_AfterSelect(object sender, TreeViewEventArgs e)
 		{
@@ -418,6 +426,8 @@ namespace ai_editor
 
 			selectedNode.DownPos();
 		}
+
+		
 		
 	}
 

@@ -66,6 +66,7 @@
 			this.删除节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.上移节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.下移节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.randToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.treeView_BTree = new ai_editor.AiTreeView();
 			this.menuStrip1.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -177,7 +178,7 @@
 			// 
 			this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
 			this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-			this.imageList1.Images.SetKeyName(0, "randomselector");
+			this.imageList1.Images.SetKeyName(0, "DecoratorRand");
 			this.imageList1.Images.SetKeyName(1, "Action");
 			this.imageList1.Images.SetKeyName(2, "Sequence");
 			this.imageList1.Images.SetKeyName(3, "Selector");
@@ -216,7 +217,7 @@
             this.上移节点ToolStripMenuItem,
             this.下移节点ToolStripMenuItem});
 			this.contextMenuStrip_Node.Name = "contextMenuStrip_Node";
-			this.contextMenuStrip_Node.Size = new System.Drawing.Size(125, 114);
+			this.contextMenuStrip_Node.Size = new System.Drawing.Size(153, 136);
 			// 
 			// 新建节点ToolStripMenuItem
 			// 
@@ -229,7 +230,7 @@
             this.linkToolStripMenuItem,
             this.decoratorToolStripMenuItem});
 			this.新建节点ToolStripMenuItem.Name = "新建节点ToolStripMenuItem";
-			this.新建节点ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+			this.新建节点ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.新建节点ToolStripMenuItem.Text = "新建节点";
 			// 
 			// selectorToolStripMenuItem
@@ -286,7 +287,8 @@
             this.notToolStripMenuItem,
             this.loopToolStripMenuItem,
             this.timerToolStripMenuItem,
-            this.counterToolStripMenuItem});
+            this.counterToolStripMenuItem,
+            this.randToolStripMenuItem});
 			this.decoratorToolStripMenuItem.Name = "decoratorToolStripMenuItem";
 			this.decoratorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.decoratorToolStripMenuItem.Text = "Decorator";
@@ -327,29 +329,37 @@
 			// 替换节点ToolStripMenuItem
 			// 
 			this.替换节点ToolStripMenuItem.Name = "替换节点ToolStripMenuItem";
-			this.替换节点ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+			this.替换节点ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.替换节点ToolStripMenuItem.Text = "替换节点";
 			// 
 			// 删除节点ToolStripMenuItem
 			// 
 			this.删除节点ToolStripMenuItem.Name = "删除节点ToolStripMenuItem";
-			this.删除节点ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+			this.删除节点ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.删除节点ToolStripMenuItem.Text = "删除节点";
 			this.删除节点ToolStripMenuItem.Click += new System.EventHandler(this.删除节点ToolStripMenuItem_Click);
 			// 
 			// 上移节点ToolStripMenuItem
 			// 
 			this.上移节点ToolStripMenuItem.Name = "上移节点ToolStripMenuItem";
-			this.上移节点ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+			this.上移节点ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.上移节点ToolStripMenuItem.Text = "上移节点";
 			this.上移节点ToolStripMenuItem.Click += new System.EventHandler(this.上移节点ToolStripMenuItem_Click);
 			// 
 			// 下移节点ToolStripMenuItem
 			// 
 			this.下移节点ToolStripMenuItem.Name = "下移节点ToolStripMenuItem";
-			this.下移节点ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+			this.下移节点ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.下移节点ToolStripMenuItem.Text = "下移节点";
 			this.下移节点ToolStripMenuItem.Click += new System.EventHandler(this.下移节点ToolStripMenuItem_Click);
+			// 
+			// randToolStripMenuItem
+			// 
+			this.randToolStripMenuItem.Name = "randToolStripMenuItem";
+			this.randToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.randToolStripMenuItem.Text = "Rand";
+			this.randToolStripMenuItem.ToolTipText = "随机";
+			this.randToolStripMenuItem.Click += new System.EventHandler(this.randToolStripMenuItem_Click);
 			// 
 			// treeView_BTree
 			// 
@@ -445,6 +455,7 @@
 		private System.Windows.Forms.ToolStripMenuItem 上移节点ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem 下移节点ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem 替换节点ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem randToolStripMenuItem;
 
     }
 }

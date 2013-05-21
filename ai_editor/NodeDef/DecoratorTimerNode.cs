@@ -23,14 +23,14 @@ namespace ai_editor.NodeDef
 			get { return "DecoratorTimer"; }
 		}
 
-		public override int InitClassType
+		public override NodeType InitClassType
 		{
 			get { return StaticClassType; }
 		}
 
-		public static int StaticClassType
+		public static NodeType StaticClassType
 		{
-			get { return (int)NodeType.NodeType_DecoratorTimer; }
+			get { return NodeType.NodeType_DecoratorTimer; }
 		}
 
 		public override NodeProperties Props

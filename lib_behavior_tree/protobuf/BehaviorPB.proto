@@ -1,6 +1,6 @@
 // 1.不要更改任何已有的字段的数值标识。
 // 2.你添加的任何字段都必须是optional或repeated的。
-// 3.数值标示范围1 - 536,870,911，不能包含19000 - 19999 
+// 3.数值标示范围1 - 536870911，不能包含19000 - 19999 
 
 package BehaviorPB;
 
@@ -17,17 +17,26 @@ enum NodeType {
 	NodeType_DecoratorLoop		= 9;
 	NodeType_DecoratorCounter	= 10;
 	NodeType_DecoratorTimer		= 11;
+	NodeType_DecoratorRand		= 12;
 	
 	// NodeType_(类名)
 	// 不一致会导致BehaviorTree::NodeFactory::Register编译不过
 	
-	
-	
+	NodeType_CntTestAction2_2		= 992; // test
+	NodeType_CntTestAction0			= 993; // test
+	NodeType_CntTestAction1			= 994; // test
+	NodeType_CntTestAction2			= 995; // test
+	NodeType_CntTestAction			= 996; // test
 	NodeType_PrintfDecoratorCounter	= 997; // test
 	NodeType_PrintfCondtion			= 998; // test
 	NodeType_PrintfAction			= 999; // test
 }
-	
+
+enum ParallelPolicy {
+	ParallelPolicy_FailOnAll 	= 0;
+	ParallelPolicy_SuccOnAll	= 1;
+}
+
 message Selector {
 }
 
@@ -35,14 +44,29 @@ message Sequence {
 }
 
 message Parallel {
-	required int32		policy				= 1;
+	required ParallelPolicy		policy		= 1;
 }
 
 message Action {
+	enum Type {
+		Null		= 0;
+		CntTest2_2	= 992; // NodeType_CntTestAction2_2
+		CntTest0	= 993; // NodeType_CntTestAction0
+		CntTest1	= 994; // NodeType_CntTestAction1
+		CntTest2	= 995; // NodeType_CntTestAction2
+		CntTest		= 996; // NodeType_CntTestAction
+		Printf		= 999; // NodeType_PrintfAction
+	}
+	
 	required string		script_path			= 1;
 }
 
 message Condition {
+	enum Type {
+		Null		= 0;
+		Printf		= 998; // NodeType_PrintfCondtion
+	}
+	
 	required string		script_path			= 1;
 }
 
@@ -55,16 +79,31 @@ message DecoratorNot {
 
 message DecoratorLoop {
 	required int32	loop_cnt				= 1;
+	required string	loop_key				= 2; // read in blackboard key
+	required string	bb_i					= 3; // write in blackboard key
 }
 
 message DecoratorCounter {
+	enum Type {
+		Null		= 0;
+		Printf		= 997; // NodeType_PrintfDecoratorCounter
+	}
+	
 	required int32	limit_cnt				= 1;
 }
 
 message DecoratorTimer {
 	required int32	elpase					= 1;
+	required int32	start					= 2;
 }
 
+message DecoratorRand {
+	required int32	r_idx					= 1;
+	required int32	r_begin					= 2;
+	required int32	r_end					= 3;
+	repeated int32	choose_arr				= 4; 
+	required string	bb_rnd					= 5; // write in blackboard key
+}
 
 message Node {
 	message Editor {
@@ -76,7 +115,7 @@ message Node {
 	
 	optional Editor				editor		= 1; // editor only
 	repeated Node				nodes		= 2;
-	required int32				type		= 3; // NodeType
+	required NodeType			type		= 3; // NodeType
 	optional Selector			selector	= 4;
 	optional Sequence			sequence	= 5;
 	optional Parallel			parallel	= 6;
@@ -87,6 +126,7 @@ message Node {
 	optional DecoratorLoop		d_loop		= 11;
 	optional DecoratorCounter	d_counter	= 12;
 	optional DecoratorTimer		d_timer		= 13;
+	optional DecoratorRand		d_rand		= 14;
 	// 新增类型序号递增，一定得是optional
 	// 没有相关配置属性的，这里可以不定义
 }

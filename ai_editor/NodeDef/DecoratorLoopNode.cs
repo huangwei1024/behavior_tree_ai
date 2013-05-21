@@ -23,14 +23,14 @@ namespace ai_editor.NodeDef
 			get { return "DecoratorLoop"; }
 		}
 
-		public override int InitClassType
+		public override NodeType InitClassType
 		{
 			get { return StaticClassType; }
 		}
 
-		public static int StaticClassType
+		public static NodeType StaticClassType
 		{
-			get { return (int)NodeType.NodeType_DecoratorLoop; }
+			get { return NodeType.NodeType_DecoratorLoop; }
 		}
 
 		public override NodeProperties Props
@@ -57,13 +57,38 @@ namespace ai_editor.NodeDef
 	public class DecoratorLoopNodeProperties : NodeProperties
 	{
 		private int loopCount;
-
 		[CategoryAttribute("循环设置"),
 		DescriptionAttribute("循环次数")]
 		public virtual int LoopCount
 		{
 			get { return loopCount; }
-			set { loopCount = value; }
+			set 
+			{ 
+				loopCount = value;
+				loopKey = ""; // 互斥
+			}
+		}
+
+		private string loopKey;
+		[CategoryAttribute("循环设置"),
+		DescriptionAttribute("黑板循环索引")]
+		public virtual string LoopBBKey
+		{
+			get { return loopKey; }
+			set 
+			{
+				loopKey = value;
+				loopCount = 0; // 互斥
+			}
+		}
+
+		private string loopBBiWrite;
+		[CategoryAttribute("循环设置"),
+		DescriptionAttribute("黑板计数索引")]
+		public virtual string LoopBBiName
+		{
+			get { return loopBBiWrite; }
+			set { loopBBiWrite = value; }
 		}
 
 		public override bool LoadProtoBuf(BehaviorPB.Node node)
@@ -75,6 +100,8 @@ namespace ai_editor.NodeDef
 				return false;
 
 			loopCount = node.d_loop.loop_cnt;
+			loopKey = node.d_loop.loop_key;
+			loopBBiWrite = node.d_loop.bb_i;
 			return true;
 		}
 
@@ -85,6 +112,8 @@ namespace ai_editor.NodeDef
 
 			node.d_loop = new BehaviorPB.DecoratorLoop();
 			node.d_loop.loop_cnt = loopCount;
+			node.d_loop.loop_key = loopKey;
+			node.d_loop.bb_i = loopBBiWrite;
 			return true;
 		}
 	}

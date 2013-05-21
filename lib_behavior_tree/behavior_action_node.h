@@ -25,8 +25,11 @@ namespace BehaviorTree
  */
 class ActionNode : public LeafNode
 {
+	NodeLoadProtoDef(LeafNode, Action, action);
+
 public:
-	ActionNode()						{}
+	ActionNode()
+		: m_pProto(NULL)				{}
 	virtual ~ActionNode()				{}
 
 	virtual int				GetType()	{return NodeType_Action;}
@@ -42,9 +45,6 @@ public:
 	 * @return 		NodeExecState
 	 */
 	virtual NodeExecState	Execute()	{return NodeExec_Success;}
-
-protected:
-
 };
 
 

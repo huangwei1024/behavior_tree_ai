@@ -35,9 +35,9 @@ namespace BehaviorPB
   {
     public Parallel() {}
     
-    private int _policy;
+    private BehaviorPB.ParallelPolicy _policy;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"policy", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int policy
+    public BehaviorPB.ParallelPolicy policy
     {
       get { return _policy; }
       set { _policy = value; }
@@ -59,6 +59,32 @@ namespace BehaviorPB
       get { return _script_path; }
       set { _script_path = value; }
     }
+    [global::ProtoBuf.ProtoContract(Name=@"Type")]
+    public enum Type
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Null", Value=0)]
+      Null = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CntTest2_2", Value=992)]
+      CntTest2_2 = 992,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CntTest0", Value=993)]
+      CntTest0 = 993,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CntTest1", Value=994)]
+      CntTest1 = 994,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CntTest2", Value=995)]
+      CntTest2 = 995,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"CntTest", Value=996)]
+      CntTest = 996,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Printf", Value=999)]
+      Printf = 999
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -76,6 +102,17 @@ namespace BehaviorPB
       get { return _script_path; }
       set { _script_path = value; }
     }
+    [global::ProtoBuf.ProtoContract(Name=@"Type")]
+    public enum Type
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Null", Value=0)]
+      Null = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Printf", Value=998)]
+      Printf = 998
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -120,6 +157,20 @@ namespace BehaviorPB
       get { return _loop_cnt; }
       set { _loop_cnt = value; }
     }
+    private string _loop_key;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"loop_key", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string loop_key
+    {
+      get { return _loop_key; }
+      set { _loop_key = value; }
+    }
+    private string _bb_i;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"bb_i", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string bb_i
+    {
+      get { return _bb_i; }
+      set { _bb_i = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -137,6 +188,17 @@ namespace BehaviorPB
       get { return _limit_cnt; }
       set { _limit_cnt = value; }
     }
+    [global::ProtoBuf.ProtoContract(Name=@"Type")]
+    public enum Type
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Null", Value=0)]
+      Null = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"Printf", Value=997)]
+      Printf = 997
+    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -153,6 +215,58 @@ namespace BehaviorPB
     {
       get { return _elpase; }
       set { _elpase = value; }
+    }
+    private int _start;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"start", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int start
+    {
+      get { return _start; }
+      set { _start = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"DecoratorRand")]
+  public partial class DecoratorRand : global::ProtoBuf.IExtensible
+  {
+    public DecoratorRand() {}
+    
+    private int _r_idx;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"r_idx", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int r_idx
+    {
+      get { return _r_idx; }
+      set { _r_idx = value; }
+    }
+    private int _r_begin;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"r_begin", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int r_begin
+    {
+      get { return _r_begin; }
+      set { _r_begin = value; }
+    }
+    private int _r_end;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"r_end", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int r_end
+    {
+      get { return _r_end; }
+      set { _r_end = value; }
+    }
+    private readonly global::System.Collections.Generic.List<int> _choose_arr = new global::System.Collections.Generic.List<int>();
+    [global::ProtoBuf.ProtoMember(4, Name=@"choose_arr", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public global::System.Collections.Generic.List<int> choose_arr
+    {
+      get { return _choose_arr; }
+    }
+  
+    private string _bb_rnd;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = true, Name=@"bb_rnd", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string bb_rnd
+    {
+      get { return _bb_rnd; }
+      set { _bb_rnd = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -180,9 +294,9 @@ namespace BehaviorPB
       get { return _nodes; }
     }
   
-    private int _type;
+    private BehaviorPB.NodeType _type;
     [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"type", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int type
+    public BehaviorPB.NodeType type
     {
       get { return _type; }
       set { _type = value; }
@@ -276,6 +390,15 @@ namespace BehaviorPB
     {
       get { return _d_timer; }
       set { _d_timer = value; }
+    }
+
+    private BehaviorPB.DecoratorRand _d_rand = null;
+    [global::ProtoBuf.ProtoMember(14, IsRequired = false, Name=@"d_rand", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::System.ComponentModel.DefaultValue(null)]
+    public BehaviorPB.DecoratorRand d_rand
+    {
+      get { return _d_rand; }
+      set { _d_rand = value; }
     }
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Editor")]
   public partial class Editor : global::ProtoBuf.IExtensible
@@ -410,6 +533,24 @@ namespace BehaviorPB
       [global::ProtoBuf.ProtoEnum(Name=@"NodeType_DecoratorTimer", Value=11)]
       NodeType_DecoratorTimer = 11,
             
+      [global::ProtoBuf.ProtoEnum(Name=@"NodeType_DecoratorRand", Value=12)]
+      NodeType_DecoratorRand = 12,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NodeType_CntTestAction2_2", Value=992)]
+      NodeType_CntTestAction2_2 = 992,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NodeType_CntTestAction0", Value=993)]
+      NodeType_CntTestAction0 = 993,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NodeType_CntTestAction1", Value=994)]
+      NodeType_CntTestAction1 = 994,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NodeType_CntTestAction2", Value=995)]
+      NodeType_CntTestAction2 = 995,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"NodeType_CntTestAction", Value=996)]
+      NodeType_CntTestAction = 996,
+            
       [global::ProtoBuf.ProtoEnum(Name=@"NodeType_PrintfDecoratorCounter", Value=997)]
       NodeType_PrintfDecoratorCounter = 997,
             
@@ -418,6 +559,17 @@ namespace BehaviorPB
             
       [global::ProtoBuf.ProtoEnum(Name=@"NodeType_PrintfAction", Value=999)]
       NodeType_PrintfAction = 999
+    }
+  
+    [global::ProtoBuf.ProtoContract(Name=@"ParallelPolicy")]
+    public enum ParallelPolicy
+    {
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ParallelPolicy_FailOnAll", Value=0)]
+      ParallelPolicy_FailOnAll = 0,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ParallelPolicy_SuccOnAll", Value=1)]
+      ParallelPolicy_SuccOnAll = 1
     }
   
 }

@@ -65,12 +65,34 @@
  * NodeFactoryDef macro
  *
  * use in every derived node class
+ * class register func
  */
 #define NodeFactoryDef(cls) \
 	static BehaviorTree::BaseNode* CreateInstance() {return new cls();} \
 	static void Register() {BehaviorTree::NodeFactory::Register(BehaviorPB::NodeType_##cls, \
 	BehaviorTree::NodeFactory::CreateCallback(&cls::CreateInstance));} \
 	virtual int	GetType() {return BehaviorPB::NodeType_##cls;}
+
+/**
+ * NodeLoadProtoDef macro
+ *
+ * use in every derived node class
+ * class protobuf load func
+ */
+#define NodeLoadProtoDef(supercls, pbcls, pbname) \
+public: \
+virtual bool LoadProto( const BehaviorPB::Node* pProto ) \
+{ \
+	if (!supercls::LoadProto(pProto)) \
+		return false; \
+	if (!pProto->has_##pbname()) \
+		return false; \
+	m_pProto = &pProto->##pbname(); \
+	return true; \
+} \
+protected: \
+const BehaviorPB::pbcls* m_pProto;
+
 
 //-------------------------------------------------------------------------
 namespace BehaviorPB
@@ -79,6 +101,7 @@ namespace BehaviorPB
 	class Node;
 };
 
+using BehaviorPB::NodeType;
 using BehaviorPB::NodeType_Null;
 using BehaviorPB::NodeType_Selector;
 using BehaviorPB::NodeType_Sequence;
@@ -92,6 +115,10 @@ using BehaviorPB::NodeType_DecoratorLoop;
 using BehaviorPB::NodeType_DecoratorCounter;
 using BehaviorPB::NodeType_DecoratorTimer;
 
+using BehaviorPB::ParallelPolicy;
+using BehaviorPB::ParallelPolicy_FailOnAll;
+using BehaviorPB::ParallelPolicy_SuccOnAll;
+
 namespace BehaviorTree
 {
 
@@ -100,7 +127,7 @@ class NonLeafNode;
 class Tree;
 class BlackBoard;
 class NodeFactory;
-class TreeProtoFactory;
+class TreeFactory;
 
 typedef std::string		String;
 typedef BaseNode		LeafNode;

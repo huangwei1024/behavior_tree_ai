@@ -22,7 +22,8 @@ namespace BehaviorTree
 
 /**
  * SelectorNode
- * 
+ * 组合节点
+ * 遇到True返回
  */
 class SelectorNode : public NonLeafNode
 {
@@ -63,7 +64,9 @@ protected:
 };
 
 /**
- * 
+ * SequenceNode
+ * 组合节点
+ * 遇到False返回
  */
 class SequenceNode : public NonLeafNode
 {
@@ -106,27 +109,17 @@ protected:
 
 
 /**
- * ParallelPolicy_FailOnAll
- *	全部fail，返回fail，否则succ
- * ParallelPolicy_SuccOnAll
- *	全部succ，返回succ，否则fail
- */
-
-enum ParallelPolicy
-{
-	ParallelPolicy_FailOnAll = 0,
-	ParallelPolicy_SuccOnAll,
-};
-
-/**
- * 
+ * ParallelNode
+ * 组合节点
+ * 子节点全部顺序执行，返回值依赖策略
  */
 class ParallelNode : public NonLeafNode
 {
+	NodeLoadProtoDef(NonLeafNode, Parallel, parallel);
+
 public:
-	ParallelNode() 
-		: m_nPolicy(ParallelPolicy_FailOnAll) 
-										{}
+	ParallelNode()
+		: m_pProto(NULL)				{}
 	virtual ~ParallelNode()				{}
 
 	virtual int				GetType()	{return NodeType_Parallel;}
@@ -145,32 +138,28 @@ public:
 		PtrList::iterator it, itEnd = m_vChilds.end();
 		for (it = m_vChilds.begin(); it != itEnd; ++ it)
 		{
-			++ nRetCnt[(*it)->Execute()];
+			NodeExecState nRet = (*it)->Execute();
+			if (nRet == NodeExec_Running)
+				return NodeExec_Running;
+			++ nRetCnt[nRet];
 		}
 
-		switch (m_nPolicy)
+		/**
+		 * ParallelPolicy_FailOnAll
+		 *	全部fail，返回fail，否则succ
+		 * ParallelPolicy_SuccOnAll
+		 *	全部succ，返回succ，否则fail
+		 */
+		switch (m_pProto->policy())
 		{
 		case ParallelPolicy_FailOnAll:
 			return (nRetCnt[NodeExec_Success] == 0) ? NodeExec_Fail : NodeExec_Success;
 		case ParallelPolicy_SuccOnAll:
 			return (nRetCnt[NodeExec_Fail] == 0) ? NodeExec_Success : NodeExec_Fail;
 		}
+		assert(false);
 		return NodeExec_Fail;
 	}
-
-	/**
-	 * @brief SetPolicy
-	 *
-	 * public 
-	 * @param 		nPolicy [in]
-	 */
-	void SetPolicy(ParallelPolicy nPolicy)	{m_nPolicy = nPolicy;}
-
-	virtual bool LoadProto(const Proto* pProto);
-	virtual bool DumpProto(Proto* pProto);
-
-protected:
-	ParallelPolicy		m_nPolicy;
 };
 
 

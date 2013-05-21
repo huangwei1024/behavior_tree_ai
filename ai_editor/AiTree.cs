@@ -7,10 +7,12 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using ai_editor.NodeDef;
-using PBNode = BehaviorPB.Node;
-using PBTree = BehaviorPB.Tree;
 using System.IO;
 using ProtoBuf;
+
+using PBNode = BehaviorPB.Node;
+using PBTree = BehaviorPB.Tree;
+using PBNodeType = BehaviorPB.NodeType;
 
 namespace ai_editor
 {
@@ -106,7 +108,7 @@ namespace ai_editor
 				AiRoot.AiNodes.AiRemove(key, true);
 		}
 
-		public void RootReplace(int nodeType)
+		public void RootReplace(PBNodeType nodeType)
 		{
 			TreeProperties treeProps = AiRoot.LogicNode.TreeNode.Props;
 			AiTreeNode newRoot = AiTreeNodeCollection.AiReplace(AiRoot, nodeType);
@@ -202,7 +204,7 @@ namespace ai_editor
 			nodes = _nodes;
 		}
 
-		public static AiTreeNode AiNew(int nodeType)
+		public static AiTreeNode AiNew(PBNodeType nodeType)
 		{
 			AiTreeNode aiNewNode = new AiTreeNode(NodeFactory.CreateInstance(nodeType));
 			aiNewNode.Refresh();
@@ -210,7 +212,7 @@ namespace ai_editor
 			return aiNewNode;
 		}
 
-		public static AiTreeNode AiReplace(AiTreeNode node, int nodeType)
+		public static AiTreeNode AiReplace(AiTreeNode node, PBNodeType nodeType)
 		{
 			node.LogicNode = NodeFactory.CreateInstance(nodeType);
 			node.Refresh();
@@ -218,7 +220,7 @@ namespace ai_editor
 			return node;
 		}
 
-		public AiTreeNode AiAdd(int nodeType)
+		public AiTreeNode AiAdd(PBNodeType nodeType)
 		{
 			AiTreeNode aiNewNode = AiNew(nodeType);
 

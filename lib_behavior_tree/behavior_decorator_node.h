@@ -18,12 +18,14 @@
 #include "behavior_tree.h"
 #include "windows.h"
 #include "Mmsystem.h"
+#include "BaseFunc.h"
 
 namespace BehaviorTree
 {
 
 /**
- * 
+ * DecoratorNode
+ * 装饰节点基类
  */
 class DecoratorNode : public NonLeafNode
 {
@@ -70,7 +72,9 @@ protected:
 };
 
 /**
- * 
+ * DecoratorNotNode
+ * 装饰节点
+ * 取反
  */
 class DecoratorNotNode : public DecoratorNode
 {
@@ -103,20 +107,20 @@ protected:
 };
 
 /**
- * 
+ * DecoratorLoopNode
+ * 装饰节点
+ * 循环
  */
 class DecoratorLoopNode : public DecoratorNode
 {
+	NodeLoadProtoDef(DecoratorNode, DecoratorLoop, d_loop);
+
 public:
-	DecoratorLoopNode() : m_nLoop(0)	{}
+	DecoratorLoopNode() 
+		: m_pProto(NULL)				{}
 	virtual ~DecoratorLoopNode()		{}
 
 	virtual int	GetType()				{return NodeType_DecoratorLoop;}
-
-	void SetLoop(int nLoop)				{m_nLoop = nLoop;}
-
-	virtual bool LoadProto(const Proto* pProto);
-	virtual bool DumpProto(Proto* pProto);
 
 protected:
 	/**
@@ -129,32 +133,41 @@ protected:
 	virtual NodeExecState _Decorate()
 	{
 		NodeExecState nOld;
-		for (int i = 0; i < m_nLoop; ++ i)
+		int loop_cnt = m_pProto->loop_cnt();
+		if (loop_cnt == 0)
+			loop_cnt = GetBlackboard()->LookupValue(m_pProto->loop_key()).Get<int>();
+		const std::string& sIKey = m_pProto->bb_i();
+
+		for (int i = 0; i < loop_cnt; ++ i)
+		{
+			if (!sIKey.empty())
+				GetBlackboard()->WriteValue(sIKey, ChalkInk(i));
 			nOld = m_vChilds.front()->Execute();
+			if (nOld != NodeExec_Success)
+				break;
+		}
 		return nOld;
 	}
 
-protected:
-	int					m_nLoop;
 };
 
 /**
- * 
+ * DecoratorCounterNode
+ * 装饰节点
+ * 计数器
  */
 class DecoratorCounterNode : public DecoratorNode
 {
+	NodeLoadProtoDef(DecoratorNode, DecoratorCounter, d_counter);
+
 public:
 	DecoratorCounterNode() 
-		: m_nCount(0), m_nLimit(1)		{}
+		: m_pProto(NULL), m_nCount(0)	{}
 	virtual ~DecoratorCounterNode()		{}
 
 	virtual int GetType()				{return NodeType_DecoratorCounter;}
 
-	void SetLimit(int nLimit)			{m_nLimit = nLimit;}
 	void ClearCount()					{m_nCount = 0;}
-
-	virtual bool LoadProto(const Proto* pProto);
-	virtual bool DumpProto(Proto* pProto);
 
 protected:
 
@@ -168,8 +181,7 @@ protected:
 	 */
 	virtual NodeExecState _Decorate()
 	{
-		// TODO
-		if (m_nCount >= m_nLimit)
+		if (m_nCount >= m_pProto->limit_cnt())
 			return NodeExec_Fail;
 
 		NodeExecState nRet = m_vChilds.front()->Execute();
@@ -179,29 +191,29 @@ protected:
 	}
 
 protected:
-	int					m_nLimit;
-	int					m_nCount;
+	int										m_nCount;
 };
 
 
 
 /**
- * 
+ * DecoratorTimerNode
+ * 装饰节点
+ * 定时器
  */
 class DecoratorTimerNode : public DecoratorNode
 {
+	NodeLoadProtoDef(DecoratorNode, DecoratorTimer, d_timer);
+
 public:
 	DecoratorTimerNode() 
-		: m_nStart(0), m_nElpase(0)		{}
+		: m_pProto(NULL), m_nStart(0), m_bPassStart(false)
+	{}
 	virtual ~DecoratorTimerNode()		{}
 
 	virtual int GetType()				{return NodeType_DecoratorTimer;}
 
-	void SetElpase(int nElpase)			{m_nElpase = nElpase;}
 	void ResetTimer()					{m_nStart = 0;}
-
-	virtual bool LoadProto(const Proto* pProto);
-	virtual bool DumpProto(Proto* pProto);
 
 protected:
 
@@ -214,28 +226,91 @@ protected:
 	 */
 	virtual NodeExecState _Decorate()
 	{
+		bool bRun = false;
+		int nTimer = 0;
+		if (m_bPassStart)
+			nTimer = m_pProto->elpase();
+		else
+		{
+			nTimer = m_pProto->start();
+			if (nTimer == 0)
+				m_bPassStart = bRun = true;
+		}
+
 		if (m_nStart > 0)
 		{
-			if (::timeGetTime() - m_nStart >= m_nElpase)
+			if (::timeGetTime() - m_nStart >= nTimer)
+			{
 				m_nStart = 0;
-			else
-				return NodeExec_Fail;
+				m_bPassStart = bRun = true;
+			}
 		}
+		
+		if (!bRun)
+			return NodeExec_Fail;
 
 		NodeExecState nRet = m_vChilds.front()->Execute();
 		if (nRet == NodeExec_Success)
-		{
-			if (m_nStart == 0 && m_nElpase > 0)
-				m_nStart = ::timeGetTime();
-		}
+			m_nStart = ::timeGetTime();
 		return nRet;
 	}
 
 protected:
-	int					m_nElpase;
-	int					m_nStart;
+	int										m_nStart;
+	bool									m_bPassStart;
 };
 
+
+/**
+ * DecoratorRandNode
+ * 装饰节点
+ * 随机
+ */
+class DecoratorRandNode : public DecoratorNode
+{
+public:
+	DecoratorRandNode() 
+		: m_pProto(NULL)				{}
+	virtual ~DecoratorRandNode()		{}
+
+	virtual int GetType()				{return NodeType_DecoratorTimer;}
+
+	virtual bool LoadProto(const BehaviorPB::Node* pProto);
+
+protected:
+
+	/**
+	 * @brief DecoratorRandNode _Decorate
+	 *
+	 * virtual protected 
+	 * Logic-Rand, on_rand exec;
+	 * @return 		NodeExecState		last state
+	 */
+	virtual NodeExecState _Decorate()
+	{
+		int nRandom = m_rand.RANDOM_int(m_pProto->r_begin(), m_pProto->r_end());
+		if (m_pProto->choose_arr_size() > 0)
+		{
+			bool bHit = false;
+			for (int i = 0; i < m_pProto->choose_arr_size(); ++ i)
+				if (nRandom == m_pProto->choose_arr(i))
+				{
+					bHit = true;
+					break;
+				}
+			if (!bHit)
+				return NodeExec_Fail;
+		}
+		if (!m_pProto->bb_rnd().empty())
+			GetBlackboard()->WriteValue(m_pProto->bb_rnd(), ChalkInk(nRandom));
+
+		return m_vChilds.front()->Execute();
+	}
+
+protected:
+	const BehaviorPB::DecoratorRand*		m_pProto;
+	G_RANDOM_MGR							m_rand;
+};
 
 };
 

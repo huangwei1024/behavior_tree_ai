@@ -24,14 +24,14 @@ namespace ai_editor.NodeDef
 			get { return "Condition"; }
 		}
 
-		public override int InitClassType
+		public override NodeType InitClassType
 		{
 			get { return StaticClassType; }
 		}
 
-		public static int StaticClassType
+		public static NodeType StaticClassType
 		{
-			get { return (int)NodeType.NodeType_Condition; }
+			get { return NodeType.NodeType_Condition; }
 		}
 
 		public override NodeProperties Props
@@ -57,14 +57,8 @@ namespace ai_editor.NodeDef
 
 	public class ConditionNodeProperties : NodeProperties
 	{
-		private static Dictionary<string, int> sMapConditionName = new Dictionary<string, int>();
+
 		private string scriptPath;
-
-		static ConditionNodeProperties()
-		{
-			sMapConditionName["printf_test"] = (int)BehaviorPB.NodeType.NodeType_PrintfCondtion;
-		}
-
 		[CategoryAttribute("条件设置"),
 		DescriptionAttribute("脚本路径"),
 		EditorAttribute(typeof(PropertyGridFileItem), typeof(System.Drawing.Design.UITypeEditor))]
@@ -75,46 +69,28 @@ namespace ai_editor.NodeDef
 			{ 
 				scriptPath = value;
 				if (value.Length > 0)
-					ConditionType = ""; // 互斥
+					ConditionType = Condition.Type.Null; // 互斥
 			}
 		}
 
-		private string conditionType;
+		private Condition.Type conditionType = Condition.Type.Null;
 		[CategoryAttribute("条件设置"),
-		DescriptionAttribute("条件类型"),
-	   TypeConverter(typeof(ConditionNameConverter))]
-		public virtual string ConditionType
+		DescriptionAttribute("条件类型")]
+		public virtual Condition.Type ConditionType
 		{
 			get { return conditionType; }
-			set
+			set 
 			{
-				if (sMapConditionName.ContainsKey(value))
-				{
-					conditionType = value;
-					Type = sMapConditionName[value];
-					ScriptPath = ""; // 互斥
-				}
+				conditionType = value;
+				if (value == Condition.Type.Null)
+					Type = ConditionNode.StaticClassType;
 				else
 				{
-					conditionType = "";
-					Type = ConditionNode.StaticClassType;
+					Type = (NodeType)conditionType;
+					scriptPath = "";
 				}
 			}
 		}
-
-		// ConditionType 属性下拉列表
-		public class ConditionNameConverter : StringConverter
-		{
-			public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-			{
-				return true;
-			}
-
-			public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
-			{
-				return new StandardValuesCollection(sMapConditionName.Keys);
-			}
-		}  
 
 		public override bool LoadProtoBuf(BehaviorPB.Node node)
 		{
@@ -125,7 +101,7 @@ namespace ai_editor.NodeDef
 				return false;
 
 			scriptPath = node.condition.script_path;
-			conditionType = Util.GetKeyByValue(sMapConditionName, Type);
+			conditionType = (Condition.Type)Type;
 			return true;
 		}
 
@@ -140,3 +116,42 @@ namespace ai_editor.NodeDef
 		}
 	}
 }
+
+
+
+// 		private string conditionType;
+// 		[CategoryAttribute("条件设置"),
+// 		DescriptionAttribute("条件类型"),
+// 	   TypeConverter(typeof(ConditionNameConverter))]
+// 		public virtual string ConditionType
+// 		{
+// 			get { return conditionType; }
+// 			set
+// 			{
+// 				if (sMapConditionName.ContainsKey(value))
+// 				{
+// 					conditionType = value;
+// 					Type = (NodeType)sMapConditionName[value];
+// 					ScriptPath = ""; // 互斥
+// 				}
+// 				else
+// 				{
+// 					conditionType = "";
+// 					Type = ConditionNode.StaticClassType;
+// 				}
+// 			}
+// 		}
+// 
+// 		// ConditionType 属性下拉列表
+// 		public class ConditionNameConverter : StringConverter
+// 		{
+// 			public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+// 			{
+// 				return true;
+// 			}
+// 
+// 			public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+// 			{
+// 				return new StandardValuesCollection(sMapConditionName.Keys);
+// 			}
+// 		}

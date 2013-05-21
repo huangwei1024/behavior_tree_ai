@@ -59,6 +59,7 @@
     </Compile>
     <Compile Include="NodeDef\ActionNode.cs" />
     <Compile Include="NodeDef\ConditionNode.cs" />
+    <Compile Include="NodeDef\DecorateRandNode.cs" />
     <Compile Include="NodeDef\DecoratorCounterNode.cs" />
     <Compile Include="NodeDef\DecoratorLoopNode.cs" />
     <Compile Include="NodeDef\DecoratorNotNode.cs" />

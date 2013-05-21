@@ -22,14 +22,14 @@ namespace ai_editor.NodeDef
 			get { return "Sequence"; }
 		}
 
-		public override int InitClassType
+		public override NodeType InitClassType
 		{
 			get { return StaticClassType; }
 		}
 
-		public static int StaticClassType
+		public static NodeType StaticClassType
 		{
-			get { return (int)NodeType.NodeType_Sequence; }
+			get { return NodeType.NodeType_Sequence; }
 		}
 
 		public override NodeProperties Props
