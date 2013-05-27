@@ -93,6 +93,12 @@ virtual bool LoadProto( const BehaviorPB::Node* pProto ) \
 protected: \
 const BehaviorPB::pbcls* m_pProto;
 
+/**
+ * PRINTF macro
+ *
+ * switch to log print
+ */
+#define PRINTF //printf
 
 //-------------------------------------------------------------------------
 namespace BehaviorPB
@@ -114,10 +120,13 @@ using BehaviorPB::NodeType_DecoratorNot;
 using BehaviorPB::NodeType_DecoratorLoop;
 using BehaviorPB::NodeType_DecoratorCounter;
 using BehaviorPB::NodeType_DecoratorTimer;
+using BehaviorPB::NodeType_DecoratorRand;
 
 using BehaviorPB::ParallelPolicy;
 using BehaviorPB::ParallelPolicy_FailOnAll;
 using BehaviorPB::ParallelPolicy_SuccOnAll;
+using BehaviorPB::ParallelPolicy_FailAlways;
+using BehaviorPB::ParallelPolicy_SuccAlways;
 
 namespace BehaviorTree
 {
@@ -125,12 +134,16 @@ namespace BehaviorTree
 class BaseNode;
 class NonLeafNode;
 class Tree;
+class ChalkInk;
+class ChalkInkPtr;
+class ChalkInkRef;
 class BlackBoard;
 class NodeFactory;
 class TreeFactory;
 
-typedef std::string		String;
-typedef BaseNode		LeafNode;
+typedef std::string					String;
+typedef BaseNode					LeafNode;
+typedef std::list <ChalkInkPtr*>	ChalkPtrList;
 
 enum NodeExecState
 {

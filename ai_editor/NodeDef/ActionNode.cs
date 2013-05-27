@@ -57,7 +57,7 @@ namespace ai_editor.NodeDef
 
 	public class ActionNodeProperties : NodeProperties
 	{
-		private string scriptPath;
+		private string scriptPath = "";
 		[CategoryAttribute("行为设置"),
 		DescriptionAttribute("脚本路径"),
 		EditorAttribute(typeof(PropertyGridFileItem), typeof(System.Drawing.Design.UITypeEditor))]

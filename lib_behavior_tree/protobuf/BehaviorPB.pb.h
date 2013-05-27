@@ -152,11 +152,13 @@ inline bool NodeType_Parse(
 }
 enum ParallelPolicy {
   ParallelPolicy_FailOnAll = 0,
-  ParallelPolicy_SuccOnAll = 1
+  ParallelPolicy_SuccOnAll = 1,
+  ParallelPolicy_FailAlways = 2,
+  ParallelPolicy_SuccAlways = 3
 };
 bool ParallelPolicy_IsValid(int value);
 const ParallelPolicy ParallelPolicy_MIN = ParallelPolicy_FailOnAll;
-const ParallelPolicy ParallelPolicy_MAX = ParallelPolicy_SuccOnAll;
+const ParallelPolicy ParallelPolicy_MAX = ParallelPolicy_SuccAlways;
 const int ParallelPolicy_ARRAYSIZE = ParallelPolicy_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ParallelPolicy_descriptor();
@@ -844,17 +846,17 @@ class DecoratorLoop : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 loop_cnt() const;
   inline void set_loop_cnt(::google::protobuf::int32 value);
 
-  // required string loop_key = 2;
-  inline bool has_loop_key() const;
-  inline void clear_loop_key();
-  static const int kLoopKeyFieldNumber = 2;
-  inline const ::std::string& loop_key() const;
-  inline void set_loop_key(const ::std::string& value);
-  inline void set_loop_key(const char* value);
-  inline void set_loop_key(const char* value, size_t size);
-  inline ::std::string* mutable_loop_key();
-  inline ::std::string* release_loop_key();
-  inline void set_allocated_loop_key(::std::string* loop_key);
+  // required string bb_loop_key = 2;
+  inline bool has_bb_loop_key() const;
+  inline void clear_bb_loop_key();
+  static const int kBbLoopKeyFieldNumber = 2;
+  inline const ::std::string& bb_loop_key() const;
+  inline void set_bb_loop_key(const ::std::string& value);
+  inline void set_bb_loop_key(const char* value);
+  inline void set_bb_loop_key(const char* value, size_t size);
+  inline ::std::string* mutable_bb_loop_key();
+  inline ::std::string* release_bb_loop_key();
+  inline void set_allocated_bb_loop_key(::std::string* bb_loop_key);
 
   // required string bb_i = 3;
   inline bool has_bb_i() const;
@@ -872,14 +874,14 @@ class DecoratorLoop : public ::google::protobuf::Message {
  private:
   inline void set_has_loop_cnt();
   inline void clear_has_loop_cnt();
-  inline void set_has_loop_key();
-  inline void clear_has_loop_key();
+  inline void set_has_bb_loop_key();
+  inline void clear_has_bb_loop_key();
   inline void set_has_bb_i();
   inline void clear_has_bb_i();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* loop_key_;
+  ::std::string* bb_loop_key_;
   ::std::string* bb_i_;
   ::google::protobuf::int32 loop_cnt_;
 
@@ -2079,73 +2081,73 @@ inline void DecoratorLoop::set_loop_cnt(::google::protobuf::int32 value) {
   loop_cnt_ = value;
 }
 
-// required string loop_key = 2;
-inline bool DecoratorLoop::has_loop_key() const {
+// required string bb_loop_key = 2;
+inline bool DecoratorLoop::has_bb_loop_key() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void DecoratorLoop::set_has_loop_key() {
+inline void DecoratorLoop::set_has_bb_loop_key() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void DecoratorLoop::clear_has_loop_key() {
+inline void DecoratorLoop::clear_has_bb_loop_key() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void DecoratorLoop::clear_loop_key() {
-  if (loop_key_ != &::google::protobuf::internal::kEmptyString) {
-    loop_key_->clear();
+inline void DecoratorLoop::clear_bb_loop_key() {
+  if (bb_loop_key_ != &::google::protobuf::internal::kEmptyString) {
+    bb_loop_key_->clear();
   }
-  clear_has_loop_key();
+  clear_has_bb_loop_key();
 }
-inline const ::std::string& DecoratorLoop::loop_key() const {
-  return *loop_key_;
+inline const ::std::string& DecoratorLoop::bb_loop_key() const {
+  return *bb_loop_key_;
 }
-inline void DecoratorLoop::set_loop_key(const ::std::string& value) {
-  set_has_loop_key();
-  if (loop_key_ == &::google::protobuf::internal::kEmptyString) {
-    loop_key_ = new ::std::string;
+inline void DecoratorLoop::set_bb_loop_key(const ::std::string& value) {
+  set_has_bb_loop_key();
+  if (bb_loop_key_ == &::google::protobuf::internal::kEmptyString) {
+    bb_loop_key_ = new ::std::string;
   }
-  loop_key_->assign(value);
+  bb_loop_key_->assign(value);
 }
-inline void DecoratorLoop::set_loop_key(const char* value) {
-  set_has_loop_key();
-  if (loop_key_ == &::google::protobuf::internal::kEmptyString) {
-    loop_key_ = new ::std::string;
+inline void DecoratorLoop::set_bb_loop_key(const char* value) {
+  set_has_bb_loop_key();
+  if (bb_loop_key_ == &::google::protobuf::internal::kEmptyString) {
+    bb_loop_key_ = new ::std::string;
   }
-  loop_key_->assign(value);
+  bb_loop_key_->assign(value);
 }
-inline void DecoratorLoop::set_loop_key(const char* value, size_t size) {
-  set_has_loop_key();
-  if (loop_key_ == &::google::protobuf::internal::kEmptyString) {
-    loop_key_ = new ::std::string;
+inline void DecoratorLoop::set_bb_loop_key(const char* value, size_t size) {
+  set_has_bb_loop_key();
+  if (bb_loop_key_ == &::google::protobuf::internal::kEmptyString) {
+    bb_loop_key_ = new ::std::string;
   }
-  loop_key_->assign(reinterpret_cast<const char*>(value), size);
+  bb_loop_key_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* DecoratorLoop::mutable_loop_key() {
-  set_has_loop_key();
-  if (loop_key_ == &::google::protobuf::internal::kEmptyString) {
-    loop_key_ = new ::std::string;
+inline ::std::string* DecoratorLoop::mutable_bb_loop_key() {
+  set_has_bb_loop_key();
+  if (bb_loop_key_ == &::google::protobuf::internal::kEmptyString) {
+    bb_loop_key_ = new ::std::string;
   }
-  return loop_key_;
+  return bb_loop_key_;
 }
-inline ::std::string* DecoratorLoop::release_loop_key() {
-  clear_has_loop_key();
-  if (loop_key_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* DecoratorLoop::release_bb_loop_key() {
+  clear_has_bb_loop_key();
+  if (bb_loop_key_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = loop_key_;
-    loop_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = bb_loop_key_;
+    bb_loop_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void DecoratorLoop::set_allocated_loop_key(::std::string* loop_key) {
-  if (loop_key_ != &::google::protobuf::internal::kEmptyString) {
-    delete loop_key_;
+inline void DecoratorLoop::set_allocated_bb_loop_key(::std::string* bb_loop_key) {
+  if (bb_loop_key_ != &::google::protobuf::internal::kEmptyString) {
+    delete bb_loop_key_;
   }
-  if (loop_key) {
-    set_has_loop_key();
-    loop_key_ = loop_key;
+  if (bb_loop_key) {
+    set_has_bb_loop_key();
+    bb_loop_key_ = bb_loop_key;
   } else {
-    clear_has_loop_key();
-    loop_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_bb_loop_key();
+    bb_loop_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

@@ -76,6 +76,15 @@ public:
 	BlackBoard* GetBlackboard();
 
 	/**
+	 * @brief AuxBBoard
+	 *
+	 * public 
+	 * auxiliary for GetBlackboard
+	 * @return 		Blackboard&
+	 */
+	BlackBoard& AuxBBoard()		{return *GetBlackboard();}
+
+	/**
 	 * @brief SetRunning
 	 *
 	 * public 
@@ -83,13 +92,12 @@ public:
 	 */
 	void SetRunning();
 
-	virtual void ClearChild() {}
-	virtual void AddChild(BaseNode* pChild) {assert(false);}
-	virtual void DeleteChild(BaseNode* pChild) {assert(false);}
-	virtual void SwapChild(BaseNode* pChild1, BaseNode* pChild2) {assert(false);}
-
 	virtual int				GetType() = 0;
+	virtual bool			PreExecute() {return true;}
 	virtual NodeExecState	Execute() = 0;
+
+	virtual void			ClearChild() {}
+	virtual void			AddChild(BaseNode* pChild) {assert(false);}
 
 	/**
 	 * @brief LoadProto
@@ -102,6 +110,10 @@ public:
 protected:
 	Tree*					m_pTree;
 	NonLeafNode*			m_pParent;
+#ifdef _DEBUG
+	String					m_sName;
+	String					m_sDesc;
+#endif
 };
 
 /**
@@ -110,69 +122,65 @@ protected:
 class NonLeafNode : public BaseNode
 {
 public:
-	typedef std::list <BaseNode*>	PtrList;
-
-public:
 	NonLeafNode()
+		: m_nChilds(0), m_nChildsSize(0), m_pChilds(NULL)
 	{}
 
 	virtual ~NonLeafNode()
 	{
 		ClearChild();
+		SafeDelete(m_pChilds);
+		m_nChilds = 0;
+		m_nChildsSize = 0;
+	}
+
+	void InitChildsList(int nSize)
+	{
+		ClearChild();
+		if (nSize > m_nChildsSize)
+		{
+			SafeDelete(m_pChilds);
+			m_pChilds = new BaseNode* [nSize];
+			m_nChildsSize = nSize;
+		}
 	}
 
 	virtual void ClearChild()
 	{
-		PtrList::iterator it, itEnd = m_vChilds.end();
-		for (it = m_vChilds.begin(); it != itEnd; ++ it)
+		for (int i = 0; i < m_nChilds; ++ i)
 		{
-			(*it)->ClearChild();
-			delete (*it);
+			NonLeafNode* pNonLeadNode = dynamic_cast<NonLeafNode*> (m_pChilds[i]);
+			if (pNonLeadNode)
+				pNonLeadNode->ClearChild();
+			SafeDelete(m_pChilds[i]);
 		}
-		m_vChilds.clear();
+		m_nChilds = 0;
 	}
 
 	virtual void AddChild(BaseNode* pChild)
 	{
 		pChild->SetParent(this);
-		m_vChilds.push_back(pChild);
+		m_pChilds[m_nChilds ++] = pChild;
+		assert(m_nChilds <= m_nChildsSize);
 	}
 
-	virtual void DeleteChild(BaseNode* pChild)
+
+	virtual bool PreExecute()
 	{
-		PtrList::iterator it, itEnd = m_vChilds.end();
-		for (it = m_vChilds.begin(); it != itEnd; ++ it)
+		for (int i = 0; i < m_nChilds; ++ i)
 		{
-			if (pChild == *it)
-			{
-				SafeDelete(*it);
-				m_vChilds.erase(it);
-				break;
-			}
+			if (!m_pChilds[i]->PreExecute())
+				return false;
 		}
+		return true;
 	}
 
-	virtual void SwapChild(BaseNode* pChild1, BaseNode* pChild2)
-	{
-		PtrList::iterator it, it2, itEnd = m_vChilds.end();
-		for (it = m_vChilds.begin(), it2 = itEnd; it != itEnd; ++ it)
-		{
-			if (pChild1 == *it || pChild2 == *it)
-			{
-				if (it2 != itEnd)
-				{
-					std::swap(it, it2);
-					break;
-				}
-				it2 = it;
-			}
-		}
-	}
-
-	virtual bool	LoadProto(const BehaviorPB::Node* pProto);
+	virtual bool LoadProto(const BehaviorPB::Node* pProto);
 
 protected:
-	PtrList			m_vChilds;
+	BaseNode**		m_pChilds;
+	int				m_nChildsSize;
+	int				m_nChilds;
 };
 
 /**
@@ -235,6 +243,12 @@ public:
 		Set(v);
 	}
 
+	template <class T>
+	operator T()
+	{
+		return Get<T>();
+	}
+
 #define SetFunc(ctype, var, etype) \
 	void Set(ctype v) \
 	{ \
@@ -294,7 +308,7 @@ public:
 		case Type_Pointer:
 			return (char*)m_oVal.ptr;
 		}
-		return "";
+		return NULL;
 	}
 
 	template <>
@@ -326,6 +340,135 @@ protected:
 };
 
 /**
+ * behavior chalk ink pointer class
+ * 通过ChalkInkPtr实现安全的ChalkInk指针访问
+ */
+class ChalkInkPtr
+{
+	friend ChalkInkRef;
+public:
+	ChalkInkPtr()
+	{
+		m_pChalk = NULL;
+		m_pChalkRef = NULL;
+	}
+
+	ChalkInkPtr(ChalkInkRef* pChalkRef)
+	{
+		m_pChalk = NULL;
+		m_pChalkRef = NULL;
+		SetOwnerRef(pChalkRef);
+	}
+
+	ChalkInkPtr(const ChalkInkPtr& oPtr)
+	{
+		m_pChalk = NULL;
+		m_pChalkRef = NULL;
+		SetOwnerRef(oPtr.m_pChalkRef);
+	}
+
+	~ChalkInkPtr()
+	{
+		SetOwnerRef(NULL);
+	}
+
+	ChalkInkPtr& operator= (const ChalkInkPtr& oPtr)
+	{
+		SetOwnerRef(oPtr.m_pChalkRef);
+		return *this;
+	}
+
+	ChalkInk* operator-> () const
+	{
+		return m_pChalk;
+	}
+
+	operator bool () const
+	{
+		return !IsNull();
+	}
+
+	bool operator! () const
+	{
+		return IsNull();
+	}
+
+	void SetNull()
+	{
+		SetOwnerRef(NULL);
+		m_pChalk = NULL;
+		m_pChalkRef = NULL;
+	}
+
+	bool IsNull() const;	
+	void SetOwnerRef(ChalkInkRef* pChalkRef);
+
+protected:
+	ChalkInk*			m_pChalk;
+	ChalkInkRef*		m_pChalkRef;
+};
+
+
+/**
+ * behavior chalk ink ref class
+ * 保证外部ChalkInkPtr访问时，不会出现野指针
+ */
+class ChalkInkRef
+{
+public:
+	ChalkInkRef(bool bIn = false)
+	{
+		m_nRef = 1;
+		m_bInBlackBoard = bIn;
+	}
+
+	~ChalkInkRef()
+	{
+		assert(m_nRef == 0);
+		assert(!m_bInBlackBoard);
+	}
+
+	ChalkInk& GetChalk()
+	{
+		return m_oVal;
+	}
+
+	void AddRef(ChalkInkPtr* pPtr)
+	{
+		pPtr->m_pChalk = &m_oVal;
+		pPtr->m_pChalkRef = this;
+		++ m_nRef;
+	}
+
+	void SubRef(ChalkInkPtr* pPtr)
+	{
+		if (pPtr)
+		{
+			pPtr->m_pChalk = NULL;
+			pPtr->m_pChalkRef = NULL;
+		}
+		if (-- m_nRef == 0)
+			delete this;
+	}
+
+	void InBlackBoard(bool bIn)
+	{
+		m_bInBlackBoard = bIn;
+	}
+
+	bool IsInBlackBoard()
+	{
+		return m_bInBlackBoard;
+	}
+
+protected:
+	ChalkInk	m_oVal;
+	int			m_nRef;
+	bool		m_bInBlackBoard;
+};
+
+
+/**
  * behavior blackboard class
  */
 class BlackBoard
@@ -333,7 +476,7 @@ class BlackBoard
 public:
 	friend Tree;
 	typedef String								ChalkName;
-	typedef std::map <ChalkName, ChalkInk>		ChalkMap;
+	typedef std::map <ChalkName, ChalkInkRef*>	ChalkMap;
 
 public:
 	BlackBoard()
@@ -341,42 +484,58 @@ public:
 	{}
 
 	virtual ~BlackBoard()
-	{}
+	{
+		Clear();
+	}
 
 	void Clear()
 	{
-		m_valNull.SetEmpty();
+		ChalkMap::iterator it, it_end = m_mapChalks.end();
+		for (it = m_mapChalks.begin(); it != it_end; ++ it)
+		{
+			ChalkInkRef* pRef = it->second;
+			pRef->InBlackBoard(false);
+			pRef->SubRef(NULL);
+		}
 		m_mapChalks.clear();
 		m_pRunningNode = NULL;
 	}
 
-	template <class T>
-	ChalkInk& WriteValue(const ChalkName& sKey, const T& tVal)
-	{
-		return WriteValue(sKey, ChalkInk(tVal));
-	}
-
-	ChalkInk& WriteValue(const ChalkName& sKey, const ChalkInk& oVal)
+	ChalkInk& operator [] (const ChalkName& sKey)
 	{
 		typedef std::pair<ChalkMap::iterator, bool> PairItB;
-		PairItB prItB = m_mapChalks.insert(std::make_pair(sKey, oVal));
-		return prItB.first->second;
+		PairItB prItB = m_mapChalks.insert(std::make_pair(sKey, new ChalkInkRef(true)));
+		ChalkInkRef* pRef = prItB.first->second;
+		return pRef->GetChalk();
 	}
 
-	ChalkInk& LookupValue(const ChalkName& sKey)
+	ChalkInkPtr WriteValue(const ChalkName& sKey, const ChalkInk& oVal)
+	{
+		typedef std::pair<ChalkMap::iterator, bool> PairItB;
+		PairItB prItB = m_mapChalks.insert(std::make_pair(sKey, new ChalkInkRef(true)));
+		ChalkInkRef* pRef = prItB.first->second;
+		pRef->GetChalk() = oVal;
+		return ChalkInkPtr(pRef);
+	}
+
+	ChalkInkPtr LookupValue(const ChalkName& sKey)
 	{
 		ChalkMap::iterator it = m_mapChalks.find(sKey);
 		if (it == m_mapChalks.end())
-		{
-			m_valNull.SetEmpty();
-			return m_valNull;
-		}
-		return it->second;
+			return ChalkInkPtr();
+		return ChalkInkPtr(it->second);
 	}
 
 	void EraseValue(const ChalkName& sKey)
 	{
-		m_mapChalks.erase(sKey);
+		ChalkMap::iterator it = m_mapChalks.find(sKey);
+		if (it == m_mapChalks.end())
+			return;
+
+		ChalkInkRef* pRef = it->second;
+		pRef->InBlackBoard(false);
+		pRef->SubRef(NULL);
+		m_mapChalks.erase(it);
 	}
 
 	BaseNode* GetRunning()
@@ -392,9 +551,7 @@ public:
 protected:
 	// running state
 	BaseNode*			m_pRunningNode;
-
 	ChalkMap			m_mapChalks;
-	ChalkInk			m_valNull;
 };
 
 

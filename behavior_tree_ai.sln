@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "behavior_tree_ai", "behavio
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lib_behavior_tree", "lib_behavior_tree\lib_behavior_tree.vcproj", "{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ai_editor_installer", "ai_editor_installer\ai_editor_installer.vdproj", "{9FA681F1-D344-47E3-B340-69F6283A493E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,12 @@ Global
 		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}.Release|Win32.ActiveCfg = Release|Win32
 		{F5CFD55F-9034-442E-A4B3-AFC08A6ADCD1}.Release|Win32.Build.0 = Release|Win32
+		{9FA681F1-D344-47E3-B340-69F6283A493E}.Debug|Any CPU.ActiveCfg = Debug
+		{9FA681F1-D344-47E3-B340-69F6283A493E}.Debug|Mixed Platforms.ActiveCfg = Debug
+		{9FA681F1-D344-47E3-B340-69F6283A493E}.Debug|Win32.ActiveCfg = Debug
+		{9FA681F1-D344-47E3-B340-69F6283A493E}.Release|Any CPU.ActiveCfg = Release
+		{9FA681F1-D344-47E3-B340-69F6283A493E}.Release|Mixed Platforms.ActiveCfg = Release
+		{9FA681F1-D344-47E3-B340-69F6283A493E}.Release|Win32.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

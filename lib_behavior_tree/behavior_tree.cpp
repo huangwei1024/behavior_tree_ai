@@ -29,6 +29,11 @@ bool BaseNode::LoadProto( const BehaviorPB::Node* pProto )
 		assert(false);
 		return false;
 	}
+#ifdef _DEBUG
+	const BehaviorPB::Node_Editor* pEditor = &pProto->editor();
+	m_sName = pEditor->name();
+	m_sDesc = pEditor->desc();
+#endif
 	return true;
 }
 
@@ -43,7 +48,7 @@ bool NonLeafNode::LoadProto( const BehaviorPB::Node* pProto )
 	if (!BaseNode::LoadProto(pProto))
 		return false;
 
-	m_vChilds.clear();
+	InitChildsList(pProto->nodes_size());
 	for (int i = 0; i < pProto->nodes_size(); ++ i)
 	{
 		const BehaviorPB::Node* pChildProto = &pProto->nodes(i);
@@ -104,6 +109,7 @@ bool DecoratorRandNode::LoadProto( const BehaviorPB::Node* pProto )
 
 	m_pProto = &pProto->d_rand();
 	m_rand.reset_seed(m_rand.RANDOM_int(-0xfffffff, 0xfffffff, m_pProto->r_idx()));
+	PRINTF("rand seed = %d\n", m_rand.m_base_seed);
 
 	return true;
 }
@@ -142,6 +148,8 @@ BaseNode* NodeFactory::CreateInstance( int nType )
 		return new DecoratorCounterNode();
 	case NodeType_DecoratorTimer:
 		return new DecoratorTimerNode();
+	case NodeType_DecoratorRand:
+		return new DecoratorRandNode();
 	}
 
 	NodeClassMap::iterator it = ms_mapNodes.find(nType);
@@ -198,7 +206,9 @@ NodeExecState Tree::Process()
 		return nRet;
 	}
 
-	return m_pRoot->Execute();
+	if (m_pRoot->PreExecute())
+		return m_pRoot->Execute();
+	return NodeExec_Fail;
 }
 
 bool Tree::IsValid()
@@ -289,7 +299,7 @@ void TreeFactory::RegisterTree( String sPath )
 		return;
 	}
 
-	pProto->PrintDebugString(); // debug output
+	//pProto->PrintDebugString(); // debug output
 
 	TreeProtoMap::iterator it = m_mapTree.find(pProto->name());
 	if (it != m_mapTree.end())
@@ -303,6 +313,21 @@ void TreeFactory::RegisterTree( String sPath )
 	item.sFilePath = sPath;
 	item.pProto = pProto;
 	m_mapTree[pProto->name()] = item;
+}
+
+//-------------------------------------------------------------------------
+void ChalkInkPtr::SetOwnerRef( ChalkInkRef* pChalkRef )
+{
+	if (m_pChalkRef)
+		m_pChalkRef->SubRef(this);
+
+	if (pChalkRef)
+		pChalkRef->AddRef(this);
+}
+
+bool ChalkInkPtr::IsNull() const
+{
+	return m_pChalkRef == NULL || !m_pChalkRef->IsInBlackBoard();
 }
 
 };

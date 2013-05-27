@@ -106,7 +106,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\3rd\include"
+				AdditionalIncludeDirectories="..\3rd\include;&quot;E:\Src\leidian-src\branches\bl_stable\SHARECODE\include\lib_common&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"

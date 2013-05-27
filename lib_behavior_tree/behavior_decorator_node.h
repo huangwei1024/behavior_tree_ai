@@ -35,18 +35,13 @@ public:
 
 	virtual void AddChild(BaseNode* pChild)
 	{
-		if (!m_vChilds.empty())
+		if (m_nChilds > 0)
 		{
 			assert(false);
 			return;
 		}
 
 		NonLeafNode::AddChild(pChild);
-	}
-
-	virtual void SwapChild(BaseNode* pChild1, BaseNode* pChild2)
-	{
-		assert(false);
 	}
 
 	/**
@@ -60,10 +55,10 @@ public:
 	 */
 	virtual NodeExecState Execute()
 	{
-		if (m_vChilds.empty())
+		if (m_nChilds == 0)
 			return NodeExec_Fail;
 
-		assert(m_vChilds.size() == 1);
+		assert(m_nChilds == 1);
 		return _Decorate();
 	}
 
@@ -91,8 +86,8 @@ protected:
 	 */
 	virtual NodeExecState _Decorate()
 	{
-		NodeExecState nOld = m_vChilds.front()->Execute();
-		switch (nOld)
+		NodeExecState nRet = m_pChilds[0]->Execute();
+		switch (nRet)
 		{
 		case NodeExec_Fail:
 			return NodeExec_Success;
@@ -123,6 +118,21 @@ public:
 	virtual int	GetType()				{return NodeType_DecoratorLoop;}
 
 protected:
+
+	virtual bool PreExecute()
+	{
+		if (!DecoratorNode::PreExecute())
+			return false;
+
+		if (!m_pProto->bb_loop_key().empty() && m_pLoopKey.IsNull())
+			m_pLoopKey = GetBlackboard()->WriteValue(m_pProto->bb_loop_key(), 0);
+		
+		if (!m_pProto->bb_i().empty() && m_pIKey.IsNull())
+			m_pIKey = GetBlackboard()->WriteValue(m_pProto->bb_i(), 0);
+
+		return true;
+	}
+
 	/**
 	 * @brief DecoratorLoopNode _Decorate
 	 *
@@ -132,23 +142,25 @@ protected:
 	 */
 	virtual NodeExecState _Decorate()
 	{
-		NodeExecState nOld;
+		NodeExecState nRet = NodeExec_Success;
 		int loop_cnt = m_pProto->loop_cnt();
-		if (loop_cnt == 0)
-			loop_cnt = GetBlackboard()->LookupValue(m_pProto->loop_key()).Get<int>();
-		const std::string& sIKey = m_pProto->bb_i();
+		if (loop_cnt == 0 && !m_pLoopKey.IsNull())
+			loop_cnt = m_pLoopKey->Get<int>();
 
 		for (int i = 0; i < loop_cnt; ++ i)
 		{
-			if (!sIKey.empty())
-				GetBlackboard()->WriteValue(sIKey, ChalkInk(i));
-			nOld = m_vChilds.front()->Execute();
-			if (nOld != NodeExec_Success)
+			if (!m_pIKey.IsNull())
+				m_pIKey->Set(i);
+			nRet = m_pChilds[0]->Execute();
+			if (nRet != NodeExec_Success)
 				break;
 		}
-		return nOld;
+		return nRet;
 	}
 
+protected:
+	ChalkInkPtr		m_pLoopKey;
+	ChalkInkPtr		m_pIKey;
 };
 
 /**
@@ -184,7 +196,7 @@ protected:
 		if (m_nCount >= m_pProto->limit_cnt())
 			return NodeExec_Fail;
 
-		NodeExecState nRet = m_vChilds.front()->Execute();
+		NodeExecState nRet = m_pChilds[0]->Execute();
 		if (nRet == NodeExec_Success)
 			++ m_nCount;
 		return nRet;
@@ -239,7 +251,7 @@ protected:
 
 		if (m_nStart > 0)
 		{
-			if (::timeGetTime() - m_nStart >= nTimer)
+			if ((int)::timeGetTime() - m_nStart >= nTimer)
 			{
 				m_nStart = 0;
 				m_bPassStart = bRun = true;
@@ -249,7 +261,7 @@ protected:
 		if (!bRun)
 			return NodeExec_Fail;
 
-		NodeExecState nRet = m_vChilds.front()->Execute();
+		NodeExecState nRet = m_pChilds[0]->Execute();
 		if (nRet == NodeExec_Success)
 			m_nStart = ::timeGetTime();
 		return nRet;
@@ -273,11 +285,21 @@ public:
 		: m_pProto(NULL)				{}
 	virtual ~DecoratorRandNode()		{}
 
-	virtual int GetType()				{return NodeType_DecoratorTimer;}
+	virtual int GetType()				{return NodeType_DecoratorRand;}
 
 	virtual bool LoadProto(const BehaviorPB::Node* pProto);
 
 protected:
+
+	virtual bool PreExecute()
+	{
+		if (!DecoratorNode::PreExecute())
+			return false;
+
+		if (!m_pProto->bb_rnd().empty() && m_pRndKey.IsNull())
+			m_pRndKey = GetBlackboard()->WriteValue(m_pProto->bb_rnd(), 0);
+		return true;
+	}
 
 	/**
 	 * @brief DecoratorRandNode _Decorate
@@ -289,6 +311,7 @@ protected:
 	virtual NodeExecState _Decorate()
 	{
 		int nRandom = m_rand.RANDOM_int(m_pProto->r_begin(), m_pProto->r_end());
+		PRINTF("rand = %d (%d, %d)\n", nRandom, m_pProto->r_begin(), m_pProto->r_end());
 		if (m_pProto->choose_arr_size() > 0)
 		{
 			bool bHit = false;
@@ -301,15 +324,17 @@ protected:
 			if (!bHit)
 				return NodeExec_Fail;
 		}
-		if (!m_pProto->bb_rnd().empty())
-			GetBlackboard()->WriteValue(m_pProto->bb_rnd(), ChalkInk(nRandom));
+		if (!m_pRndKey.IsNull())
+			m_pRndKey->Set(nRandom);
 
-		return m_vChilds.front()->Execute();
+		return m_pChilds[0]->Execute();
 	}
 
 protected:
 	const BehaviorPB::DecoratorRand*		m_pProto;
 	G_RANDOM_MGR							m_rand;
+	ChalkInkPtr								m_pRndKey;
+
 };
 
 };

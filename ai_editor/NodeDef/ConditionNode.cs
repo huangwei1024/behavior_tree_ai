@@ -58,7 +58,7 @@ namespace ai_editor.NodeDef
 	public class ConditionNodeProperties : NodeProperties
 	{
 
-		private string scriptPath;
+		private string scriptPath = "";
 		[CategoryAttribute("条件设置"),
 		DescriptionAttribute("脚本路径"),
 		EditorAttribute(typeof(PropertyGridFileItem), typeof(System.Drawing.Design.UITypeEditor))]

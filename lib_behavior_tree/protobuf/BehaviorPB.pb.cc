@@ -187,7 +187,7 @@ void protobuf_AssignDesc_BehaviorPB_2eproto() {
   DecoratorLoop_descriptor_ = file->message_type(7);
   static const int DecoratorLoop_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DecoratorLoop, loop_cnt_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DecoratorLoop, loop_key_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DecoratorLoop, bb_loop_key_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DecoratorLoop, bb_i_),
   };
   DecoratorLoop_reflection_ =
@@ -427,49 +427,51 @@ void protobuf_AddDesc_BehaviorPB_2eproto() {
     "Printf\020\347\007\"\?\n\tCondition\022\023\n\013script_path\030\001 "
     "\002(\t\"\035\n\004Type\022\010\n\004Null\020\000\022\013\n\006Printf\020\346\007\"\035\n\004Li"
     "nk\022\025\n\rsub_tree_name\030\001 \002(\t\"\016\n\014DecoratorNo"
-    "t\"A\n\rDecoratorLoop\022\020\n\010loop_cnt\030\001 \002(\005\022\020\n\010"
-    "loop_key\030\002 \002(\t\022\014\n\004bb_i\030\003 \002(\t\"D\n\020Decorato"
-    "rCounter\022\021\n\tlimit_cnt\030\001 \002(\005\"\035\n\004Type\022\010\n\004N"
-    "ull\020\000\022\013\n\006Printf\020\345\007\"/\n\016DecoratorTimer\022\016\n\006"
-    "elpase\030\001 \002(\005\022\r\n\005start\030\002 \002(\005\"b\n\rDecorator"
-    "Rand\022\r\n\005r_idx\030\001 \002(\005\022\017\n\007r_begin\030\002 \002(\005\022\r\n\005"
-    "r_end\030\003 \002(\005\022\022\n\nchoose_arr\030\004 \003(\005\022\016\n\006bb_rn"
-    "d\030\005 \002(\t\"\366\004\n\004Node\022\'\n\006editor\030\001 \001(\0132\027.Behav"
-    "iorPB.Node.Editor\022\037\n\005nodes\030\002 \003(\0132\020.Behav"
-    "iorPB.Node\022\"\n\004type\030\003 \002(\0162\024.BehaviorPB.No"
-    "deType\022&\n\010selector\030\004 \001(\0132\024.BehaviorPB.Se"
-    "lector\022&\n\010sequence\030\005 \001(\0132\024.BehaviorPB.Se"
-    "quence\022&\n\010parallel\030\006 \001(\0132\024.BehaviorPB.Pa"
-    "rallel\022\"\n\006action\030\007 \001(\0132\022.BehaviorPB.Acti"
-    "on\022(\n\tcondition\030\010 \001(\0132\025.BehaviorPB.Condi"
-    "tion\022\036\n\004link\030\t \001(\0132\020.BehaviorPB.Link\022\'\n\005"
-    "d_not\030\n \001(\0132\030.BehaviorPB.DecoratorNot\022)\n"
-    "\006d_loop\030\013 \001(\0132\031.BehaviorPB.DecoratorLoop"
-    "\022/\n\td_counter\030\014 \001(\0132\034.BehaviorPB.Decorat"
-    "orCounter\022+\n\007d_timer\030\r \001(\0132\032.BehaviorPB."
-    "DecoratorTimer\022)\n\006d_rand\030\016 \001(\0132\031.Behavio"
-    "rPB.DecoratorRand\032=\n\006Editor\022\n\n\002id\030\001 \002(\005\022"
-    "\013\n\003key\030\002 \002(\t\022\014\n\004name\030\003 \002(\t\022\014\n\004desc\030\004 \002(\t"
-    "\"u\n\004Tree\022\'\n\006editor\030\001 \001(\0132\027.BehaviorPB.Tr"
-    "ee.Editor\022\014\n\004name\030\002 \002(\t\022\036\n\004root\030\003 \002(\0132\020."
-    "BehaviorPB.Node\032\026\n\006Editor\022\014\n\004desc\030\001 \002(\t*"
-    "\300\004\n\010NodeType\022\021\n\rNodeType_Null\020\000\022\025\n\021NodeT"
-    "ype_Selector\020\001\022\025\n\021NodeType_Sequence\020\002\022\025\n"
-    "\021NodeType_Parallel\020\003\022\023\n\017NodeType_Action\020"
-    "\004\022\026\n\022NodeType_Condition\020\005\022\021\n\rNodeType_Li"
-    "nk\020\006\022\026\n\022NodeType_Decorator\020\007\022\031\n\025NodeType"
-    "_DecoratorNot\020\010\022\032\n\026NodeType_DecoratorLoo"
-    "p\020\t\022\035\n\031NodeType_DecoratorCounter\020\n\022\033\n\027No"
-    "deType_DecoratorTimer\020\013\022\032\n\026NodeType_Deco"
-    "ratorRand\020\014\022\036\n\031NodeType_CntTestAction2_2"
-    "\020\340\007\022\034\n\027NodeType_CntTestAction0\020\341\007\022\034\n\027Nod"
-    "eType_CntTestAction1\020\342\007\022\034\n\027NodeType_CntT"
-    "estAction2\020\343\007\022\033\n\026NodeType_CntTestAction\020"
-    "\344\007\022$\n\037NodeType_PrintfDecoratorCounter\020\345\007"
-    "\022\034\n\027NodeType_PrintfCondtion\020\346\007\022\032\n\025NodeTy"
-    "pe_PrintfAction\020\347\007*L\n\016ParallelPolicy\022\034\n\030"
-    "ParallelPolicy_FailOnAll\020\000\022\034\n\030ParallelPo"
-    "licy_SuccOnAll\020\001", 2056);
+    "t\"D\n\rDecoratorLoop\022\020\n\010loop_cnt\030\001 \002(\005\022\023\n\013"
+    "bb_loop_key\030\002 \002(\t\022\014\n\004bb_i\030\003 \002(\t\"D\n\020Decor"
+    "atorCounter\022\021\n\tlimit_cnt\030\001 \002(\005\"\035\n\004Type\022\010"
+    "\n\004Null\020\000\022\013\n\006Printf\020\345\007\"/\n\016DecoratorTimer\022"
+    "\016\n\006elpase\030\001 \002(\005\022\r\n\005start\030\002 \002(\005\"b\n\rDecora"
+    "torRand\022\r\n\005r_idx\030\001 \002(\005\022\017\n\007r_begin\030\002 \002(\005\022"
+    "\r\n\005r_end\030\003 \002(\005\022\022\n\nchoose_arr\030\004 \003(\005\022\016\n\006bb"
+    "_rnd\030\005 \002(\t\"\366\004\n\004Node\022\'\n\006editor\030\001 \001(\0132\027.Be"
+    "haviorPB.Node.Editor\022\037\n\005nodes\030\002 \003(\0132\020.Be"
+    "haviorPB.Node\022\"\n\004type\030\003 \002(\0162\024.BehaviorPB"
+    ".NodeType\022&\n\010selector\030\004 \001(\0132\024.BehaviorPB"
+    ".Selector\022&\n\010sequence\030\005 \001(\0132\024.BehaviorPB"
+    ".Sequence\022&\n\010parallel\030\006 \001(\0132\024.BehaviorPB"
+    ".Parallel\022\"\n\006action\030\007 \001(\0132\022.BehaviorPB.A"
+    "ction\022(\n\tcondition\030\010 \001(\0132\025.BehaviorPB.Co"
+    "ndition\022\036\n\004link\030\t \001(\0132\020.BehaviorPB.Link\022"
+    "\'\n\005d_not\030\n \001(\0132\030.BehaviorPB.DecoratorNot"
+    "\022)\n\006d_loop\030\013 \001(\0132\031.BehaviorPB.DecoratorL"
+    "oop\022/\n\td_counter\030\014 \001(\0132\034.BehaviorPB.Deco"
+    "ratorCounter\022+\n\007d_timer\030\r \001(\0132\032.Behavior"
+    "PB.DecoratorTimer\022)\n\006d_rand\030\016 \001(\0132\031.Beha"
+    "viorPB.DecoratorRand\032=\n\006Editor\022\n\n\002id\030\001 \002"
+    "(\005\022\013\n\003key\030\002 \002(\t\022\014\n\004name\030\003 \002(\t\022\014\n\004desc\030\004 "
+    "\002(\t\"u\n\004Tree\022\'\n\006editor\030\001 \001(\0132\027.BehaviorPB"
+    ".Tree.Editor\022\014\n\004name\030\002 \002(\t\022\036\n\004root\030\003 \002(\013"
+    "2\020.BehaviorPB.Node\032\026\n\006Editor\022\014\n\004desc\030\001 \002"
+    "(\t*\300\004\n\010NodeType\022\021\n\rNodeType_Null\020\000\022\025\n\021No"
+    "deType_Selector\020\001\022\025\n\021NodeType_Sequence\020\002"
+    "\022\025\n\021NodeType_Parallel\020\003\022\023\n\017NodeType_Acti"
+    "on\020\004\022\026\n\022NodeType_Condition\020\005\022\021\n\rNodeType"
+    "_Link\020\006\022\026\n\022NodeType_Decorator\020\007\022\031\n\025NodeT"
+    "ype_DecoratorNot\020\010\022\032\n\026NodeType_Decorator"
+    "Loop\020\t\022\035\n\031NodeType_DecoratorCounter\020\n\022\033\n"
+    "\027NodeType_DecoratorTimer\020\013\022\032\n\026NodeType_D"
+    "ecoratorRand\020\014\022\036\n\031NodeType_CntTestAction"
+    "2_2\020\340\007\022\034\n\027NodeType_CntTestAction0\020\341\007\022\034\n\027"
+    "NodeType_CntTestAction1\020\342\007\022\034\n\027NodeType_C"
+    "ntTestAction2\020\343\007\022\033\n\026NodeType_CntTestActi"
+    "on\020\344\007\022$\n\037NodeType_PrintfDecoratorCounter"
+    "\020\345\007\022\034\n\027NodeType_PrintfCondtion\020\346\007\022\032\n\025Nod"
+    "eType_PrintfAction\020\347\007*\212\001\n\016ParallelPolicy"
+    "\022\034\n\030ParallelPolicy_FailOnAll\020\000\022\034\n\030Parall"
+    "elPolicy_SuccOnAll\020\001\022\035\n\031ParallelPolicy_F"
+    "ailAlways\020\002\022\035\n\031ParallelPolicy_SuccAlways"
+    "\020\003", 2122);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "BehaviorPB.proto", &protobuf_RegisterTypes);
   Selector::default_instance_ = new Selector();
@@ -552,6 +554,8 @@ bool ParallelPolicy_IsValid(int value) {
   switch(value) {
     case 0:
     case 1:
+    case 2:
+    case 3:
       return true;
     default:
       return false;
@@ -1976,7 +1980,7 @@ void DecoratorNot::Swap(DecoratorNot* other) {
 
 #ifndef _MSC_VER
 const int DecoratorLoop::kLoopCntFieldNumber;
-const int DecoratorLoop::kLoopKeyFieldNumber;
+const int DecoratorLoop::kBbLoopKeyFieldNumber;
 const int DecoratorLoop::kBbIFieldNumber;
 #endif  // !_MSC_VER
 
@@ -1997,7 +2001,7 @@ DecoratorLoop::DecoratorLoop(const DecoratorLoop& from)
 void DecoratorLoop::SharedCtor() {
   _cached_size_ = 0;
   loop_cnt_ = 0;
-  loop_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  bb_loop_key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   bb_i_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -2007,8 +2011,8 @@ DecoratorLoop::~DecoratorLoop() {
 }
 
 void DecoratorLoop::SharedDtor() {
-  if (loop_key_ != &::google::protobuf::internal::kEmptyString) {
-    delete loop_key_;
+  if (bb_loop_key_ != &::google::protobuf::internal::kEmptyString) {
+    delete bb_loop_key_;
   }
   if (bb_i_ != &::google::protobuf::internal::kEmptyString) {
     delete bb_i_;
@@ -2041,9 +2045,9 @@ DecoratorLoop* DecoratorLoop::New() const {
 void DecoratorLoop::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     loop_cnt_ = 0;
-    if (has_loop_key()) {
-      if (loop_key_ != &::google::protobuf::internal::kEmptyString) {
-        loop_key_->clear();
+    if (has_bb_loop_key()) {
+      if (bb_loop_key_ != &::google::protobuf::internal::kEmptyString) {
+        bb_loop_key_->clear();
       }
     }
     if (has_bb_i()) {
@@ -2073,19 +2077,19 @@ bool DecoratorLoop::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_loop_key;
+        if (input->ExpectTag(18)) goto parse_bb_loop_key;
         break;
       }
 
-      // required string loop_key = 2;
+      // required string bb_loop_key = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_loop_key:
+         parse_bb_loop_key:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_loop_key()));
+                input, this->mutable_bb_loop_key()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->loop_key().data(), this->loop_key().length(),
+            this->bb_loop_key().data(), this->bb_loop_key().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -2134,13 +2138,13 @@ void DecoratorLoop::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->loop_cnt(), output);
   }
 
-  // required string loop_key = 2;
-  if (has_loop_key()) {
+  // required string bb_loop_key = 2;
+  if (has_bb_loop_key()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->loop_key().data(), this->loop_key().length(),
+      this->bb_loop_key().data(), this->bb_loop_key().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->loop_key(), output);
+      2, this->bb_loop_key(), output);
   }
 
   // required string bb_i = 3;
@@ -2165,14 +2169,14 @@ void DecoratorLoop::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->loop_cnt(), target);
   }
 
-  // required string loop_key = 2;
-  if (has_loop_key()) {
+  // required string bb_loop_key = 2;
+  if (has_bb_loop_key()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->loop_key().data(), this->loop_key().length(),
+      this->bb_loop_key().data(), this->bb_loop_key().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->loop_key(), target);
+        2, this->bb_loop_key(), target);
   }
 
   // required string bb_i = 3;
@@ -2203,11 +2207,11 @@ int DecoratorLoop::ByteSize() const {
           this->loop_cnt());
     }
 
-    // required string loop_key = 2;
-    if (has_loop_key()) {
+    // required string bb_loop_key = 2;
+    if (has_bb_loop_key()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->loop_key());
+          this->bb_loop_key());
     }
 
     // required string bb_i = 3;
@@ -2247,8 +2251,8 @@ void DecoratorLoop::MergeFrom(const DecoratorLoop& from) {
     if (from.has_loop_cnt()) {
       set_loop_cnt(from.loop_cnt());
     }
-    if (from.has_loop_key()) {
-      set_loop_key(from.loop_key());
+    if (from.has_bb_loop_key()) {
+      set_bb_loop_key(from.bb_loop_key());
     }
     if (from.has_bb_i()) {
       set_bb_i(from.bb_i());
@@ -2278,7 +2282,7 @@ bool DecoratorLoop::IsInitialized() const {
 void DecoratorLoop::Swap(DecoratorLoop* other) {
   if (other != this) {
     std::swap(loop_cnt_, other->loop_cnt_);
-    std::swap(loop_key_, other->loop_key_);
+    std::swap(bb_loop_key_, other->bb_loop_key_);
     std::swap(bb_i_, other->bb_i_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

@@ -61,8 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/verbose"
-				AdditionalDependencies="lib_behavior_tree.lib libprotobuf.lib lib_common_d.lib"
+				AdditionalDependencies="lib_behavior_tree.lib libprotobuf.lib lib_common_d.lib Rpcrt4.lib lib_zlib_d.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\3rd\lib\debug;..\debug;&quot;E:\Src\leidian-src\branches\bl_stable\SHARECODE\lib\Debug&quot;"
 				GenerateDebugInformation="true"
@@ -119,7 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\lib_behavior_tree;..\3rd\include"
+				AdditionalIncludeDirectories="..\lib_behavior_tree;..\3rd\include;&quot;E:\Src\leidian-src\branches\bl_stable\SHARECODE\include\lib_common&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
@@ -138,9 +137,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\release\lib_behavior_tree.lib libprotobuf.lib"
+				AdditionalDependencies="lib_behavior_tree.lib libprotobuf.lib lib_common.lib Rpcrt4.lib lib_zlib.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\3rd\lib\release"
+				AdditionalLibraryDirectories="..\3rd\lib\release;..\release;&quot;E:\Src\leidian-src\branches\bl_stable\SHARECODE\lib\Release&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -198,6 +197,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
+		<File
+			RelativePath=".\perf.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

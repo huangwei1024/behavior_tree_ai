@@ -126,9 +126,9 @@ namespace ai_editor.NodeDef
 
 		// editor
 		private int id;
-		private string key;
-		private string desc;
-		private string name;
+		private string key = "";
+		private string desc = "";
+		private string name = "";
 
 		[CategoryAttribute("È«¾ÖÉèÖÃ"),
 		ReadOnlyAttribute(true),

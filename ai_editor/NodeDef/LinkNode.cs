@@ -56,8 +56,7 @@ namespace ai_editor.NodeDef
 
 	public class LinkNodeProperties : NodeProperties
 	{
-		private string subTreeName;
-
+		private string subTreeName = "";
 		[CategoryAttribute("ÍâÁ´ÉèÖÃ"),
 		DescriptionAttribute("Ê÷Ãû³Æ")]
 		public virtual string SubTreeName

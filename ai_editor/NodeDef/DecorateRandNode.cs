@@ -92,7 +92,7 @@ namespace ai_editor.NodeDef
 		}
 
 
-		private string rndBBWrite;
+		private string rndBBWrite = "";
 		[CategoryAttribute("随机设置"),
 	   DescriptionAttribute("黑板写入索引")]
 		public virtual string RndBBName

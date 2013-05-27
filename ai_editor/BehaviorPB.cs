@@ -157,12 +157,12 @@ namespace BehaviorPB
       get { return _loop_cnt; }
       set { _loop_cnt = value; }
     }
-    private string _loop_key;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"loop_key", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public string loop_key
+    private string _bb_loop_key;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"bb_loop_key", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string bb_loop_key
     {
-      get { return _loop_key; }
-      set { _loop_key = value; }
+      get { return _bb_loop_key; }
+      set { _bb_loop_key = value; }
     }
     private string _bb_i;
     [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"bb_i", DataFormat = global::ProtoBuf.DataFormat.Default)]
@@ -569,7 +569,13 @@ namespace BehaviorPB
       ParallelPolicy_FailOnAll = 0,
             
       [global::ProtoBuf.ProtoEnum(Name=@"ParallelPolicy_SuccOnAll", Value=1)]
-      ParallelPolicy_SuccOnAll = 1
+      ParallelPolicy_SuccOnAll = 1,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ParallelPolicy_FailAlways", Value=2)]
+      ParallelPolicy_FailAlways = 2,
+            
+      [global::ProtoBuf.ProtoEnum(Name=@"ParallelPolicy_SuccAlways", Value=3)]
+      ParallelPolicy_SuccAlways = 3
     }
   
 }

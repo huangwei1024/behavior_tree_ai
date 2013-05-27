@@ -35,6 +35,8 @@ enum NodeType {
 enum ParallelPolicy {
 	ParallelPolicy_FailOnAll 	= 0;
 	ParallelPolicy_SuccOnAll	= 1;
+	ParallelPolicy_FailAlways	= 2;
+	ParallelPolicy_SuccAlways	= 3;
 }
 
 message Selector {
@@ -79,7 +81,7 @@ message DecoratorNot {
 
 message DecoratorLoop {
 	required int32	loop_cnt				= 1;
-	required string	loop_key				= 2; // read in blackboard key
+	required string	bb_loop_key				= 2; // read in blackboard key
 	required string	bb_i					= 3; // write in blackboard key
 }
 

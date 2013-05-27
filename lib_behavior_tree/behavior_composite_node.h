@@ -45,10 +45,9 @@ public:
 	 */
 	virtual NodeExecState Execute()
 	{
-		PtrList::iterator it, itEnd = m_vChilds.end();
-		for (it = m_vChilds.begin(); it != itEnd; ++ it)
+		for (int i = 0; i < m_nChilds; ++ i)
 		{
-			NodeExecState nRet = (*it)->Execute();
+			NodeExecState nRet = m_pChilds[i]->Execute();
 			switch (nRet)
 			{
 			case NodeExec_Success:
@@ -89,10 +88,9 @@ public:
 	 */
 	virtual NodeExecState Execute()
 	{
-		PtrList::iterator it, itEnd = m_vChilds.end();
-		for (it = m_vChilds.begin(); it != itEnd; ++ it)
+		for (int i = 0; i < m_nChilds; ++ i)
 		{
-			NodeExecState nRet = (*it)->Execute();
+			NodeExecState nRet = m_pChilds[i]->Execute();
 			switch (nRet)
 			{
 			case NodeExec_Fail:
@@ -135,10 +133,9 @@ public:
 	virtual NodeExecState Execute()
 	{
 		int nRetCnt[NodeExec_Total] = {0};
-		PtrList::iterator it, itEnd = m_vChilds.end();
-		for (it = m_vChilds.begin(); it != itEnd; ++ it)
+		for (int i = 0; i < m_nChilds; ++ i)
 		{
-			NodeExecState nRet = (*it)->Execute();
+			NodeExecState nRet = m_pChilds[i]->Execute();
 			if (nRet == NodeExec_Running)
 				return NodeExec_Running;
 			++ nRetCnt[nRet];
@@ -149,6 +146,10 @@ public:
 		 *	全部fail，返回fail，否则succ
 		 * ParallelPolicy_SuccOnAll
 		 *	全部succ，返回succ，否则fail
+		 * ParallelPolicy_FailAlways
+		 *  返回fail
+		 * ParallelPolicy_SuccAlways
+		 *  返回succ
 		 */
 		switch (m_pProto->policy())
 		{
@@ -156,6 +157,10 @@ public:
 			return (nRetCnt[NodeExec_Success] == 0) ? NodeExec_Fail : NodeExec_Success;
 		case ParallelPolicy_SuccOnAll:
 			return (nRetCnt[NodeExec_Fail] == 0) ? NodeExec_Success : NodeExec_Fail;
+		case ParallelPolicy_FailAlways:
+			return NodeExec_Fail;
+		case ParallelPolicy_SuccAlways:
+			return NodeExec_Success;
 		}
 		assert(false);
 		return NodeExec_Fail;

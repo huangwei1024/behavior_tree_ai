@@ -57,7 +57,6 @@ namespace ai_editor.NodeDef
 	public class ParallelNodeProperties : NodeProperties
 	{
 		private ParallelPolicy policy;
-
 		[CategoryAttribute("并行设置"),
 		DescriptionAttribute("并行策略")]
 		public virtual ParallelPolicy Policy

@@ -69,7 +69,7 @@ namespace ai_editor.NodeDef
 			}
 		}
 
-		private string loopKey;
+		private string loopKey = "";
 		[CategoryAttribute("循环设置"),
 		DescriptionAttribute("黑板循环索引")]
 		public virtual string LoopBBKey
@@ -82,7 +82,7 @@ namespace ai_editor.NodeDef
 			}
 		}
 
-		private string loopBBiWrite;
+		private string loopBBiWrite = "";
 		[CategoryAttribute("循环设置"),
 		DescriptionAttribute("黑板计数索引")]
 		public virtual string LoopBBiName
@@ -100,7 +100,7 @@ namespace ai_editor.NodeDef
 				return false;
 
 			loopCount = node.d_loop.loop_cnt;
-			loopKey = node.d_loop.loop_key;
+			loopKey = node.d_loop.bb_loop_key;
 			loopBBiWrite = node.d_loop.bb_i;
 			return true;
 		}
@@ -112,7 +112,7 @@ namespace ai_editor.NodeDef
 
 			node.d_loop = new BehaviorPB.DecoratorLoop();
 			node.d_loop.loop_cnt = loopCount;
-			node.d_loop.loop_key = loopKey;
+			node.d_loop.bb_loop_key = loopKey;
 			node.d_loop.bb_i = loopBBiWrite;
 			return true;
 		}

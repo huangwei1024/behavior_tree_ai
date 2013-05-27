@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过下列属性集
 // 控制。更改这些属性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("BT AI 编辑器")]
+[assembly: AssemblyTitle("行为树AI 编辑器")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("NetEase")]
-[assembly: AssemblyProduct("BT AI 编辑器")]
+[assembly: AssemblyProduct("行为树AI编辑器")]
 [assembly: AssemblyCopyright("版权所有 (C) NetEase 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
